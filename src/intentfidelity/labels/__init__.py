@@ -56,6 +56,11 @@ from intentfidelity.labels.naturalistic_io import (
     read_naturalistic_events_jsonl,
     write_naturalistic_events_jsonl,
 )
+from intentfidelity.labels.p300 import (
+    P300_SOURCE_TYPE,
+    P300SelectionEvent,
+    weak_target_from_p300_event,
+)
 
 __all__ = [
     "AuthorizationEvent",
@@ -64,6 +69,8 @@ __all__ = [
     "HANDWRITING_SOURCE_TYPE",
     "NATURALISTIC_SOURCE_TYPE",
     "NaturalisticEvent",
+    "P300_SOURCE_TYPE",
+    "P300SelectionEvent",
     "Prediction",
     "SPACE_TOKEN",
     "TextPrediction",
@@ -88,6 +95,7 @@ __all__ = [
     "weak_target_from_handwriting_cue",
     "weak_target_from_authorization_event",
     "weak_target_from_naturalistic_event",
+    "weak_target_from_p300_event",
     "handwriting_cues_from_trial",
     "weak_targets_from_trials",
     "write_predictions_jsonl",

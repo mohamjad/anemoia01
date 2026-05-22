@@ -1,6 +1,6 @@
 import pytest
 
-from intentfidelity.labels.p300 import (
+from intentfidelity.labels import (
     P300_SOURCE_TYPE,
     P300SelectionEvent,
     weak_target_from_p300_event,
