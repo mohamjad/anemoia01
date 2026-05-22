@@ -17,14 +17,14 @@ BASELINES: tuple[BaselineSpec, ...] = (
         method_id="identity",
         name="Identity",
         category="alignment",
-        status="placeholder",
+        status="implemented",
         description="Pass-through reference for already aligned feature spaces.",
     ),
     BaselineSpec(
         method_id="session_centering",
         name="Session centering",
         category="alignment",
-        status="placeholder",
+        status="implemented",
         description="Subtract session-level feature centroids before evaluation.",
     ),
     BaselineSpec(
@@ -45,7 +45,7 @@ BASELINES: tuple[BaselineSpec, ...] = (
         method_id="whitening_coloring",
         name="Whitening-coloring",
         category="alignment",
-        status="placeholder",
+        status="implemented",
         description="Distribution matching through whitening and recoloring.",
     ),
     BaselineSpec(
@@ -81,4 +81,3 @@ def get_baseline(method_id: str) -> BaselineSpec:
         if baseline.method_id == method_id:
             return baseline
     raise KeyError(f"unknown baseline method_id: {method_id}")
-

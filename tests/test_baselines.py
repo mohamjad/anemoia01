@@ -22,3 +22,8 @@ def test_get_baseline_returns_method_metadata() -> None:
     assert baseline.category == "language_prior"
     assert baseline.status == "placeholder"
 
+
+def test_implemented_baselines_are_marked_active() -> None:
+    assert get_baseline("identity").status == "implemented"
+    assert get_baseline("session_centering").status == "implemented"
+    assert get_baseline("whitening_coloring").status == "implemented"
