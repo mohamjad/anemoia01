@@ -9,3 +9,5 @@ Pass 1 supports three report-card types:
 Cards render to JSON or Markdown. Eval cards summarize fidelity to declared weak
 target distributions and do not claim access to true intent.
 
+Eval cards preserve `evidence_scope` when the underlying `EvalResult` records
+whether a run used sanity baselines or supplied predictions.
