@@ -9,11 +9,13 @@ from intentfidelity.labels import (
     AuthorizationEvent,
     AuthorizationState,
     NaturalisticEvent,
+    P300SelectionEvent,
     Prediction,
     TextPrediction,
     TextTarget,
     write_authorization_events_jsonl,
     write_naturalistic_events_jsonl,
+    write_p300_events_jsonl,
     write_predictions_jsonl,
     write_text_predictions_jsonl,
     write_text_targets_jsonl,
@@ -265,6 +267,39 @@ def test_naturalistic_command_scores_event_jsonl(tmp_path: Path, capsys) -> None
     output = capsys.readouterr().out
     assert "Naturalistic Weak-Label Evaluation" in output
     assert "Mean confidence: 0.750" in output
+
+
+def test_selection_command_scores_p300_event_jsonl(tmp_path: Path, capsys) -> None:
+    events_path = tmp_path / "events.jsonl"
+    predictions_path = tmp_path / "predictions.jsonl"
+    write_p300_events_jsonl(
+        (P300SelectionEvent("s0", "A", ("A", "B"), 0.9, "A", "session-1"),),
+        events_path,
+    )
+    write_predictions_jsonl(
+        (Prediction("s0", {"A": 0.9, "B": 0.1}, "decoder"),),
+        predictions_path,
+    )
+
+    assert (
+        main(
+            [
+                "eval",
+                "selection",
+                str(events_path),
+                str(predictions_path),
+                "--dataset-id",
+                "bigp3bci",
+                "--format",
+                "markdown",
+            ]
+        )
+        == 0
+    )
+
+    output = capsys.readouterr().out
+    assert "Selection Evaluation" in output
+    assert "Observed selection accuracy: 1.000" in output
 
 
 def test_nwb_summary_command_lists_hdf5_datasets(tmp_path: Path, capsys) -> None:

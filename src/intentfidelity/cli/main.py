@@ -16,6 +16,7 @@ from intentfidelity.ingest import inventory_falcon_h2, list_hdf5_datasets
 from intentfidelity.labels import (
     read_authorization_events_jsonl,
     read_naturalistic_events_jsonl,
+    read_p300_events_jsonl,
     read_predictions_jsonl,
     read_text_predictions_jsonl,
     read_text_targets_jsonl,
@@ -30,6 +31,7 @@ from intentfidelity.protocols import (
     language_prior_report,
     load_eval_result,
     naturalistic_eval_result,
+    selection_eval_result,
 )
 from intentfidelity.protocols import falcon_h2_targets_from_file
 from intentfidelity.protocols import falcon_h2_prediction_eval
@@ -38,6 +40,7 @@ from intentfidelity.reports import (
     render_comparison_markdown,
     render_language_prior_markdown,
     render_naturalistic_markdown,
+    render_selection_markdown,
 )
 from intentfidelity.resources import fetch_dandi_assets, get_manifest, load_manifests
 
@@ -130,6 +133,12 @@ def build_parser() -> argparse.ArgumentParser:
         "--format", choices=("json", "markdown"), default="json"
     )
     _add_handler(naturalistic_eval, _eval_naturalistic)
+    selection_eval = eval_subparsers.add_parser("selection")
+    selection_eval.add_argument("events_jsonl", type=Path)
+    selection_eval.add_argument("predictions_jsonl", type=Path)
+    selection_eval.add_argument("--dataset-id", required=True)
+    selection_eval.add_argument("--format", choices=("json", "markdown"), default="json")
+    _add_handler(selection_eval, _eval_selection)
 
     ingest_parser = subparsers.add_parser("ingest")
     ingest_subparsers = ingest_parser.add_subparsers(dest="ingest_command")
@@ -304,6 +313,18 @@ def _eval_naturalistic(args: argparse.Namespace) -> None:
     )
     if args.format == "markdown":
         print(render_naturalistic_markdown(result), end="")
+        return
+    print(json.dumps(result.to_dict(), indent=2, sort_keys=True))
+
+
+def _eval_selection(args: argparse.Namespace) -> None:
+    result = selection_eval_result(
+        read_p300_events_jsonl(args.events_jsonl),
+        _predictions_by_method(read_predictions_jsonl(args.predictions_jsonl)),
+        dataset_id=args.dataset_id,
+    )
+    if args.format == "markdown":
+        print(render_selection_markdown(result), end="")
         return
     print(json.dumps(result.to_dict(), indent=2, sort_keys=True))
 
