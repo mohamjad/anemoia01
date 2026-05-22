@@ -1,6 +1,6 @@
 import pytest
 
-from intentfidelity.labels.naturalistic import (
+from intentfidelity.labels import (
     NATURALISTIC_SOURCE_TYPE,
     NaturalisticEvent,
     weak_target_from_naturalistic_event,

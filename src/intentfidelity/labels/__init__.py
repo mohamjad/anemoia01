@@ -47,12 +47,19 @@ from intentfidelity.labels.authorization_io import (
     read_authorization_events_jsonl,
     write_authorization_events_jsonl,
 )
+from intentfidelity.labels.naturalistic import (
+    NATURALISTIC_SOURCE_TYPE,
+    NaturalisticEvent,
+    weak_target_from_naturalistic_event,
+)
 
 __all__ = [
     "AuthorizationEvent",
     "AuthorizationState",
     "DistributionValidationError",
     "HANDWRITING_SOURCE_TYPE",
+    "NATURALISTIC_SOURCE_TYPE",
+    "NaturalisticEvent",
     "Prediction",
     "SPACE_TOKEN",
     "TextPrediction",
@@ -75,6 +82,7 @@ __all__ = [
     "weak_target_from_dict",
     "weak_target_from_handwriting_cue",
     "weak_target_from_authorization_event",
+    "weak_target_from_naturalistic_event",
     "handwriting_cues_from_trial",
     "weak_targets_from_trials",
     "write_predictions_jsonl",
