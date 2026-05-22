@@ -14,6 +14,7 @@ from intentfidelity.baselines import (
 from intentfidelity.figures import render_comparison_table, render_ranking_reversal
 from intentfidelity.ingest import inventory_falcon_h2, list_hdf5_datasets
 from intentfidelity.labels import (
+    read_authorization_events_jsonl,
     read_predictions_jsonl,
     read_text_predictions_jsonl,
     read_text_targets_jsonl,
@@ -21,6 +22,7 @@ from intentfidelity.labels import (
 )
 from intentfidelity.protocols import (
     EvalResult,
+    authorization_eval_result,
     communication_eval_result,
     compare_eval_results,
     falcon_h2_baseline_eval,
@@ -112,6 +114,11 @@ def build_parser() -> argparse.ArgumentParser:
         "--format", choices=("json", "markdown"), default="json"
     )
     _add_handler(language_prior_eval, _eval_language_prior)
+    authorization_eval = eval_subparsers.add_parser("authorization")
+    authorization_eval.add_argument("events_jsonl", type=Path)
+    authorization_eval.add_argument("predictions_jsonl", type=Path)
+    authorization_eval.add_argument("--dataset-id", required=True)
+    _add_handler(authorization_eval, _eval_authorization)
 
     ingest_parser = subparsers.add_parser("ingest")
     ingest_subparsers = ingest_parser.add_subparsers(dest="ingest_command")
@@ -267,6 +274,15 @@ def _eval_language_prior(args: argparse.Namespace) -> None:
         print(render_language_prior_markdown(attribution), end="")
         return
     print(json.dumps(attribution.to_dict(), indent=2, sort_keys=True))
+
+
+def _eval_authorization(args: argparse.Namespace) -> None:
+    result = authorization_eval_result(
+        read_authorization_events_jsonl(args.events_jsonl),
+        _predictions_by_method(read_predictions_jsonl(args.predictions_jsonl)),
+        dataset_id=args.dataset_id,
+    )
+    print(json.dumps(result.to_dict(), indent=2, sort_keys=True))
 
 
 def _ingest_falcon_h2_inventory(args: argparse.Namespace) -> None:

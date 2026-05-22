@@ -6,9 +6,12 @@ import h5py
 from intentfidelity.cli.main import main
 from intentfidelity.baselines import LabeledExample, write_labeled_examples_csv
 from intentfidelity.labels import (
+    AuthorizationEvent,
+    AuthorizationState,
     Prediction,
     TextPrediction,
     TextTarget,
+    write_authorization_events_jsonl,
     write_predictions_jsonl,
     write_text_predictions_jsonl,
     write_text_targets_jsonl,
@@ -191,6 +194,42 @@ def test_language_prior_command_outputs_attribution(tmp_path: Path, capsys) -> N
     output = capsys.readouterr().out
     assert "Language Prior Attribution" in output
     assert "lm_heavy_worse" in output
+
+
+def test_authorization_command_scores_event_jsonl(tmp_path: Path, capsys) -> None:
+    events_path = tmp_path / "events.jsonl"
+    predictions_path = tmp_path / "predictions.jsonl"
+    write_authorization_events_jsonl(
+        (AuthorizationEvent("s0", AuthorizationState.AUTHORIZED),), events_path
+    )
+    write_predictions_jsonl(
+        (
+            Prediction(
+                "s0",
+                {"authorized": 0.9, "not_authorized": 0.1},
+                "decoder",
+            ),
+        ),
+        predictions_path,
+    )
+
+    assert (
+        main(
+            [
+                "eval",
+                "authorization",
+                str(events_path),
+                str(predictions_path),
+                "--dataset-id",
+                "kunz2025",
+            ]
+        )
+        == 0
+    )
+
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["protocol"] == "authorization"
+    assert payload["method_scores"][0]["method_id"] == "decoder"
 
 
 def test_nwb_summary_command_lists_hdf5_datasets(tmp_path: Path, capsys) -> None:
