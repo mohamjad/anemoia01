@@ -23,6 +23,7 @@ from intentfidelity.labels import (
     write_weak_targets_jsonl,
 )
 from intentfidelity.protocols import (
+    EvidenceLevel,
     EvalResult,
     authorization_eval_result,
     communication_eval_result,
@@ -32,6 +33,7 @@ from intentfidelity.protocols import (
     load_eval_result,
     naturalistic_eval_result,
     selection_eval_result,
+    write_falcon_h2_artifact_bundle,
 )
 from intentfidelity.protocols import falcon_h2_targets_from_file
 from intentfidelity.protocols import falcon_h2_prediction_eval
@@ -100,6 +102,15 @@ def build_parser() -> argparse.ArgumentParser:
     falcon_h2_feature_baseline.add_argument("train_nwb", type=Path)
     falcon_h2_feature_baseline.add_argument("test_nwb", type=Path)
     _add_handler(falcon_h2_feature_baseline, _eval_falcon_h2_feature_baseline)
+    falcon_h2_bundle = eval_subparsers.add_parser("falcon-h2-bundle")
+    falcon_h2_bundle.add_argument("source", type=Path)
+    falcon_h2_bundle.add_argument("output_dir", type=Path)
+    falcon_h2_bundle.add_argument(
+        "--evidence-level",
+        choices=tuple(level.value for level in EvidenceLevel),
+        default=EvidenceLevel.FIXTURE_EVIDENCE.value,
+    )
+    _add_handler(falcon_h2_bundle, _eval_falcon_h2_bundle)
     synthetic_eval = eval_subparsers.add_parser("synthetic-baselines")
     _add_handler(synthetic_eval, _eval_synthetic_baselines)
     communication_eval = eval_subparsers.add_parser("communication")
@@ -266,6 +277,15 @@ def _eval_falcon_h2_feature_baseline(args: argparse.Namespace) -> None:
 
     result = falcon_h2_feature_baseline_eval(args.train_nwb, args.test_nwb)
     print(json.dumps(result.to_dict(), indent=2, sort_keys=True))
+
+
+def _eval_falcon_h2_bundle(args: argparse.Namespace) -> None:
+    bundle = write_falcon_h2_artifact_bundle(
+        args.source,
+        args.output_dir,
+        evidence_level=EvidenceLevel(args.evidence_level),
+    )
+    print(json.dumps(bundle.to_dict(), indent=2, sort_keys=True))
 
 
 def _eval_synthetic_baselines(_: argparse.Namespace) -> None:

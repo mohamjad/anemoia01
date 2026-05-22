@@ -131,6 +131,23 @@ def test_falcon_h2_targets_command_writes_jsonl(tmp_path: Path, capsys) -> None:
     assert len(output.read_text(encoding="utf-8").splitlines()) == 2
 
 
+def test_falcon_h2_bundle_command_writes_artifacts(tmp_path: Path, capsys) -> None:
+    path = _write_cli_h2_file(tmp_path)
+    output_dir = tmp_path / "bundle"
+
+    assert main(["eval", "falcon-h2-bundle", str(path), str(output_dir)]) == 0
+
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["evidence_level"] == "fixture_evidence"
+    assert payload["metadata"]["target_count"] == 2
+    assert (output_dir / "targets.jsonl").exists()
+    assert (output_dir / "predictions.jsonl").exists()
+    assert (output_dir / "result.json").exists()
+    assert "not downloaded FALCON H2 dataset evidence" in (
+        output_dir / "eval_card.md"
+    ).read_text(encoding="utf-8")
+
+
 def test_falcon_h2_predictions_command_scores_jsonl(tmp_path: Path, capsys) -> None:
     path = _write_cli_h2_file(tmp_path)
     predictions = (
