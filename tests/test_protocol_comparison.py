@@ -17,6 +17,7 @@ def test_compare_eval_results_reports_ranking_disagreement() -> None:
     report = compare_eval_results(result)
 
     assert report.ranking.has_disagreement is True
+    assert report.to_dict()["ranking"]["has_disagreement"] is True
 
 
 def test_compare_eval_results_reports_over_adaptation_between_runs() -> None:

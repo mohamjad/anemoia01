@@ -18,6 +18,27 @@ class MethodComparisonReport:
     ranking: RankingDisagreement
     over_adaptation_events: tuple[OverAdaptationEvent, ...]
 
+    def to_dict(self) -> dict:
+        return {
+            "dataset_id": self.dataset_id,
+            "protocol": self.protocol,
+            "ranking": {
+                "conventional_ranking": list(self.ranking.conventional_ranking),
+                "intent_fidelity_ranking": list(self.ranking.intent_fidelity_ranking),
+                "kendall_tau_distance": self.ranking.kendall_tau_distance,
+                "has_disagreement": self.ranking.has_disagreement,
+            },
+            "over_adaptation_events": [
+                {
+                    "method_id": event.method_id,
+                    "conventional_delta": event.conventional_delta,
+                    "intent_fidelity_delta": event.intent_fidelity_delta,
+                    "reason": event.reason,
+                }
+                for event in self.over_adaptation_events
+            ],
+        }
+
 
 def compare_eval_results(
     before: EvalResult,
@@ -35,4 +56,3 @@ def compare_eval_results(
         ranking=ranking,
         over_adaptation_events=events,
     )
-
