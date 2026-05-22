@@ -1,5 +1,5 @@
 from intentfidelity.labels import NaturalisticEvent, Prediction
-from intentfidelity.protocols.naturalistic import naturalistic_eval_result
+from intentfidelity.protocols import naturalistic_eval_result
 
 
 def test_naturalistic_eval_result_scores_predictions_and_summary() -> None:
