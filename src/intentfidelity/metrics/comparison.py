@@ -18,6 +18,13 @@ class RankingDisagreement:
     kendall_tau_distance: int
     has_disagreement: bool
 
+    @property
+    def reversal_rate(self) -> float:
+        method_count = len(self.conventional_ranking)
+        if method_count < 2:
+            return 0.0
+        return self.kendall_tau_distance / (method_count * (method_count - 1) / 2)
+
 
 @dataclass(frozen=True)
 class OverAdaptationEvent:
@@ -128,4 +135,3 @@ def _kendall_tau_distance(left: Sequence[str], right: Sequence[str]) -> int:
             if right_positions[left_method] > right_positions[right_method]:
                 inversions += 1
     return inversions
-

@@ -20,6 +20,7 @@ def test_ranking_disagreement_detects_reversal() -> None:
     assert disagreement.conventional_ranking == ("accuracy_first", "proxy_faithful")
     assert disagreement.intent_fidelity_ranking == ("proxy_faithful", "accuracy_first")
     assert disagreement.kendall_tau_distance == 1
+    assert disagreement.reversal_rate == pytest.approx(1.0)
 
 
 def test_detect_over_adaptation_flags_divergent_metric_changes() -> None:
@@ -47,4 +48,3 @@ def test_expected_calibration_error_bins_confidence_accuracy_gap() -> None:
     )
 
     assert ece == pytest.approx(0.15)
-
