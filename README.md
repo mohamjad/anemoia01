@@ -42,3 +42,4 @@ Useful pass-1 references:
 - `docs/CLI.md`
 - `docs/FALCON_H2_PASS2.md`
 - `docs/FALCON_H2_FORMAT.md`
+- `docs/PASS3_METHOD_COMPARISON.md`
