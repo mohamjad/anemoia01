@@ -1,5 +1,5 @@
 from intentfidelity.metrics import MethodScore
-from intentfidelity.protocols.schemas import ProtocolType, selection_result
+from intentfidelity.protocols import ProtocolType, selection_result
 
 
 def test_selection_result_uses_selection_protocol_type() -> None:

@@ -8,6 +8,7 @@ from intentfidelity.protocols.schemas import (
     few_shot_recalibration_result,
     held_out_session_result,
     naturalistic_weak_label_result,
+    selection_result,
 )
 from intentfidelity.protocols.io import load_eval_result, save_eval_result
 from intentfidelity.protocols.falcon_h2 import (
@@ -46,5 +47,6 @@ __all__ = [
     "naturalistic_weak_label_result",
     "naturalistic_eval_result",
     "save_eval_result",
+    "selection_result",
     "synthetic_baseline_eval",
 ]
