@@ -17,7 +17,7 @@ from intentfidelity.protocols.schemas import EvalResult, ProtocolType
 
 
 def falcon_h2_targets_from_file(path) -> tuple[WeakTarget, ...]:
-    split = _split_from_path(path)
+    split = falcon_h2_split_from_path(path)
     trials = load_falcon_h2_trials(path, split)
     return weak_targets_from_trials(trials)
 
@@ -98,8 +98,12 @@ def falcon_h2_prediction_result_from_targets(
 
 
 def falcon_h2_feature_baseline_eval(train_path, test_path) -> EvalResult:
-    train_examples = load_falcon_h2_labeled_examples(train_path, _split_from_path(train_path))
-    test_examples = load_falcon_h2_labeled_examples(test_path, _split_from_path(test_path))
+    train_examples = load_falcon_h2_labeled_examples(
+        train_path, falcon_h2_split_from_path(train_path)
+    )
+    test_examples = load_falcon_h2_labeled_examples(
+        test_path, falcon_h2_split_from_path(test_path)
+    )
     if not train_examples or not test_examples:
         raise ValueError("train and test files must produce labeled examples")
 
@@ -141,7 +145,7 @@ def _score_predictions(method_id: str, targets: tuple[WeakTarget, ...], predicti
     return MethodScore(method_id=method_id, conventional_score=mean_loss, intent_fidelity_score=mean_loss)
 
 
-def _split_from_path(path) -> IngestSplit:
+def falcon_h2_split_from_path(path) -> IngestSplit:
     text = str(path)
     if "held-out-calib" in text or "held_out_calib" in text:
         return IngestSplit.HELD_OUT_CALIB

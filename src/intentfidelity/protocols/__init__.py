@@ -25,6 +25,7 @@ from intentfidelity.protocols.falcon_h2 import (
     falcon_h2_feature_baseline_eval,
     falcon_h2_prediction_eval,
     falcon_h2_prediction_result_from_targets,
+    falcon_h2_split_from_path,
     falcon_h2_targets_from_file,
 )
 from intentfidelity.protocols.comparison import (
@@ -57,6 +58,7 @@ __all__ = [
     "falcon_h2_feature_baseline_eval",
     "falcon_h2_prediction_eval",
     "falcon_h2_prediction_result_from_targets",
+    "falcon_h2_split_from_path",
     "falcon_h2_targets_from_file",
     "held_out_session_result",
     "load_artifact_bundle",

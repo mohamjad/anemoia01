@@ -6,9 +6,11 @@ from intentfidelity.protocols.falcon_h2 import (
     falcon_h2_feature_baseline_eval,
     falcon_h2_prediction_eval,
     falcon_h2_prediction_result_from_targets,
+    falcon_h2_split_from_path,
     falcon_h2_targets_from_file,
 )
 from intentfidelity.labels import Prediction
+from intentfidelity.ingest import IngestSplit
 
 
 def test_falcon_h2_targets_from_file_extracts_character_targets(tmp_path) -> None:
@@ -18,6 +20,17 @@ def test_falcon_h2_targets_from_file_extracts_character_targets(tmp_path) -> Non
 
     assert len(targets) == 2
     assert targets[0].metadata["session_date"] == "2023-04-17"
+
+
+def test_falcon_h2_split_from_path_uses_falcon_split_names() -> None:
+    assert (
+        falcon_h2_split_from_path("data/h2/sub-T5-held-out-calib/example.nwb")
+        == IngestSplit.HELD_OUT_CALIB
+    )
+    assert (
+        falcon_h2_split_from_path("data/h2/sub-T5-held-in-minival/example.nwb")
+        == IngestSplit.MINIVAL
+    )
 
 
 def test_falcon_h2_baseline_eval_returns_ranked_result(tmp_path) -> None:
