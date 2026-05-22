@@ -133,7 +133,11 @@ def _score_baseline(method_id: str, targets: tuple[WeakTarget, ...]) -> MethodSc
     )
 
 
-def _score_predictions(method_id: str, targets: tuple[WeakTarget, ...], predictions) -> MethodScore:
+def _score_predictions(
+    method_id: str,
+    targets: tuple[WeakTarget, ...],
+    predictions,
+) -> MethodScore:
     predictions_by_sample = {prediction.sample_id: prediction for prediction in predictions}
     losses: list[float] = []
     for target in targets:
@@ -142,7 +146,11 @@ def _score_predictions(method_id: str, targets: tuple[WeakTarget, ...], predicti
             raise ValueError(f"missing prediction for sample_id: {target.sample_id}")
         losses.append(intent_fidelity_loss(target, prediction).value)
     mean_loss = sum(losses) / len(losses)
-    return MethodScore(method_id=method_id, conventional_score=mean_loss, intent_fidelity_score=mean_loss)
+    return MethodScore(
+        method_id=method_id,
+        conventional_score=mean_loss,
+        intent_fidelity_score=mean_loss,
+    )
 
 
 def falcon_h2_split_from_path(path) -> IngestSplit:

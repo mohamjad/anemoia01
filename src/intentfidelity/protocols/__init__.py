@@ -28,6 +28,9 @@ from intentfidelity.protocols.falcon_h2 import (
     falcon_h2_split_from_path,
     falcon_h2_targets_from_file,
 )
+from intentfidelity.protocols.falcon_h2_artifacts import (
+    write_falcon_h2_artifact_bundle,
+)
 from intentfidelity.protocols.comparison import (
     MethodComparisonReport,
     compare_eval_results,
@@ -71,4 +74,5 @@ __all__ = [
     "selection_result",
     "selection_eval_result",
     "synthetic_baseline_eval",
+    "write_falcon_h2_artifact_bundle",
 ]
