@@ -27,6 +27,7 @@ from intentfidelity.ingest.falcon_neural import (
     FalconH2NeuralSummary,
     summarize_falcon_h2_neural,
 )
+from intentfidelity.ingest.falcon_examples import load_falcon_h2_labeled_examples
 
 __all__ = [
     "DataFile",
@@ -46,6 +47,7 @@ __all__ = [
     "inventory_falcon_h2",
     "list_hdf5_datasets",
     "load_falcon_h2_trials",
+    "load_falcon_h2_labeled_examples",
     "require_dataset",
     "resolve_falcon_h2_root",
     "session_date_from_path",
