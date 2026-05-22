@@ -30,9 +30,19 @@ def test_eval_card_uses_weak_target_summary() -> None:
     assert card.method_count == 1
 
 
+def test_eval_card_preserves_evidence_scope() -> None:
+    result = held_out_session_result(
+        "falcon_h2",
+        (MethodScore("baseline", 0.1, 0.2),),
+        baseline_scope="target-construction sanity baselines",
+    )
+    card = EvalCard.from_result(result)
+
+    assert card.evidence_scope == "target-construction sanity baselines"
+
+
 def test_claim_card_json_keeps_claim_narrow() -> None:
     rendered = render_json(default_claim_card())
 
     assert "can be insufficient" in rendered
     assert "No direct access to true intent" in rendered
-

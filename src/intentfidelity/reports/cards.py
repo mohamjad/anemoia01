@@ -77,6 +77,7 @@ class EvalCard:
     method_count: int
     ranking_disagreement: bool | None
     summary: str
+    evidence_scope: str | None = None
 
     @classmethod
     def from_result(cls, result: EvalResult) -> EvalCard:
@@ -95,6 +96,7 @@ class EvalCard:
                 "Evaluation card summarizes fidelity to declared weak target "
                 "distributions, not direct access to intent."
             ),
+            evidence_scope=result.metadata.get("baseline_scope"),
         )
 
     def to_dict(self) -> dict[str, Any]:
@@ -106,6 +108,7 @@ class EvalCard:
             "method_count": self.method_count,
             "ranking_disagreement": self.ranking_disagreement,
             "summary": self.summary,
+            "evidence_scope": self.evidence_scope,
         }
 
 
@@ -148,4 +151,3 @@ def default_claim_card() -> ClaimCard:
             "Real-data evidence is planned after resource ingestion.",
         ),
     )
-
