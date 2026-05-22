@@ -1,0 +1,6 @@
+experiment_id: willett2023_lm_attribution
+dataset_id: willett2023
+protocol: communication
+status: scaffold
+resource_manifest: willett2023
+
