@@ -19,7 +19,11 @@ from intentfidelity.baselines.nearest_centroid import (
     NearestCentroidModel,
     fit_nearest_centroid,
 )
-from intentfidelity.baselines.runner import BaselineRun, run_centroid_baseline
+from intentfidelity.baselines.runner import (
+    BaselineRun,
+    run_centroid_baseline,
+    run_default_centroid_baselines,
+)
 from intentfidelity.baselines.io import (
     read_labeled_examples_csv,
     write_labeled_examples_csv,
@@ -41,6 +45,7 @@ __all__ = [
     "proxy_oracle_prediction",
     "read_labeled_examples_csv",
     "run_centroid_baseline",
+    "run_default_centroid_baselines",
     "sessions_from_examples",
     "session_centering_transform",
     "synthetic_shift_examples",
