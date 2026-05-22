@@ -2,8 +2,10 @@ import h5py
 
 from intentfidelity.protocols.falcon_h2 import (
     falcon_h2_baseline_eval,
+    falcon_h2_prediction_eval,
     falcon_h2_targets_from_file,
 )
+from intentfidelity.labels import Prediction
 
 
 def test_falcon_h2_targets_from_file_extracts_character_targets(tmp_path) -> None:
@@ -28,6 +30,19 @@ def test_falcon_h2_baseline_eval_returns_ranked_result(tmp_path) -> None:
     assert result.ranking_disagreement is not None
 
 
+def test_falcon_h2_prediction_eval_scores_external_predictions(tmp_path) -> None:
+    path = _write_h2_file(tmp_path)
+    targets = falcon_h2_targets_from_file(path)
+    predictions = tuple(
+        Prediction(target.sample_id, target.probabilities, "decoder") for target in targets
+    )
+
+    result = falcon_h2_prediction_eval(path, {"decoder": predictions})
+
+    assert result.method_scores[0].method_id == "decoder"
+    assert result.method_scores[0].intent_fidelity_score == 0.0
+
+
 def _write_h2_file(tmp_path):
     path = tmp_path / "sub-T5-held-out-calib_ses-20230417.nwb"
     with h5py.File(path, "w") as handle:
@@ -40,4 +55,3 @@ def _write_h2_file(tmp_path):
         handle.create_dataset("acquisition/binned_spikes/timestamps", data=[0.0])
         handle.create_dataset("acquisition/eval_mask/data", data=[True])
     return path
-
