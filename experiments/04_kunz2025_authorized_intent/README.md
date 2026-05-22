@@ -3,5 +3,5 @@
 Purpose: reserve an authorization-evaluation path for declared weak targets that
 include authorization states.
 
-No ingestion is implemented in pass 1.
-
+The pass-4 runner emits a synthetic authorization `EvalResult` from explicit
+authorization-state proxy events. No real-data ingestion is implemented.
