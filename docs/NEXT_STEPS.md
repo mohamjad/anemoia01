@@ -2,8 +2,8 @@
 
 ## Recommended Path
 
-Use the FALCON H2 artifact bundle path for the next local evidence run, then
-move to a downloaded FALCON H2 dataset run when files are available locally.
+Use the completed minimal FALCON H2 downloaded-data bundle run as the local
+evidence handoff, then expand to fuller method baselines or full split coverage.
 
 Why FALCON H2:
 
@@ -70,6 +70,8 @@ data root
 
 Only after the FALCON H2 bundle is stable:
 
+- full downloaded FALCON H2 split coverage instead of the minimal one-file-per-split run
+- feature-baseline artifact bundles using train/test NWB inputs
 - real Card/Willett speech-path ingestion
 - Kunz authorization event extraction
 - AJILE12 naturalistic event extraction

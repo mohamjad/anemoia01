@@ -62,6 +62,11 @@ intentfidelity eval falcon-h2-validate-bundle outputs/falcon-h2-bundle
 The validator checks expected artifacts, loadability, count consistency,
 source-file hashes, evidence-level consistency, and report proxy-scope wording.
 
+One minimal downloaded-data FALCON H2 bundle run is recorded in
+`docs/FALCON_H2_LOCAL_RUN.md`. It uses one downloaded NWB file per required
+split and remains scoped to declared cue-character proxy targets and sanity
+baselines.
+
 ## Invariants
 
 - Do not claim direct access to true intent.

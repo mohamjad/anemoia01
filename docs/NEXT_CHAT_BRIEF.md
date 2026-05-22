@@ -59,6 +59,10 @@ The command defaults to `fixture_evidence`. Use `--evidence-level
 downloaded_dataset_evidence` only for local runs against downloaded FALCON H2
 files.
 
+A minimal downloaded-data run is recorded in `docs/FALCON_H2_LOCAL_RUN.md`.
+It uses one NWB file per required split and reports only proxy-oracle and
+uniform sanity baselines against declared cue-character weak target proxies.
+
 Do not backdate commits or fabricate history.
 
 Keep claims narrow:
