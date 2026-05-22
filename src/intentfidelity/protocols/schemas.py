@@ -14,6 +14,7 @@ class ProtocolType(StrEnum):
     COMMUNICATION = "communication"
     AUTHORIZATION = "authorization"
     NATURALISTIC_WEAK_LABEL = "naturalistic_weak_label"
+    SELECTION = "selection"
 
 
 @dataclass(frozen=True)
@@ -150,6 +151,20 @@ def naturalistic_weak_label_result(
     )
 
 
+def selection_result(
+    dataset_id: str,
+    method_scores: tuple[MethodScore, ...],
+    **metadata: Any,
+) -> EvalResult:
+    return EvalResult(
+        dataset_id=dataset_id,
+        protocol=ProtocolType.SELECTION,
+        method_scores=method_scores,
+        primary_metric="selection_intent_fidelity_loss",
+        metadata=metadata,
+    )
+
+
 def _ranking_to_dict(ranking: RankingDisagreement | None) -> dict[str, Any] | None:
     if ranking is None:
         return None
@@ -168,4 +183,3 @@ def _ranking_from_dict(payload: dict[str, Any]) -> RankingDisagreement:
         kendall_tau_distance=int(payload["kendall_tau_distance"]),
         has_disagreement=bool(payload["has_disagreement"]),
     )
-
