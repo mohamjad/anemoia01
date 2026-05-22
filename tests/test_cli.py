@@ -4,6 +4,7 @@ from pathlib import Path
 import h5py
 
 from intentfidelity.cli.main import main
+from intentfidelity.baselines import LabeledExample, write_labeled_examples_csv
 from intentfidelity.labels import Prediction, write_predictions_jsonl
 from intentfidelity.metrics import MethodScore, ranking_disagreement
 from intentfidelity.protocols import EvalResult, ProtocolType
@@ -122,6 +123,24 @@ def test_nwb_summary_command_lists_hdf5_datasets(tmp_path: Path, capsys) -> None
     assert main(["ingest", "nwb-summary", str(path)]) == 0
 
     assert "x/y" in capsys.readouterr().out
+
+
+def test_baselines_centroid_command_outputs_predictions(tmp_path: Path, capsys) -> None:
+    train = tmp_path / "train.csv"
+    test = tmp_path / "test.csv"
+    write_labeled_examples_csv(
+        (
+            LabeledExample("train-a", "a", [0.0], "s1"),
+            LabeledExample("train-b", "b", [10.0], "s1"),
+        ),
+        train,
+    )
+    write_labeled_examples_csv((LabeledExample("test-a", "a", [1.0], "s2"),), test)
+
+    assert main(["baselines", "centroid", str(train), str(test)]) == 0
+
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["test_count"] == 1
 
 
 def test_falcon_h2_assets_command_can_be_patched(monkeypatch, capsys) -> None:

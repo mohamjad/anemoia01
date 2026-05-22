@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import sys
 
+from intentfidelity.baselines import read_labeled_examples_csv, run_centroid_baseline
 from intentfidelity.figures import render_ranking_reversal
 from intentfidelity.ingest import inventory_falcon_h2, list_hdf5_datasets
 from intentfidelity.labels import read_predictions_jsonl, write_weak_targets_jsonl
@@ -99,6 +100,13 @@ def build_parser() -> argparse.ArgumentParser:
     ranking = figure_subparsers.add_parser("ranking-reversal")
     ranking.add_argument("result_json", type=Path)
     _add_handler(ranking, _figure_ranking_reversal)
+
+    baselines_parser = subparsers.add_parser("baselines")
+    baselines_subparsers = baselines_parser.add_subparsers(dest="baselines_command")
+    centroid = baselines_subparsers.add_parser("centroid")
+    centroid.add_argument("train_csv", type=Path)
+    centroid.add_argument("test_csv", type=Path)
+    _add_handler(centroid, _baselines_centroid)
 
     return parser
 
@@ -208,6 +216,25 @@ def _report_eval_card(args: argparse.Namespace) -> None:
 
 def _figure_ranking_reversal(args: argparse.Namespace) -> None:
     print(render_ranking_reversal(_load_eval_result(args.result_json)), end="")
+
+
+def _baselines_centroid(args: argparse.Namespace) -> None:
+    run = run_centroid_baseline(
+        read_labeled_examples_csv(args.train_csv),
+        read_labeled_examples_csv(args.test_csv),
+    )
+    print(
+        json.dumps(
+            {
+                "method_id": run.method_id,
+                "train_count": run.train_count,
+                "test_count": run.test_count,
+                "predictions": [prediction.to_dict() for prediction in run.predictions],
+            },
+            indent=2,
+            sort_keys=True,
+        )
+    )
 
 
 def _load_eval_result(path: Path) -> EvalResult:
