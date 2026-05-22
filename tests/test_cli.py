@@ -111,6 +111,16 @@ def test_falcon_h2_predictions_command_scores_jsonl(tmp_path: Path, capsys) -> N
     assert payload["method_scores"][0]["method_id"] == "decoder"
 
 
+def test_nwb_summary_command_lists_hdf5_datasets(tmp_path: Path, capsys) -> None:
+    path = tmp_path / "sample.nwb"
+    with h5py.File(path, "w") as handle:
+        handle.create_dataset("x/y", data=[1])
+
+    assert main(["ingest", "nwb-summary", str(path)]) == 0
+
+    assert "x/y" in capsys.readouterr().out
+
+
 def test_falcon_h2_assets_command_can_be_patched(monkeypatch, capsys) -> None:
     class Asset:
         asset_id = "abc"

@@ -6,7 +6,7 @@ from pathlib import Path
 import sys
 
 from intentfidelity.figures import render_ranking_reversal
-from intentfidelity.ingest import inventory_falcon_h2
+from intentfidelity.ingest import inventory_falcon_h2, list_hdf5_datasets
 from intentfidelity.labels import read_predictions_jsonl, write_weak_targets_jsonl
 from intentfidelity.protocols import EvalResult, falcon_h2_baseline_eval, load_eval_result
 from intentfidelity.protocols import falcon_h2_targets_from_file
@@ -68,6 +68,9 @@ def build_parser() -> argparse.ArgumentParser:
     falcon_h2_inventory.add_argument("data_root", type=Path)
     falcon_h2_inventory.add_argument("--json", action="store_true")
     _add_handler(falcon_h2_inventory, _ingest_falcon_h2_inventory)
+    nwb_summary = ingest_subparsers.add_parser("nwb-summary")
+    nwb_summary.add_argument("nwb_file", type=Path)
+    _add_handler(nwb_summary, _ingest_nwb_summary)
 
     report_parser = subparsers.add_parser("report")
     report_subparsers = report_parser.add_subparsers(dest="report_command")
@@ -170,6 +173,11 @@ def _ingest_falcon_h2_inventory(args: argparse.Namespace) -> None:
     for issue in inventory.issues:
         location = f" ({issue.path})" if issue.path else ""
         print(f"{issue.severity.value}: {issue.code}: {issue.message}{location}")
+
+
+def _ingest_nwb_summary(args: argparse.Namespace) -> None:
+    for dataset in list_hdf5_datasets(args.nwb_file):
+        print(f"{dataset.path}\t{dataset.shape}\t{dataset.dtype}")
 
 
 def _report_eval_card(args: argparse.Namespace) -> None:
