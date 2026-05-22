@@ -21,6 +21,7 @@ from intentfidelity.protocols.comparison import (
     compare_eval_results,
 )
 from intentfidelity.protocols.synthetic import synthetic_baseline_eval
+from intentfidelity.protocols.communication import communication_eval_result
 
 __all__ = [
     "EvalResult",
@@ -28,6 +29,7 @@ __all__ = [
     "ProtocolType",
     "authorization_result",
     "communication_result",
+    "communication_eval_result",
     "compare_eval_results",
     "few_shot_recalibration_result",
     "falcon_h2_baseline_eval",
