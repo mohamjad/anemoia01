@@ -40,6 +40,23 @@ def identity_transform(examples: Sequence[LabeledExample]) -> FeatureTransform:
     )
 
 
+def session_centering_transform(examples: Sequence[LabeledExample]) -> FeatureTransform:
+    dimension = feature_dimension(examples)
+    grouped = _examples_by_session(examples)
+    return FeatureTransform(
+        method_id="session_centering",
+        offsets={
+            session: _mean_vector([example.features for example in session_examples], dimension)
+            for session, session_examples in grouped.items()
+        },
+        scales={session: (1.0,) * dimension for session in grouped},
+    )
+
+
+def _mean_vector(vectors: Sequence[tuple[float, ...]], dimension: int) -> tuple[float, ...]:
+    return tuple(sum(vector[index] for vector in vectors) / len(vectors) for index in range(dimension))
+
+
 def _apply_affine(
     features: tuple[float, ...],
     offset: tuple[float, ...] | None,
@@ -57,4 +74,3 @@ def _examples_by_session(
     for example in examples:
         grouped[example.session_id].append(example)
     return grouped
-
