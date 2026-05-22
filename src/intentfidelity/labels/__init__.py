@@ -43,6 +43,10 @@ from intentfidelity.labels.authorization import (
     AuthorizationState,
     weak_target_from_authorization_event,
 )
+from intentfidelity.labels.authorization_io import (
+    read_authorization_events_jsonl,
+    write_authorization_events_jsonl,
+)
 
 __all__ = [
     "AuthorizationEvent",
@@ -63,6 +67,7 @@ __all__ = [
     "normalize_text",
     "prediction_from_dict",
     "read_predictions_jsonl",
+    "read_authorization_events_jsonl",
     "read_text_predictions_jsonl",
     "read_text_targets_jsonl",
     "read_weak_targets_jsonl",
@@ -73,6 +78,7 @@ __all__ = [
     "handwriting_cues_from_trial",
     "weak_targets_from_trials",
     "write_predictions_jsonl",
+    "write_authorization_events_jsonl",
     "write_text_predictions_jsonl",
     "write_text_targets_jsonl",
     "write_weak_targets_jsonl",

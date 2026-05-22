@@ -1,5 +1,6 @@
-from intentfidelity.labels import AuthorizationEvent, AuthorizationState
-from intentfidelity.labels.authorization_io import (
+from intentfidelity.labels import (
+    AuthorizationEvent,
+    AuthorizationState,
     read_authorization_events_jsonl,
     write_authorization_events_jsonl,
 )
