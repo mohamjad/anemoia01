@@ -1,0 +1,6 @@
+experiment_id: card2024_speech_fidelity
+dataset_id: card2024
+protocol: communication
+status: scaffold
+resource_manifest: card2024
+
