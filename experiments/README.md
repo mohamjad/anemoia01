@@ -1,7 +1,9 @@
 # Experiments
 
-These folders are pass-1 scaffolds. They define expected evaluation paths and
-outputs, but they do not ingest real datasets yet.
+These folders define expected evaluation paths and outputs. FALCON H2 has the
+first local-data-ready path; the speech, authorization, naturalistic, and
+selection folders are synthetic protocol scaffolds until dataset-specific
+ingestion is implemented.
 
 The synthetic experiment is only a sanity check. Real-data evidence starts with
 FALCON H2 after ingestion is implemented.

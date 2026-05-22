@@ -145,7 +145,10 @@ def default_claim_card() -> ClaimCard:
             "This is an evaluation-infrastructure claim about disagreement "
             "between conventional metrics and intent-fidelity metrics."
         ),
-        evidence_status="architecture and synthetic sanity checks only in pass 1",
+        evidence_status=(
+            "architecture, fixture-backed FALCON H2 plumbing, and synthetic "
+            "protocol scaffolds"
+        ),
         caveats=(
             "No direct access to true intent is claimed.",
             "Real-data evidence is planned after resource ingestion.",
