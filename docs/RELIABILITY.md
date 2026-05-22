@@ -21,6 +21,12 @@ pytest tests/test_resource_registry.py tests/test_resource_schema.py -q
 For CLI changes, test the command in `tests/test_cli.py` and verify the output
 contract, not only exit status.
 
+For FALCON H2 bundle changes, run:
+
+```text
+pytest tests/test_falcon_h2_artifacts.py tests/test_cli.py -q
+```
+
 ## Evidence Levels
 
 Use these terms consistently:
@@ -55,6 +61,10 @@ A complete evaluation handoff should include:
 - report card or protocol Markdown
 - test command used to validate the run
 - data provenance and limitations
+
+The FALCON H2 bundle command writes these artifacts directly and records
+`evidence_level`, `target_type`, file counts, target counts, and prediction
+counts in `bundle_manifest.json` and `result.json` metadata.
 
 ## Review Checklist
 

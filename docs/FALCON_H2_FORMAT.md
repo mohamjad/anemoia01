@@ -16,3 +16,5 @@ Cue strings use `>` as a space marker and `~` as a period marker. Weak target
 construction treats these as declared prompt proxies, not direct observations of
 intent.
 
+The artifact bundle command consumes the same paths and writes the reproducible
+bundle described in `docs/FALCON_H2_BUNDLE.md`.

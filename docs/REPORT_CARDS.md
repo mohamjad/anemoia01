@@ -12,6 +12,11 @@ target distributions and do not claim access to true intent.
 Eval cards preserve `evidence_scope` when the underlying `EvalResult` records
 whether a run used sanity baselines or supplied predictions.
 
+FALCON H2 artifact bundles write `eval_card.md` and `comparison.md`. Both state
+that cue-character targets are declared weak target proxies and do not imply
+direct access to true intent. Fixture bundle cards also state that fixture
+results are not downloaded FALCON H2 dataset evidence.
+
 Pass 4 adds focused Markdown renderers for:
 
 - communication evaluation results

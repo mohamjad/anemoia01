@@ -37,6 +37,7 @@ Every implementation change should have a focused test:
 - report output: `tests/test_*_report.py`
 - CLI behavior: `tests/test_cli.py`
 - experiment runner: `tests/test_*_experiment.py`
+- artifact bundles: `tests/test_*_artifacts.py`
 
 Run the full suite before pushing:
 

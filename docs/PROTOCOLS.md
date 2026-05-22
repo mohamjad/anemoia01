@@ -19,6 +19,14 @@ FALCON H2 now has a held-out-session path that can:
 - score target-construction sanity baselines
 - score external prediction JSONL files
 - run centroid feature baselines over character-window neural summaries
+- write a reproducible local artifact bundle with inventory, targets,
+  predictions, `EvalResult` JSON, eval card, comparison report, and bundle
+  manifest
+
+The bundle path is fixture-backed and local-data ready. Fixture bundles validate
+the protocol flow only; they are not downloaded dataset evidence unless the
+command is run against downloaded FALCON H2 files with that evidence level
+recorded.
 
 Method comparison reports can summarize ranking disagreement for one result and
 over-adaptation events between two results.

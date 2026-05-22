@@ -46,6 +46,13 @@ Build a real FALCON H2 evidence pass:
 4. Add docs that distinguish fixture evidence from downloaded dataset evidence.
 5. Run the full suite and push small commits.
 
+Current implementation includes `intentfidelity eval falcon-h2-bundle`, which
+writes `inventory.json`, `targets.jsonl`, `predictions.jsonl`, `result.json`,
+`eval_card.md`, `comparison.md`, and `bundle_manifest.json`. The command
+defaults to `fixture_evidence`; pass `--evidence-level
+downloaded_dataset_evidence` only for local runs against downloaded FALCON H2
+files.
+
 ## Invariants
 
 - Do not claim direct access to true intent.

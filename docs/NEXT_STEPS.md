@@ -2,7 +2,8 @@
 
 ## Recommended Path
 
-Start a real FALCON H2 evidence pass.
+Use the FALCON H2 artifact bundle path for the next local evidence run, then
+move to a downloaded FALCON H2 dataset run when files are available locally.
 
 Why FALCON H2:
 
@@ -13,7 +14,8 @@ Why FALCON H2:
 
 ## Pass Objective
 
-Produce a reproducible local evaluation bundle from FALCON H2 files:
+The current bundle implementation produces a reproducible local evaluation
+bundle from FALCON H2 files:
 
 ```text
 data root
@@ -27,27 +29,23 @@ data root
 
 ## Concrete Work Items
 
-1. Add an artifact bundle schema.
-   - Suggested module: `src/intentfidelity/protocols/artifacts.py`
-   - Include paths, dataset id, protocol, evidence level, and generated files.
+1. Run the fixture-backed bundle command when checking the local contract:
 
-2. Add a FALCON H2 bundle writer.
-   - Suggested module: `src/intentfidelity/protocols/falcon_h2_artifacts.py`
-   - Inputs: NWB path or inventory root.
-   - Outputs: target JSONL, prediction JSONL, result JSON, eval card Markdown.
+   ```text
+   intentfidelity eval falcon-h2-bundle <fixture.nwb> outputs/falcon-h2-fixture
+   ```
 
-3. Add a CLI command.
-   - Suggested command: `intentfidelity eval falcon-h2-bundle <nwb-file> <output-dir>`
-   - Keep it deterministic and testable with synthetic HDF5 fixtures.
+2. For downloaded FALCON H2 files, run:
 
-4. Add tests before touching downloaded data.
-   - Extend `tests/test_cli.py`.
-   - Add a focused artifact test.
-   - Reuse the existing synthetic H2 fixture shape.
+   ```text
+   intentfidelity eval falcon-h2-bundle data outputs/falcon-h2-bundle --evidence-level downloaded_dataset_evidence
+   ```
 
-5. Add evidence documentation.
-   - Document fixture evidence separately from downloaded dataset evidence.
-   - Record exact commands used to generate artifacts.
+3. Inspect `eval_card.md`, `comparison.md`, and `bundle_manifest.json` before
+   treating the output as a reported result.
+
+4. Keep fixture results scoped as fixture evidence. Do not describe them as
+   downloaded dataset evidence.
 
 ## Acceptance Criteria
 
@@ -57,6 +55,8 @@ data root
 - The eval card states the evidence scope.
 - No report implies direct access to true intent.
 - Docs explain how to reproduce the run.
+- A downloaded-data bundle should record the local data path and exact command
+  used to generate artifacts.
 
 ## Deferred Work
 

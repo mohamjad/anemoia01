@@ -27,7 +27,8 @@ selection.
 Current task frontier:
 
 ```text
-Move from synthetic protocol scaffolds into real-data ingestion and evaluation.
+Use the FALCON H2 artifact bundle path for local evidence runs, then run it
+against downloaded FALCON H2 files when available.
 ```
 
 Read these before starting the next implementation pass:
@@ -45,6 +46,17 @@ Completed scaffold passes:
 4. Communication, language-prior, and authorization scaffolds.
 5. Naturalistic weak-label scaffolding.
 6. Selection weak-target scaffolding.
+7. Fixture-backed FALCON H2 artifact bundle flow.
+
+FALCON H2 bundle command:
+
+```text
+intentfidelity eval falcon-h2-bundle <nwb-or-data-root> <output-dir>
+```
+
+The command defaults to `fixture_evidence`. Use `--evidence-level
+downloaded_dataset_evidence` only for local runs against downloaded FALCON H2
+files.
 
 Do not backdate commits or fabricate history.
 

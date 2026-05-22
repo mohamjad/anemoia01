@@ -50,3 +50,23 @@ For a new dataset path:
 7. Add a CLI command only after the Python API is tested.
 8. Add or update an experiment scaffold.
 9. Update docs and evidence scope.
+
+## Artifact Bundle Flow
+
+FALCON H2 now has a local bundle writer:
+
+```text
+NWB/HDF5 file or FALCON H2 data root
+-> inventory.json
+-> targets.jsonl
+-> predictions.jsonl
+-> result.json
+-> eval_card.md
+-> comparison.md
+-> bundle_manifest.json
+```
+
+The implementation keeps ingestion, target construction, baseline prediction,
+protocol scoring, and report rendering in separate modules. Bundle metadata
+records evidence level and target type so fixture results are not confused with
+downloaded dataset evidence.
