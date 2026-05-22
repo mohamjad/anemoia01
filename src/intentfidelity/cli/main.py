@@ -9,7 +9,7 @@ from intentfidelity.figures import render_ranking_reversal
 from intentfidelity.ingest import inventory_falcon_h2
 from intentfidelity.protocols import EvalResult, falcon_h2_baseline_eval, load_eval_result
 from intentfidelity.reports import DatasetCard, EvalCard, render_json, render_markdown
-from intentfidelity.resources import get_manifest, load_manifests
+from intentfidelity.resources import fetch_dandi_assets, get_manifest, load_manifests
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -37,6 +37,9 @@ def build_parser() -> argparse.ArgumentParser:
     resources_card.add_argument("dataset_id")
     resources_card.add_argument("--format", choices=("markdown", "json"), default="markdown")
     _add_handler(resources_card, _resources_card)
+    dandi_assets = resources_subparsers.add_parser("falcon-h2-assets")
+    dandi_assets.add_argument("--json", action="store_true")
+    _add_handler(dandi_assets, _resources_falcon_h2_assets)
 
     eval_parser = subparsers.add_parser("eval")
     eval_subparsers = eval_parser.add_subparsers(dest="eval_command")
@@ -95,6 +98,15 @@ def _resources_validate(_: argparse.Namespace) -> None:
 def _resources_card(args: argparse.Namespace) -> None:
     card = DatasetCard.from_manifest(get_manifest(args.dataset_id))
     _print_card(card, args.format)
+
+
+def _resources_falcon_h2_assets(args: argparse.Namespace) -> None:
+    assets = fetch_dandi_assets()
+    if args.json:
+        print(json.dumps([asset.__dict__ for asset in assets], indent=2, sort_keys=True))
+        return
+    for asset in assets:
+        print(f"{asset.path}\t{asset.size}")
 
 
 def _report_dataset_card(args: argparse.Namespace) -> None:

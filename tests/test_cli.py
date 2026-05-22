@@ -89,3 +89,16 @@ def test_falcon_h2_baseline_eval_command_outputs_json(tmp_path: Path, capsys) ->
     payload = json.loads(capsys.readouterr().out)
     assert payload["dataset_id"] == "falcon_h2"
     assert len(payload["method_scores"]) == 2
+
+
+def test_falcon_h2_assets_command_can_be_patched(monkeypatch, capsys) -> None:
+    class Asset:
+        asset_id = "abc"
+        path = "sub-T5-held-out-calib/file.nwb"
+        size = 123
+
+    monkeypatch.setattr("intentfidelity.cli.main.fetch_dandi_assets", lambda: (Asset(),))
+
+    assert main(["resources", "falcon-h2-assets"]) == 0
+
+    assert "sub-T5-held-out-calib/file.nwb" in capsys.readouterr().out
