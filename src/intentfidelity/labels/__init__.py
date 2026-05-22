@@ -21,6 +21,10 @@ from intentfidelity.labels.cue_text import (
     cue_support,
     normalize_h2_cue,
 )
+from intentfidelity.labels.falcon_h2 import (
+    handwriting_cues_from_trial,
+    weak_targets_from_trials,
+)
 
 __all__ = [
     "DistributionValidationError",
@@ -38,4 +42,6 @@ __all__ = [
     "require_same_support",
     "weak_target_from_dict",
     "weak_target_from_handwriting_cue",
+    "handwriting_cues_from_trial",
+    "weak_targets_from_trials",
 ]
