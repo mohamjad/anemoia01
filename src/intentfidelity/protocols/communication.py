@@ -5,6 +5,7 @@ from typing import Iterable
 
 from intentfidelity.labels import TextPrediction, TextTarget
 from intentfidelity.metrics import MethodScore, character_error_rate, word_error_rate
+from intentfidelity.metrics import ranking_disagreement
 from intentfidelity.protocols.schemas import EvalResult, ProtocolType
 
 
@@ -40,6 +41,8 @@ def communication_eval_result(
         protocol=ProtocolType.COMMUNICATION,
         method_scores=method_scores,
         primary_metric=metric,
+        ranking_disagreement=ranking_disagreement(method_scores)
+        if len(method_scores) > 1
+        else None,
         metadata={"target_type": "text_transcript_proxy"},
     )
-

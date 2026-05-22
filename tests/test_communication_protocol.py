@@ -14,3 +14,15 @@ def test_communication_eval_result_scores_text_predictions() -> None:
     assert result.method_scores[0].method_id == "decoder"
     assert result.primary_metric == "character_error_rate"
 
+
+def test_communication_eval_result_adds_ranking_for_multiple_methods() -> None:
+    result = communication_eval_result(
+        targets=(TextTarget("utt-1", "hello", "prompt"),),
+        predictions=(
+            TextPrediction("utt-1", "hello", "good"),
+            TextPrediction("utt-1", "xxxxx", "bad"),
+        ),
+        dataset_id="card2024",
+    )
+
+    assert result.ranking_disagreement is not None
