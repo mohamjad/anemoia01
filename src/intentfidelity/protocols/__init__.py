@@ -23,12 +23,14 @@ from intentfidelity.protocols.comparison import (
 from intentfidelity.protocols.synthetic import synthetic_baseline_eval
 from intentfidelity.protocols.communication import communication_eval_result
 from intentfidelity.protocols.language_prior import language_prior_report
+from intentfidelity.protocols.authorization import authorization_eval_result
 
 __all__ = [
     "EvalResult",
     "MethodComparisonReport",
     "ProtocolType",
     "authorization_result",
+    "authorization_eval_result",
     "communication_result",
     "communication_eval_result",
     "compare_eval_results",
