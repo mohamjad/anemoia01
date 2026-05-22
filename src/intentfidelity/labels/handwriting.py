@@ -20,7 +20,7 @@ class HandwritingCue:
     def __post_init__(self) -> None:
         if not self.sample_id.strip():
             raise DistributionValidationError("sample_id must be a non-empty string")
-        if not self.prompted_label.strip():
+        if self.prompted_label == "":
             raise DistributionValidationError("prompted_label must be a non-empty string")
         if self.window_end <= self.window_start:
             raise DistributionValidationError("window_end must be greater than window_start")
@@ -64,4 +64,3 @@ def weak_target_from_handwriting_cue(
         source_type=HANDWRITING_SOURCE_TYPE,
         metadata=metadata,
     )
-

@@ -87,7 +87,7 @@ def normalize_probabilities(probabilities: Mapping[str, float]) -> dict[str, flo
     clean: dict[str, float] = {}
     total = 0.0
     for label, value in probabilities.items():
-        if not isinstance(label, str) or not label.strip():
+        if not isinstance(label, str) or label == "":
             raise DistributionValidationError("distribution labels must be non-empty strings")
         if not isinstance(value, int | float) or isinstance(value, bool):
             raise DistributionValidationError("distribution probabilities must be numeric")
