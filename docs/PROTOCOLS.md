@@ -34,3 +34,7 @@ These scaffolds expose the protocol contracts before real speech-path ingestion.
 Pass 5 adds a naturalistic weak-label evaluator for AJILE12-style behavior
 proxies. It scores predictions against confidence-weighted weak targets and
 records proxy confidence and ambiguity metadata on the `EvalResult`.
+
+Pass 6 adds an explicit selection protocol for bigP3BCI-style P300 symbol
+selection. It scores predictions against prompted-symbol weak targets and
+records proxy confidence plus observed selection accuracy metadata.
