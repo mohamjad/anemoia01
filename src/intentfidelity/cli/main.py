@@ -1,12 +1,11 @@
 from __future__ import annotations
 
 import argparse
-import json
 from pathlib import Path
 import sys
 
 from intentfidelity.figures import render_ranking_reversal
-from intentfidelity.protocols import EvalResult
+from intentfidelity.protocols import EvalResult, load_eval_result
 from intentfidelity.reports import DatasetCard, EvalCard, render_json, render_markdown
 from intentfidelity.resources import get_manifest, load_manifests
 
@@ -109,9 +108,7 @@ def _figure_ranking_reversal(args: argparse.Namespace) -> None:
 
 
 def _load_eval_result(path: Path) -> EvalResult:
-    with path.open("r", encoding="utf-8") as handle:
-        payload = json.load(handle)
-    return EvalResult.from_dict(payload)
+    return load_eval_result(path)
 
 
 def _print_card(card: object, output_format: str) -> None:
@@ -123,4 +120,3 @@ def _print_card(card: object, output_format: str) -> None:
 
 if __name__ == "__main__":
     raise SystemExit(main(sys.argv[1:]))
-
