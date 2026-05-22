@@ -19,8 +19,10 @@ from intentfidelity.baselines.nearest_centroid import (
     NearestCentroidModel,
     fit_nearest_centroid,
 )
+from intentfidelity.baselines.runner import BaselineRun, run_centroid_baseline
 
 __all__ = [
+    "BaselineRun",
     "BaselineSpec",
     "FeatureTransform",
     "LabeledExample",
@@ -32,6 +34,7 @@ __all__ = [
     "labels_from_examples",
     "list_baselines",
     "proxy_oracle_prediction",
+    "run_centroid_baseline",
     "sessions_from_examples",
     "session_centering_transform",
     "uniform_prediction",
