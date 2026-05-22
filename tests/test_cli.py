@@ -60,6 +60,9 @@ def test_eval_summary_and_figure_commands(tmp_path: Path, capsys) -> None:
     assert main(["figure", "ranking-reversal", str(path)]) == 0
     assert "accuracy_first -> proxy_faithful" in capsys.readouterr().out
 
+    assert main(["eval", "compare", str(path), "--format", "markdown"]) == 0
+    assert "Method Comparison Report" in capsys.readouterr().out
+
 
 def test_falcon_h2_inventory_command_reports_layout(tmp_path: Path, capsys) -> None:
     h2_root = tmp_path / "h2"

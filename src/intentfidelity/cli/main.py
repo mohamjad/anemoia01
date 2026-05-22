@@ -8,10 +8,16 @@ import sys
 from intentfidelity.figures import render_ranking_reversal
 from intentfidelity.ingest import inventory_falcon_h2, list_hdf5_datasets
 from intentfidelity.labels import read_predictions_jsonl, write_weak_targets_jsonl
-from intentfidelity.protocols import EvalResult, falcon_h2_baseline_eval, load_eval_result
+from intentfidelity.protocols import (
+    EvalResult,
+    compare_eval_results,
+    falcon_h2_baseline_eval,
+    load_eval_result,
+)
 from intentfidelity.protocols import falcon_h2_targets_from_file
 from intentfidelity.protocols import falcon_h2_prediction_eval
 from intentfidelity.reports import DatasetCard, EvalCard, render_json, render_markdown
+from intentfidelity.reports import render_comparison_markdown
 from intentfidelity.resources import fetch_dandi_assets, get_manifest, load_manifests
 
 
@@ -49,6 +55,11 @@ def build_parser() -> argparse.ArgumentParser:
     eval_summary = eval_subparsers.add_parser("summarize")
     eval_summary.add_argument("result_json", type=Path)
     _add_handler(eval_summary, _eval_summarize)
+    eval_compare = eval_subparsers.add_parser("compare")
+    eval_compare.add_argument("before_json", type=Path)
+    eval_compare.add_argument("after_json", type=Path, nargs="?")
+    eval_compare.add_argument("--format", choices=("json", "markdown"), default="json")
+    _add_handler(eval_compare, _eval_compare)
     falcon_h2_eval = eval_subparsers.add_parser("falcon-h2-baselines")
     falcon_h2_eval.add_argument("nwb_file", type=Path)
     falcon_h2_eval.add_argument("--output", type=Path)
@@ -135,6 +146,16 @@ def _eval_summarize(args: argparse.Namespace) -> None:
     print(f"Methods: {len(result.method_scores)}")
     if result.ranking_disagreement is not None:
         print(f"Ranking disagreement: {result.ranking_disagreement.has_disagreement}")
+
+
+def _eval_compare(args: argparse.Namespace) -> None:
+    before = load_eval_result(args.before_json)
+    after = load_eval_result(args.after_json) if args.after_json else None
+    report = compare_eval_results(before, after)
+    if args.format == "markdown":
+        print(render_comparison_markdown(report), end="")
+        return
+    print(json.dumps(report.to_dict(), indent=2, sort_keys=True))
 
 
 def _eval_falcon_h2_baselines(args: argparse.Namespace) -> None:
