@@ -15,12 +15,18 @@ from intentfidelity.baselines.transforms import (
     whitening_coloring_transform,
     whitening_transform,
 )
+from intentfidelity.baselines.nearest_centroid import (
+    NearestCentroidModel,
+    fit_nearest_centroid,
+)
 
 __all__ = [
     "BaselineSpec",
     "FeatureTransform",
     "LabeledExample",
+    "NearestCentroidModel",
     "feature_dimension",
+    "fit_nearest_centroid",
     "get_baseline",
     "identity_transform",
     "labels_from_examples",
