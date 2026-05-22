@@ -167,6 +167,17 @@ def test_baselines_centroid_command_outputs_predictions(tmp_path: Path, capsys) 
     assert payload["test_count"] == 1
 
 
+def test_baselines_list_command_outputs_implemented_methods(capsys) -> None:
+    assert main(["baselines", "list", "--implemented"]) == 0
+
+    payload = json.loads(capsys.readouterr().out)
+    assert [item["method_id"] for item in payload] == [
+        "identity",
+        "session_centering",
+        "whitening_coloring",
+    ]
+
+
 def test_falcon_h2_assets_command_can_be_patched(monkeypatch, capsys) -> None:
     class Asset:
         asset_id = "abc"

@@ -5,7 +5,12 @@ import json
 from pathlib import Path
 import sys
 
-from intentfidelity.baselines import read_labeled_examples_csv, run_centroid_baseline
+from intentfidelity.baselines import (
+    list_baselines,
+    list_implemented_baselines,
+    read_labeled_examples_csv,
+    run_centroid_baseline,
+)
 from intentfidelity.figures import render_comparison_table, render_ranking_reversal
 from intentfidelity.ingest import inventory_falcon_h2, list_hdf5_datasets
 from intentfidelity.labels import read_predictions_jsonl, write_weak_targets_jsonl
@@ -112,6 +117,9 @@ def build_parser() -> argparse.ArgumentParser:
 
     baselines_parser = subparsers.add_parser("baselines")
     baselines_subparsers = baselines_parser.add_subparsers(dest="baselines_command")
+    baselines_list = baselines_subparsers.add_parser("list")
+    baselines_list.add_argument("--implemented", action="store_true")
+    _add_handler(baselines_list, _baselines_list)
     centroid = baselines_subparsers.add_parser("centroid")
     centroid.add_argument("train_csv", type=Path)
     centroid.add_argument("test_csv", type=Path)
@@ -261,6 +269,11 @@ def _baselines_centroid(args: argparse.Namespace) -> None:
             sort_keys=True,
         )
     )
+
+
+def _baselines_list(args: argparse.Namespace) -> None:
+    baselines = list_implemented_baselines() if args.implemented else list_baselines()
+    print(json.dumps([baseline.to_dict() for baseline in baselines], indent=2, sort_keys=True))
 
 
 def _load_eval_result(path: Path) -> EvalResult:
