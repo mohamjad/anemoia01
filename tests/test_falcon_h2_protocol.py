@@ -2,8 +2,10 @@ import h5py
 
 from intentfidelity.protocols.falcon_h2 import (
     falcon_h2_baseline_eval,
+    falcon_h2_baseline_predictions,
     falcon_h2_feature_baseline_eval,
     falcon_h2_prediction_eval,
+    falcon_h2_prediction_result_from_targets,
     falcon_h2_targets_from_file,
 )
 from intentfidelity.labels import Prediction
@@ -41,6 +43,34 @@ def test_falcon_h2_prediction_eval_scores_external_predictions(tmp_path) -> None
     result = falcon_h2_prediction_eval(path, {"decoder": predictions})
 
     assert result.method_scores[0].method_id == "decoder"
+    assert result.method_scores[0].intent_fidelity_score == 0.0
+
+
+def test_falcon_h2_baseline_predictions_cover_each_target(tmp_path) -> None:
+    targets = falcon_h2_targets_from_file(_write_h2_file(tmp_path))
+
+    predictions = falcon_h2_baseline_predictions(targets)
+
+    assert len(predictions) == len(targets) * 2
+    assert {prediction.method_id for prediction in predictions} == {
+        "proxy_oracle",
+        "uniform_prior",
+    }
+
+
+def test_falcon_h2_prediction_result_scores_existing_targets(tmp_path) -> None:
+    targets = falcon_h2_targets_from_file(_write_h2_file(tmp_path))
+    predictions = tuple(
+        Prediction(target.sample_id, target.probabilities, "decoder") for target in targets
+    )
+
+    result = falcon_h2_prediction_result_from_targets(
+        targets,
+        {"decoder": predictions},
+        metadata={"evidence_level": "fixture_evidence"},
+    )
+
+    assert result.metadata["evidence_level"] == "fixture_evidence"
     assert result.method_scores[0].intent_fidelity_score == 0.0
 
 

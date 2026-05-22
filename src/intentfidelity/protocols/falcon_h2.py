@@ -6,7 +6,7 @@ from intentfidelity.ingest import (
     load_falcon_h2_trials,
 )
 from intentfidelity.ingest.falcon_examples import load_falcon_h2_labeled_examples
-from intentfidelity.labels import WeakTarget, weak_targets_from_trials
+from intentfidelity.labels import Prediction, WeakTarget, weak_targets_from_trials
 from intentfidelity.metrics import (
     DistributionMetric,
     MethodScore,
@@ -27,10 +27,7 @@ def falcon_h2_baseline_eval(path) -> EvalResult:
     if not targets:
         raise ValueError("cannot evaluate FALCON H2 file without weak targets")
 
-    scores = (
-        _score_baseline("proxy_oracle", targets),
-        _score_baseline("uniform_prior", targets),
-    )
+    scores = falcon_h2_baseline_scores(targets)
     return EvalResult(
         dataset_id="falcon_h2",
         protocol=ProtocolType.HELD_OUT_SESSION,
@@ -44,6 +41,21 @@ def falcon_h2_baseline_eval(path) -> EvalResult:
     )
 
 
+def falcon_h2_baseline_predictions(targets: tuple[WeakTarget, ...]) -> tuple[Prediction, ...]:
+    predictions: list[Prediction] = []
+    for target in targets:
+        predictions.append(proxy_oracle_prediction(target, "proxy_oracle"))
+        predictions.append(uniform_prediction(target, "uniform_prior"))
+    return tuple(predictions)
+
+
+def falcon_h2_baseline_scores(targets: tuple[WeakTarget, ...]) -> tuple[MethodScore, ...]:
+    return (
+        _score_baseline("proxy_oracle", targets),
+        _score_baseline("uniform_prior", targets),
+    )
+
+
 def falcon_h2_prediction_eval(
     path,
     predictions_by_method: dict[str, tuple],
@@ -51,6 +63,25 @@ def falcon_h2_prediction_eval(
     targets = falcon_h2_targets_from_file(path)
     if not targets:
         raise ValueError("cannot evaluate FALCON H2 file without weak targets")
+
+    return falcon_h2_prediction_result_from_targets(
+        targets,
+        predictions_by_method,
+        metadata={
+            "source_path": str(path),
+            "baseline_scope": "external predictions against declared weak targets",
+        },
+    )
+
+
+def falcon_h2_prediction_result_from_targets(
+    targets: tuple[WeakTarget, ...],
+    predictions_by_method: dict[str, tuple[Prediction, ...]],
+    *,
+    metadata: dict | None = None,
+) -> EvalResult:
+    if not targets:
+        raise ValueError("cannot evaluate FALCON H2 targets without weak targets")
 
     scores = tuple(
         _score_predictions(method_id, targets, predictions)
@@ -62,10 +93,7 @@ def falcon_h2_prediction_eval(
         method_scores=scores,
         primary_metric="intent_fidelity_log_loss",
         ranking_disagreement=ranking_disagreement(scores) if len(scores) > 1 else None,
-        metadata={
-            "source_path": str(path),
-            "baseline_scope": "external predictions against declared weak targets",
-        },
+        metadata=dict(metadata or {}),
     )
 
 
