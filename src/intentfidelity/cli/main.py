@@ -13,9 +13,15 @@ from intentfidelity.baselines import (
 )
 from intentfidelity.figures import render_comparison_table, render_ranking_reversal
 from intentfidelity.ingest import inventory_falcon_h2, list_hdf5_datasets
-from intentfidelity.labels import read_predictions_jsonl, write_weak_targets_jsonl
+from intentfidelity.labels import (
+    read_predictions_jsonl,
+    read_text_predictions_jsonl,
+    read_text_targets_jsonl,
+    write_weak_targets_jsonl,
+)
 from intentfidelity.protocols import (
     EvalResult,
+    communication_eval_result,
     compare_eval_results,
     falcon_h2_baseline_eval,
     load_eval_result,
@@ -84,6 +90,16 @@ def build_parser() -> argparse.ArgumentParser:
     _add_handler(falcon_h2_feature_baseline, _eval_falcon_h2_feature_baseline)
     synthetic_eval = eval_subparsers.add_parser("synthetic-baselines")
     _add_handler(synthetic_eval, _eval_synthetic_baselines)
+    communication_eval = eval_subparsers.add_parser("communication")
+    communication_eval.add_argument("targets_jsonl", type=Path)
+    communication_eval.add_argument("predictions_jsonl", type=Path)
+    communication_eval.add_argument("--dataset-id", required=True)
+    communication_eval.add_argument(
+        "--metric",
+        choices=("character_error_rate", "word_error_rate"),
+        default="character_error_rate",
+    )
+    _add_handler(communication_eval, _eval_communication)
 
     ingest_parser = subparsers.add_parser("ingest")
     ingest_subparsers = ingest_parser.add_subparsers(dest="ingest_command")
@@ -217,6 +233,16 @@ def _eval_synthetic_baselines(_: argparse.Namespace) -> None:
     from intentfidelity.protocols import synthetic_baseline_eval
 
     print(json.dumps(synthetic_baseline_eval().to_dict(), indent=2, sort_keys=True))
+
+
+def _eval_communication(args: argparse.Namespace) -> None:
+    result = communication_eval_result(
+        read_text_targets_jsonl(args.targets_jsonl),
+        read_text_predictions_jsonl(args.predictions_jsonl),
+        dataset_id=args.dataset_id,
+        metric=args.metric,
+    )
+    print(json.dumps(result.to_dict(), indent=2, sort_keys=True))
 
 
 def _ingest_falcon_h2_inventory(args: argparse.Namespace) -> None:

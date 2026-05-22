@@ -5,7 +5,14 @@ import h5py
 
 from intentfidelity.cli.main import main
 from intentfidelity.baselines import LabeledExample, write_labeled_examples_csv
-from intentfidelity.labels import Prediction, write_predictions_jsonl
+from intentfidelity.labels import (
+    Prediction,
+    TextPrediction,
+    TextTarget,
+    write_predictions_jsonl,
+    write_text_predictions_jsonl,
+    write_text_targets_jsonl,
+)
 from intentfidelity.metrics import MethodScore, ranking_disagreement
 from intentfidelity.protocols import EvalResult, ProtocolType
 
@@ -137,6 +144,33 @@ def test_synthetic_baselines_command_outputs_eval_result(capsys) -> None:
 
     payload = json.loads(capsys.readouterr().out)
     assert payload["dataset_id"] == "synthetic_shift"
+
+
+def test_communication_command_scores_text_jsonl(tmp_path: Path, capsys) -> None:
+    targets_path = tmp_path / "targets.jsonl"
+    predictions_path = tmp_path / "predictions.jsonl"
+    write_text_targets_jsonl((TextTarget("s0", "open", "prompt"),), targets_path)
+    write_text_predictions_jsonl(
+        (TextPrediction("s0", "open", "decoder"),), predictions_path
+    )
+
+    assert (
+        main(
+            [
+                "eval",
+                "communication",
+                str(targets_path),
+                str(predictions_path),
+                "--dataset-id",
+                "card2024",
+            ]
+        )
+        == 0
+    )
+
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["protocol"] == "communication"
+    assert payload["method_scores"][0]["method_id"] == "decoder"
 
 
 def test_nwb_summary_command_lists_hdf5_datasets(tmp_path: Path, capsys) -> None:
