@@ -12,10 +12,14 @@ from intentfidelity.protocols.schemas import (
 )
 from intentfidelity.protocols.artifacts import (
     ArtifactBundle,
+    ArtifactValidationIssue,
+    ArtifactValidationReport,
+    ArtifactValidationSeverity,
     EvidenceLevel,
     GeneratedArtifact,
     load_artifact_bundle,
     save_artifact_bundle,
+    validate_artifact_bundle,
 )
 from intentfidelity.protocols.io import load_eval_result, save_eval_result
 from intentfidelity.protocols.falcon_h2 import (
@@ -45,6 +49,9 @@ from intentfidelity.protocols.selection import selection_eval_result
 __all__ = [
     "EvalResult",
     "ArtifactBundle",
+    "ArtifactValidationIssue",
+    "ArtifactValidationReport",
+    "ArtifactValidationSeverity",
     "EvidenceLevel",
     "GeneratedArtifact",
     "MethodComparisonReport",
@@ -74,5 +81,6 @@ __all__ = [
     "selection_result",
     "selection_eval_result",
     "synthetic_baseline_eval",
+    "validate_artifact_bundle",
     "write_falcon_h2_artifact_bundle",
 ]

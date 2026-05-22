@@ -2,6 +2,7 @@ from __future__ import annotations
 
 import json
 from dataclasses import dataclass, field
+from collections.abc import Iterable
 from enum import StrEnum
 from pathlib import Path
 from typing import Any, Mapping
@@ -15,6 +16,11 @@ class EvidenceLevel(StrEnum):
     FIXTURE_EVIDENCE = "fixture_evidence"
     DOWNLOADED_DATASET_EVIDENCE = "downloaded_dataset_evidence"
     REPORTED_RESULT = "reported_result"
+
+
+class ArtifactValidationSeverity(StrEnum):
+    ERROR = "error"
+    WARNING = "warning"
 
 
 @dataclass(frozen=True)
@@ -105,3 +111,130 @@ def save_artifact_bundle(bundle: ArtifactBundle, path: str | Path) -> None:
 def load_artifact_bundle(path: str | Path) -> ArtifactBundle:
     payload = json.loads(Path(path).read_text(encoding="utf-8"))
     return ArtifactBundle.from_dict(payload)
+
+
+@dataclass(frozen=True)
+class ArtifactValidationIssue:
+    severity: ArtifactValidationSeverity
+    code: str
+    message: str
+    path: Path | None = None
+
+    def __post_init__(self) -> None:
+        if not self.code.strip():
+            raise ValueError("validation issue code must be set")
+        if not self.message.strip():
+            raise ValueError("validation issue message must be set")
+        if self.path is not None:
+            object.__setattr__(self, "path", Path(self.path))
+
+    def to_dict(self) -> dict[str, str | None]:
+        return {
+            "severity": self.severity.value,
+            "code": self.code,
+            "message": self.message,
+            "path": str(self.path) if self.path is not None else None,
+        }
+
+
+@dataclass(frozen=True)
+class ArtifactValidationReport:
+    bundle_dir: Path
+    manifest_path: Path
+    checked_files: tuple[Path, ...]
+    issues: tuple[ArtifactValidationIssue, ...] = ()
+
+    def __post_init__(self) -> None:
+        object.__setattr__(self, "bundle_dir", Path(self.bundle_dir))
+        object.__setattr__(self, "manifest_path", Path(self.manifest_path))
+        object.__setattr__(self, "checked_files", tuple(Path(path) for path in self.checked_files))
+        object.__setattr__(self, "issues", tuple(self.issues))
+
+    @property
+    def is_valid(self) -> bool:
+        return not any(
+            issue.severity == ArtifactValidationSeverity.ERROR
+            for issue in self.issues
+        )
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "bundle_dir": str(self.bundle_dir),
+            "manifest_path": str(self.manifest_path),
+            "is_valid": self.is_valid,
+            "checked_files": [str(path) for path in self.checked_files],
+            "issues": [issue.to_dict() for issue in self.issues],
+        }
+
+
+def validate_artifact_bundle(
+    bundle_dir: str | Path,
+    *,
+    required_kinds: Iterable[str] = (),
+) -> ArtifactValidationReport:
+    root = Path(bundle_dir)
+    manifest_path = root / "bundle_manifest.json"
+    issues: list[ArtifactValidationIssue] = []
+    checked_files: list[Path] = []
+
+    if not manifest_path.exists():
+        return ArtifactValidationReport(
+            bundle_dir=root,
+            manifest_path=manifest_path,
+            checked_files=(),
+            issues=(
+                ArtifactValidationIssue(
+                    ArtifactValidationSeverity.ERROR,
+                    "missing_bundle_manifest",
+                    "bundle_manifest.json is required.",
+                    manifest_path,
+                ),
+            ),
+        )
+
+    try:
+        bundle = load_artifact_bundle(manifest_path)
+    except (KeyError, TypeError, ValueError, json.JSONDecodeError) as exc:
+        return ArtifactValidationReport(
+            bundle_dir=root,
+            manifest_path=manifest_path,
+            checked_files=(manifest_path,),
+            issues=(
+                ArtifactValidationIssue(
+                    ArtifactValidationSeverity.ERROR,
+                    "invalid_bundle_manifest",
+                    f"bundle_manifest.json could not be loaded: {exc}",
+                    manifest_path,
+                ),
+            ),
+        )
+
+    generated_by_kind = {artifact.kind: artifact for artifact in bundle.generated_files}
+    for kind in sorted(set(required_kinds) - set(generated_by_kind)):
+        issues.append(
+            ArtifactValidationIssue(
+                ArtifactValidationSeverity.ERROR,
+                "missing_required_artifact_kind",
+                f"bundle manifest is missing required artifact kind: {kind}",
+                manifest_path,
+            )
+        )
+
+    for artifact in bundle.generated_files:
+        checked_files.append(artifact.path)
+        if not artifact.path.exists():
+            issues.append(
+                ArtifactValidationIssue(
+                    ArtifactValidationSeverity.ERROR,
+                    "missing_generated_artifact",
+                    f"generated artifact is missing: {artifact.kind}",
+                    artifact.path,
+                )
+            )
+
+    return ArtifactValidationReport(
+        bundle_dir=root,
+        manifest_path=manifest_path,
+        checked_files=tuple(checked_files),
+        issues=tuple(issues),
+    )
