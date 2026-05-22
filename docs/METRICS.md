@@ -14,6 +14,7 @@ Implemented in pass 1:
 - ranking disagreement
 - over-adaptation detection
 - expected calibration error
+- ranking reversal rate
 
 For FALCON H2 pass 2, `intent_fidelity_log_loss` is computed over character
 targets derived from declared handwriting prompt cues and trial timing windows.
