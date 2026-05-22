@@ -16,6 +16,12 @@ The inventory step scans each split for `.nwb`, `.h5`, or `.hdf5` files and
 reports missing roots, missing split directories, empty splits, and discovered
 file counts.
 
+The parser also accepts canonical DANDI split directory names:
+
+- `sub-T5-held-in-calib`
+- `sub-T5-held-in-minival`
+- `sub-T5-held-out-calib`
+
 CLI:
 
 ```text
@@ -28,7 +34,23 @@ Experiment runner:
 python experiments/01_falcon_h2_ranking_disagreement/run.py data --json
 ```
 
-This does not yet parse trial contents or produce real-data evidence. It is the
-first guarded step toward FALCON H2 weak target construction and held-out-session
-ranking disagreement evaluation.
+Weak target export:
 
+```text
+intentfidelity eval falcon-h2-targets data/h2/sub-T5-held-out-calib/example.nwb outputs/targets.jsonl
+```
+
+Baseline sanity eval:
+
+```text
+intentfidelity eval falcon-h2-baselines data/h2/sub-T5-held-out-calib/example.nwb
+```
+
+External prediction eval:
+
+```text
+intentfidelity eval falcon-h2-predictions data/h2/sub-T5-held-out-calib/example.nwb outputs/predictions.jsonl
+```
+
+The built-in baselines are target-construction sanity checks. Decoder evidence
+requires external predictions or later decoder integration.
