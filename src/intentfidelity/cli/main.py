@@ -7,7 +7,9 @@ import sys
 
 from intentfidelity.figures import render_ranking_reversal
 from intentfidelity.ingest import inventory_falcon_h2
+from intentfidelity.labels import write_weak_targets_jsonl
 from intentfidelity.protocols import EvalResult, falcon_h2_baseline_eval, load_eval_result
+from intentfidelity.protocols import falcon_h2_targets_from_file
 from intentfidelity.reports import DatasetCard, EvalCard, render_json, render_markdown
 from intentfidelity.resources import fetch_dandi_assets, get_manifest, load_manifests
 
@@ -50,6 +52,10 @@ def build_parser() -> argparse.ArgumentParser:
     falcon_h2_eval.add_argument("nwb_file", type=Path)
     falcon_h2_eval.add_argument("--output", type=Path)
     _add_handler(falcon_h2_eval, _eval_falcon_h2_baselines)
+    falcon_h2_targets = eval_subparsers.add_parser("falcon-h2-targets")
+    falcon_h2_targets.add_argument("nwb_file", type=Path)
+    falcon_h2_targets.add_argument("output_jsonl", type=Path)
+    _add_handler(falcon_h2_targets, _eval_falcon_h2_targets)
 
     ingest_parser = subparsers.add_parser("ingest")
     ingest_subparsers = ingest_parser.add_subparsers(dest="ingest_command")
@@ -132,6 +138,12 @@ def _eval_falcon_h2_baselines(args: argparse.Namespace) -> None:
         print(f"Wrote {args.output}")
         return
     print(rendered)
+
+
+def _eval_falcon_h2_targets(args: argparse.Namespace) -> None:
+    targets = falcon_h2_targets_from_file(args.nwb_file)
+    write_weak_targets_jsonl(targets, args.output_jsonl)
+    print(f"Wrote {len(targets)} weak targets to {args.output_jsonl}")
 
 
 def _ingest_falcon_h2_inventory(args: argparse.Namespace) -> None:

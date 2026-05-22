@@ -76,19 +76,23 @@ def test_falcon_h2_inventory_command_reports_layout(tmp_path: Path, capsys) -> N
 
 
 def test_falcon_h2_baseline_eval_command_outputs_json(tmp_path: Path, capsys) -> None:
-    path = tmp_path / "sub-T5-held-out-calib_ses-20230417.nwb"
-    with h5py.File(path, "w") as handle:
-        trials = handle.create_group("intervals/trials")
-        trials.create_dataset("cue", data=[b"ab"])
-        trials.create_dataset("start_time", data=[0.0])
-        trials.create_dataset("stop_time", data=[2.0])
-        trials.create_dataset("id", data=[1])
+    path = _write_cli_h2_file(tmp_path)
 
     assert main(["eval", "falcon-h2-baselines", str(path)]) == 0
 
     payload = json.loads(capsys.readouterr().out)
     assert payload["dataset_id"] == "falcon_h2"
     assert len(payload["method_scores"]) == 2
+
+
+def test_falcon_h2_targets_command_writes_jsonl(tmp_path: Path, capsys) -> None:
+    path = _write_cli_h2_file(tmp_path)
+    output = tmp_path / "targets.jsonl"
+
+    assert main(["eval", "falcon-h2-targets", str(path), str(output)]) == 0
+
+    assert "Wrote 2 weak targets" in capsys.readouterr().out
+    assert len(output.read_text(encoding="utf-8").splitlines()) == 2
 
 
 def test_falcon_h2_assets_command_can_be_patched(monkeypatch, capsys) -> None:
@@ -102,3 +106,14 @@ def test_falcon_h2_assets_command_can_be_patched(monkeypatch, capsys) -> None:
     assert main(["resources", "falcon-h2-assets"]) == 0
 
     assert "sub-T5-held-out-calib/file.nwb" in capsys.readouterr().out
+
+
+def _write_cli_h2_file(tmp_path: Path) -> Path:
+    path = tmp_path / "sub-T5-held-out-calib_ses-20230417.nwb"
+    with h5py.File(path, "w") as handle:
+        trials = handle.create_group("intervals/trials")
+        trials.create_dataset("cue", data=[b"ab"])
+        trials.create_dataset("start_time", data=[0.0])
+        trials.create_dataset("stop_time", data=[2.0])
+        trials.create_dataset("id", data=[1])
+    return path
