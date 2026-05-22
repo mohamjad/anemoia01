@@ -24,7 +24,9 @@ intentfidelity = "intentfidelity.cli.main:main"
 testpaths = ["tests"]
 pythonpath = ["src"]
 
+[tool.hatch.build.targets.wheel]
+packages = ["src/intentfidelity"]
+
 [tool.ruff]
 line-length = 88
 target-version = "py311"
-
