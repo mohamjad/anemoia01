@@ -10,6 +10,7 @@ from intentfidelity.reports.cards import (
 )
 from intentfidelity.reports.comparison import render_comparison_markdown
 from intentfidelity.reports.communication import render_communication_markdown
+from intentfidelity.reports.language_prior import render_language_prior_markdown
 
 __all__ = [
     "ClaimCard",
@@ -20,4 +21,5 @@ __all__ = [
     "render_markdown",
     "render_comparison_markdown",
     "render_communication_markdown",
+    "render_language_prior_markdown",
 ]

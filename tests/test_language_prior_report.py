@@ -1,5 +1,5 @@
 from intentfidelity.metrics import MethodScore, language_prior_attribution
-from intentfidelity.reports.language_prior import render_language_prior_markdown
+from intentfidelity.reports import render_language_prior_markdown
 
 
 def test_render_language_prior_markdown_keeps_scope_narrow() -> None:
