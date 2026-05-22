@@ -21,6 +21,7 @@ def test_falcon_h2_bundle_writes_complete_fixture_artifacts(tmp_path: Path) -> N
         source,
         output_dir,
         evidence_level=EvidenceLevel.FIXTURE_EVIDENCE,
+        command="intentfidelity eval falcon-h2-bundle fixture.nwb bundle",
     )
 
     expected_files = {
@@ -52,7 +53,13 @@ def test_falcon_h2_bundle_writes_complete_fixture_artifacts(tmp_path: Path) -> N
     assert len(predictions) == 4
     assert result.dataset_id == "falcon_h2"
     assert result.metadata["evidence_level"] == "fixture_evidence"
+    assert result.metadata["intentfidelity_version"] == "0.1.0"
+    assert result.metadata["command"] == (
+        "intentfidelity eval falcon-h2-bundle fixture.nwb bundle"
+    )
+    assert result.metadata["source_files"][0]["sha256"]
     assert manifest.metadata["target_count"] == 2
+    assert manifest.metadata["source_files"][0]["size_bytes"] == source.stat().st_size
 
     eval_card = (output_dir / "eval_card.md").read_text(encoding="utf-8")
     comparison = (output_dir / "comparison.md").read_text(encoding="utf-8")

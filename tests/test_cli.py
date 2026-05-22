@@ -140,6 +140,10 @@ def test_falcon_h2_bundle_command_writes_artifacts(tmp_path: Path, capsys) -> No
     payload = json.loads(capsys.readouterr().out)
     assert payload["evidence_level"] == "fixture_evidence"
     assert payload["metadata"]["target_count"] == 2
+    assert payload["metadata"]["command"].startswith(
+        "intentfidelity eval falcon-h2-bundle"
+    )
+    assert payload["metadata"]["source_files"][0]["sha256"]
     assert (output_dir / "targets.jsonl").exists()
     assert (output_dir / "predictions.jsonl").exists()
     assert (output_dir / "result.json").exists()

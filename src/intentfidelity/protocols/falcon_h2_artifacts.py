@@ -1,8 +1,11 @@
 from __future__ import annotations
 
+import hashlib
 import json
+from datetime import UTC, datetime
 from pathlib import Path
 
+from intentfidelity import __version__
 from intentfidelity.ingest.falcon_h2 import (
     FALCON_H2_DATASET_ID,
     FALCON_H2_FILE_SUFFIXES,
@@ -57,6 +60,7 @@ def write_falcon_h2_artifact_bundle(
     output_dir: str | Path,
     *,
     evidence_level: EvidenceLevel = EvidenceLevel.FIXTURE_EVIDENCE,
+    command: str | None = None,
 ) -> ArtifactBundle:
     source = Path(source_path)
     output = Path(output_dir)
@@ -70,10 +74,21 @@ def write_falcon_h2_artifact_bundle(
         raise ValueError("cannot write FALCON H2 bundle without weak targets")
 
     predictions = falcon_h2_baseline_predictions(targets)
+    generated_at = datetime.now(UTC).isoformat(timespec="seconds")
+    source_files = _source_file_provenance(inventory)
     result = falcon_h2_prediction_result_from_targets(
         targets,
         _predictions_by_method(predictions),
-        metadata=_result_metadata(source, inventory, targets, predictions, evidence_level),
+        metadata=_result_metadata(
+            source,
+            inventory,
+            targets,
+            predictions,
+            evidence_level,
+            generated_at=generated_at,
+            source_files=source_files,
+            command=command,
+        ),
     )
 
     paths = _BundlePaths(output)
@@ -139,6 +154,11 @@ def write_falcon_h2_artifact_bundle(
             "target_count": len(targets),
             "prediction_count": len(predictions),
             "target_type": "handwriting_cue_character",
+            "generated_at": generated_at,
+            "generated_by": "intentfidelity",
+            "intentfidelity_version": __version__,
+            "command": command,
+            "source_files": source_files,
         },
     )
     save_artifact_bundle(bundle, paths.bundle_manifest_json)
@@ -226,6 +246,10 @@ def _result_metadata(
     targets: tuple[WeakTarget, ...],
     predictions: tuple[Prediction, ...],
     evidence_level: EvidenceLevel,
+    *,
+    generated_at: str,
+    source_files: tuple[dict[str, object], ...],
+    command: str | None,
 ) -> dict[str, object]:
     return {
         "source_path": str(source),
@@ -235,6 +259,11 @@ def _result_metadata(
         "target_type": "handwriting_cue_character",
         "weak_target_source": "declared FALCON H2 trial cue text",
         "evidence_level": evidence_level.value,
+        "generated_at": generated_at,
+        "generated_by": "intentfidelity",
+        "intentfidelity_version": __version__,
+        "command": command,
+        "source_files": source_files,
         "baseline_scope": _evidence_scope_text(evidence_level),
         "proxy_limitations": (
             "Weak targets are cue-character intent proxies; this result does "
@@ -267,6 +296,31 @@ def _render_comparison_markdown(result, evidence_scope: str) -> str:
         "- Comparison rankings are computed against declared weak target "
         "distributions, not directly observed true intent.\n"
     )
+
+
+def _source_file_provenance(
+    inventory: DatasetInventory,
+) -> tuple[dict[str, object], ...]:
+    return tuple(
+        {
+            "path": str(data_file.path),
+            "split": data_file.split.value,
+            "size_bytes": data_file.size_bytes,
+            "sha256": _sha256_file(data_file.path),
+        }
+        for data_file in sorted(
+            inventory.files,
+            key=lambda item: (item.split.value, str(item.path)),
+        )
+    )
+
+
+def _sha256_file(path: Path) -> str:
+    digest = hashlib.sha256()
+    with path.open("rb") as handle:
+        for chunk in iter(lambda: handle.read(1024 * 1024), b""):
+            digest.update(chunk)
+    return digest.hexdigest()
 
 
 def _write_json(payload: dict, path: Path) -> None:

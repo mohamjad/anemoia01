@@ -290,6 +290,7 @@ def _eval_falcon_h2_bundle(args: argparse.Namespace) -> None:
         args.source,
         args.output_dir,
         evidence_level=EvidenceLevel(args.evidence_level),
+        command=_falcon_h2_bundle_command(args),
     )
     print(json.dumps(bundle.to_dict(), indent=2, sort_keys=True))
 
@@ -436,6 +437,14 @@ def _predictions_by_method(predictions) -> dict[str, tuple]:
     for prediction in predictions:
         grouped.setdefault(prediction.method_id, []).append(prediction)
     return {method_id: tuple(values) for method_id, values in grouped.items()}
+
+
+def _falcon_h2_bundle_command(args: argparse.Namespace) -> str:
+    return (
+        "intentfidelity eval falcon-h2-bundle "
+        f"{args.source} {args.output_dir} "
+        f"--evidence-level {args.evidence_level}"
+    )
 
 
 if __name__ == "__main__":
