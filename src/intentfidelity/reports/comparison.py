@@ -15,6 +15,7 @@ def render_comparison_markdown(report: MethodComparisonReport) -> str:
         f"- Conventional: {' -> '.join(report.ranking.conventional_ranking)}",
         f"- Intent fidelity: {' -> '.join(report.ranking.intent_fidelity_ranking)}",
         f"- Kendall tau distance: {report.ranking.kendall_tau_distance}",
+        f"- Reversal rate: {report.ranking.reversal_rate:.3f}",
         "",
         "## Over-Adaptation",
     ]
@@ -26,4 +27,3 @@ def render_comparison_markdown(report: MethodComparisonReport) -> str:
             for event in report.over_adaptation_events
         )
     return "\n".join(lines) + "\n"
-

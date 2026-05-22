@@ -18,4 +18,4 @@ def test_render_comparison_markdown_includes_rankings() -> None:
 
     assert "Conventional: a -> b" in markdown
     assert "Intent fidelity: b -> a" in markdown
-
+    assert "Reversal rate: 1.000" in markdown
