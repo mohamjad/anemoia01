@@ -1,6 +1,11 @@
 """Baseline method registry."""
 
-from intentfidelity.baselines.registry import BaselineSpec, get_baseline, list_baselines
+from intentfidelity.baselines.registry import (
+    BaselineSpec,
+    get_baseline,
+    list_baselines,
+    list_implemented_baselines,
+)
 from intentfidelity.baselines.predictions import proxy_oracle_prediction, uniform_prediction
 from intentfidelity.baselines.examples import (
     LabeledExample,
@@ -42,6 +47,7 @@ __all__ = [
     "identity_transform",
     "labels_from_examples",
     "list_baselines",
+    "list_implemented_baselines",
     "proxy_oracle_prediction",
     "read_labeled_examples_csv",
     "run_centroid_baseline",
