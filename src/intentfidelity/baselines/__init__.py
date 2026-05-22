@@ -20,6 +20,10 @@ from intentfidelity.baselines.nearest_centroid import (
     fit_nearest_centroid,
 )
 from intentfidelity.baselines.runner import BaselineRun, run_centroid_baseline
+from intentfidelity.baselines.io import (
+    read_labeled_examples_csv,
+    write_labeled_examples_csv,
+)
 
 __all__ = [
     "BaselineRun",
@@ -34,10 +38,12 @@ __all__ = [
     "labels_from_examples",
     "list_baselines",
     "proxy_oracle_prediction",
+    "read_labeled_examples_csv",
     "run_centroid_baseline",
     "sessions_from_examples",
     "session_centering_transform",
     "uniform_prediction",
     "whitening_coloring_transform",
     "whitening_transform",
+    "write_labeled_examples_csv",
 ]
