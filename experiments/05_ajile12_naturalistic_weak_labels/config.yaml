@@ -1,0 +1,6 @@
+experiment_id: ajile12_naturalistic_weak_labels
+dataset_id: ajile12
+protocol: naturalistic_weak_label
+status: scaffold
+resource_manifest: ajile12
+
