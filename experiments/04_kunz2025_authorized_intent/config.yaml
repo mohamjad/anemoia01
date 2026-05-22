@@ -3,4 +3,5 @@ dataset_id: kunz2025
 protocol: authorization
 status: scaffold
 resource_manifest: kunz2025
-
+runner: synthetic_protocol_scaffold
+target_type: authorization_state_proxy
