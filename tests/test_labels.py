@@ -6,7 +6,9 @@ from intentfidelity.labels import (
     WeakTarget,
     align_probabilities,
     normalize_probabilities,
+    prediction_from_dict,
     require_same_support,
+    weak_target_from_dict,
 )
 
 
@@ -46,3 +48,10 @@ def test_align_probabilities_sorts_labels_for_metrics() -> None:
     assert target_values == (0.75, 0.25)
     assert prediction_values == (0.5, 0.5)
 
+
+def test_targets_and_predictions_round_trip_through_dicts() -> None:
+    target = WeakTarget("trial-001", {"go": 2, "stop": 1}, "prompt")
+    prediction = Prediction("trial-001", {"go": 0.6, "stop": 0.4}, "decoder")
+
+    assert weak_target_from_dict(target.to_dict()) == target
+    assert prediction_from_dict(prediction.to_dict()) == prediction

@@ -26,6 +26,14 @@ class WeakTarget:
     def support(self) -> tuple[str, ...]:
         return tuple(self.probabilities)
 
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "sample_id": self.sample_id,
+            "probabilities": self.probabilities,
+            "source_type": self.source_type,
+            "metadata": self.metadata,
+        }
+
 
 @dataclass(frozen=True)
 class Prediction:
@@ -44,6 +52,32 @@ class Prediction:
     @property
     def support(self) -> tuple[str, ...]:
         return tuple(self.probabilities)
+
+    def to_dict(self) -> dict[str, Any]:
+        return {
+            "sample_id": self.sample_id,
+            "probabilities": self.probabilities,
+            "method_id": self.method_id,
+            "metadata": self.metadata,
+        }
+
+
+def weak_target_from_dict(payload: Mapping[str, Any]) -> WeakTarget:
+    return WeakTarget(
+        sample_id=str(payload["sample_id"]),
+        probabilities=dict(payload["probabilities"]),
+        source_type=str(payload["source_type"]),
+        metadata=dict(payload.get("metadata", {})),
+    )
+
+
+def prediction_from_dict(payload: Mapping[str, Any]) -> Prediction:
+    return Prediction(
+        sample_id=str(payload["sample_id"]),
+        probabilities=dict(payload["probabilities"]),
+        method_id=str(payload["method_id"]),
+        metadata=dict(payload.get("metadata", {})),
+    )
 
 
 def normalize_probabilities(probabilities: Mapping[str, float]) -> dict[str, float]:
@@ -98,4 +132,3 @@ def align_probabilities(
 def _validate_id(value: str, field_name: str) -> None:
     if not isinstance(value, str) or not value.strip():
         raise DistributionValidationError(f"{field_name} must be a non-empty string")
-

@@ -6,7 +6,9 @@ from intentfidelity.labels.schemas import (
     WeakTarget,
     align_probabilities,
     normalize_probabilities,
+    prediction_from_dict,
     require_same_support,
+    weak_target_from_dict,
 )
 
 __all__ = [
@@ -15,6 +17,7 @@ __all__ = [
     "WeakTarget",
     "align_probabilities",
     "normalize_probabilities",
+    "prediction_from_dict",
     "require_same_support",
+    "weak_target_from_dict",
 ]
-
