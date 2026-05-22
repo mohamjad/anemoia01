@@ -73,6 +73,10 @@ def build_parser() -> argparse.ArgumentParser:
     falcon_h2_predictions.add_argument("nwb_file", type=Path)
     falcon_h2_predictions.add_argument("predictions_jsonl", type=Path)
     _add_handler(falcon_h2_predictions, _eval_falcon_h2_predictions)
+    falcon_h2_feature_baseline = eval_subparsers.add_parser("falcon-h2-feature-baseline")
+    falcon_h2_feature_baseline.add_argument("train_nwb", type=Path)
+    falcon_h2_feature_baseline.add_argument("test_nwb", type=Path)
+    _add_handler(falcon_h2_feature_baseline, _eval_falcon_h2_feature_baseline)
     synthetic_eval = eval_subparsers.add_parser("synthetic-baselines")
     _add_handler(synthetic_eval, _eval_synthetic_baselines)
 
@@ -188,6 +192,13 @@ def _eval_falcon_h2_targets(args: argparse.Namespace) -> None:
 def _eval_falcon_h2_predictions(args: argparse.Namespace) -> None:
     grouped = _predictions_by_method(read_predictions_jsonl(args.predictions_jsonl))
     result = falcon_h2_prediction_eval(args.nwb_file, grouped)
+    print(json.dumps(result.to_dict(), indent=2, sort_keys=True))
+
+
+def _eval_falcon_h2_feature_baseline(args: argparse.Namespace) -> None:
+    from intentfidelity.protocols import falcon_h2_feature_baseline_eval
+
+    result = falcon_h2_feature_baseline_eval(args.train_nwb, args.test_nwb)
     print(json.dumps(result.to_dict(), indent=2, sort_keys=True))
 
 

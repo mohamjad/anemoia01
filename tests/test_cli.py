@@ -90,6 +90,16 @@ def test_falcon_h2_baseline_eval_command_outputs_json(tmp_path: Path, capsys) ->
     assert len(payload["method_scores"]) == 2
 
 
+def test_falcon_h2_feature_baseline_command_outputs_json(tmp_path: Path, capsys) -> None:
+    train = _write_cli_h2_file(tmp_path, "sub-T5-held-in-calib_ses-20230417.nwb")
+    test = _write_cli_h2_file(tmp_path, "sub-T5-held-out-calib_ses-20230418.nwb")
+
+    assert main(["eval", "falcon-h2-feature-baseline", str(train), str(test)]) == 0
+
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["method_scores"][0]["method_id"] == "identity_centroid"
+
+
 def test_falcon_h2_targets_command_writes_jsonl(tmp_path: Path, capsys) -> None:
     path = _write_cli_h2_file(tmp_path)
     output = tmp_path / "targets.jsonl"
@@ -163,12 +173,17 @@ def test_falcon_h2_assets_command_can_be_patched(monkeypatch, capsys) -> None:
     assert "sub-T5-held-out-calib/file.nwb" in capsys.readouterr().out
 
 
-def _write_cli_h2_file(tmp_path: Path) -> Path:
-    path = tmp_path / "sub-T5-held-out-calib_ses-20230417.nwb"
+def _write_cli_h2_file(
+    tmp_path: Path,
+    name: str = "sub-T5-held-out-calib_ses-20230417.nwb",
+) -> Path:
+    path = tmp_path / name
     with h5py.File(path, "w") as handle:
         trials = handle.create_group("intervals/trials")
         trials.create_dataset("cue", data=[b"ab"])
         trials.create_dataset("start_time", data=[0.0])
         trials.create_dataset("stop_time", data=[2.0])
         trials.create_dataset("id", data=[1])
+        handle.create_dataset("acquisition/binned_spikes/data", data=[[0, 1], [1, 0]])
+        handle.create_dataset("acquisition/binned_spikes/timestamps", data=[0.25, 1.25])
     return path
