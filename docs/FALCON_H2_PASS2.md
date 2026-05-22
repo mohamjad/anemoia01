@@ -52,5 +52,12 @@ External prediction eval:
 intentfidelity eval falcon-h2-predictions data/h2/sub-T5-held-out-calib/example.nwb outputs/predictions.jsonl
 ```
 
+Optional public-sample test:
+
+```text
+$env:FALCON_H2_SAMPLE_NWB="C:\path\to\sub-T5-held-out-calib_ses-20230417.nwb"
+pytest tests/test_falcon_h2_public_sample.py -q
+```
+
 The built-in baselines are target-construction sanity checks. Decoder evidence
 requires external predictions or later decoder integration.
