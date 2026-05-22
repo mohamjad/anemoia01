@@ -14,6 +14,16 @@ class LanguagePriorAttribution:
     heavy_minus_light: float
     interpretation: str
 
+    def to_dict(self) -> dict[str, float | str]:
+        return {
+            "lm_light_method_id": self.lm_light_method_id,
+            "lm_heavy_method_id": self.lm_heavy_method_id,
+            "light_intent_fidelity_score": self.light_intent_fidelity_score,
+            "heavy_intent_fidelity_score": self.heavy_intent_fidelity_score,
+            "heavy_minus_light": self.heavy_minus_light,
+            "interpretation": self.interpretation,
+        }
+
 
 def language_prior_attribution(
     lm_light: MethodScore,
@@ -35,4 +45,3 @@ def language_prior_attribution(
         heavy_minus_light=delta,
         interpretation=interpretation,
     )
-

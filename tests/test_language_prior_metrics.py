@@ -10,4 +10,4 @@ def test_language_prior_attribution_reports_heavy_minus_light_delta() -> None:
 
     assert report.heavy_minus_light == 0.2
     assert report.interpretation == "lm_heavy_worse"
-
+    assert report.to_dict()["lm_heavy_method_id"] == "lm_heavy"
