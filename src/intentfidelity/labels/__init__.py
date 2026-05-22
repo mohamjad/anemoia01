@@ -61,6 +61,10 @@ from intentfidelity.labels.p300 import (
     P300SelectionEvent,
     weak_target_from_p300_event,
 )
+from intentfidelity.labels.p300_io import (
+    read_p300_events_jsonl,
+    write_p300_events_jsonl,
+)
 
 __all__ = [
     "AuthorizationEvent",
@@ -87,6 +91,7 @@ __all__ = [
     "read_predictions_jsonl",
     "read_authorization_events_jsonl",
     "read_naturalistic_events_jsonl",
+    "read_p300_events_jsonl",
     "read_text_predictions_jsonl",
     "read_text_targets_jsonl",
     "read_weak_targets_jsonl",
@@ -101,6 +106,7 @@ __all__ = [
     "write_predictions_jsonl",
     "write_authorization_events_jsonl",
     "write_naturalistic_events_jsonl",
+    "write_p300_events_jsonl",
     "write_text_predictions_jsonl",
     "write_text_targets_jsonl",
     "write_weak_targets_jsonl",

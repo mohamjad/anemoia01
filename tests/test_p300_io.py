@@ -1,5 +1,8 @@
-from intentfidelity.labels import P300SelectionEvent
-from intentfidelity.labels.p300_io import read_p300_events_jsonl, write_p300_events_jsonl
+from intentfidelity.labels import (
+    P300SelectionEvent,
+    read_p300_events_jsonl,
+    write_p300_events_jsonl,
+)
 
 
 def test_p300_events_jsonl_roundtrip(tmp_path) -> None:
