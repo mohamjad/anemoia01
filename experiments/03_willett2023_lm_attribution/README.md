@@ -3,5 +3,5 @@
 Purpose: prepare a speech-path comparison between decoder behavior and
 language-prior-heavy method variants.
 
-No ingestion is implemented in pass 1.
-
+The pass-4 runner emits synthetic LM-light versus LM-heavy attribution from
+method scores. No real-data ingestion is implemented.
