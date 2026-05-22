@@ -21,6 +21,7 @@ from intentfidelity.ingest.nwb_hdf5 import (
     list_hdf5_datasets,
     require_dataset,
 )
+from intentfidelity.ingest.falcon_session import FalconSessionKey, session_date_from_path
 
 __all__ = [
     "DataFile",
@@ -28,6 +29,7 @@ __all__ = [
     "IngestSplit",
     "FALCON_H2_DATASET_ID",
     "FALCON_H2_EXPECTED_SPLITS",
+    "FalconSessionKey",
     "ValidationIssue",
     "ValidationSeverity",
     "Hdf5DatasetInfo",
@@ -38,4 +40,5 @@ __all__ = [
     "list_hdf5_datasets",
     "require_dataset",
     "resolve_falcon_h2_root",
+    "session_date_from_path",
 ]
