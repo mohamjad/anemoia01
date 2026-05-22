@@ -11,6 +11,15 @@ class BaselineSpec:
     status: str
     description: str
 
+    def to_dict(self) -> dict[str, str]:
+        return {
+            "method_id": self.method_id,
+            "name": self.name,
+            "category": self.category,
+            "status": self.status,
+            "description": self.description,
+        }
+
 
 BASELINES: tuple[BaselineSpec, ...] = (
     BaselineSpec(
@@ -74,6 +83,10 @@ BASELINES: tuple[BaselineSpec, ...] = (
 
 def list_baselines() -> tuple[BaselineSpec, ...]:
     return BASELINES
+
+
+def list_implemented_baselines() -> tuple[BaselineSpec, ...]:
+    return tuple(baseline for baseline in BASELINES if baseline.status == "implemented")
 
 
 def get_baseline(method_id: str) -> BaselineSpec:

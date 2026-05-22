@@ -1,4 +1,5 @@
 from intentfidelity.baselines import get_baseline, list_baselines
+from intentfidelity.baselines.registry import list_implemented_baselines
 
 
 def test_baseline_registry_contains_first_pass_methods() -> None:
@@ -27,3 +28,12 @@ def test_implemented_baselines_are_marked_active() -> None:
     assert get_baseline("identity").status == "implemented"
     assert get_baseline("session_centering").status == "implemented"
     assert get_baseline("whitening_coloring").status == "implemented"
+
+
+def test_baseline_specs_serialize_and_filter_by_status() -> None:
+    assert get_baseline("identity").to_dict()["status"] == "implemented"
+    assert [baseline.method_id for baseline in list_implemented_baselines()] == [
+        "identity",
+        "session_centering",
+        "whitening_coloring",
+    ]
