@@ -73,6 +73,8 @@ def build_parser() -> argparse.ArgumentParser:
     falcon_h2_predictions.add_argument("nwb_file", type=Path)
     falcon_h2_predictions.add_argument("predictions_jsonl", type=Path)
     _add_handler(falcon_h2_predictions, _eval_falcon_h2_predictions)
+    synthetic_eval = eval_subparsers.add_parser("synthetic-baselines")
+    _add_handler(synthetic_eval, _eval_synthetic_baselines)
 
     ingest_parser = subparsers.add_parser("ingest")
     ingest_subparsers = ingest_parser.add_subparsers(dest="ingest_command")
@@ -187,6 +189,12 @@ def _eval_falcon_h2_predictions(args: argparse.Namespace) -> None:
     grouped = _predictions_by_method(read_predictions_jsonl(args.predictions_jsonl))
     result = falcon_h2_prediction_eval(args.nwb_file, grouped)
     print(json.dumps(result.to_dict(), indent=2, sort_keys=True))
+
+
+def _eval_synthetic_baselines(_: argparse.Namespace) -> None:
+    from intentfidelity.protocols import synthetic_baseline_eval
+
+    print(json.dumps(synthetic_baseline_eval().to_dict(), indent=2, sort_keys=True))
 
 
 def _ingest_falcon_h2_inventory(args: argparse.Namespace) -> None:

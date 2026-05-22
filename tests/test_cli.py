@@ -115,6 +115,13 @@ def test_falcon_h2_predictions_command_scores_jsonl(tmp_path: Path, capsys) -> N
     assert payload["method_scores"][0]["method_id"] == "decoder"
 
 
+def test_synthetic_baselines_command_outputs_eval_result(capsys) -> None:
+    assert main(["eval", "synthetic-baselines"]) == 0
+
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["dataset_id"] == "synthetic_shift"
+
+
 def test_nwb_summary_command_lists_hdf5_datasets(tmp_path: Path, capsys) -> None:
     path = tmp_path / "sample.nwb"
     with h5py.File(path, "w") as handle:
