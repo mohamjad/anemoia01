@@ -20,6 +20,8 @@ Pass 4 added communication, language-prior attribution, and authorization
 protocol scaffolds for the speech-path resources.
 Pass 5 added naturalistic weak-label scaffolding for AJILE12-style behavior
 proxies.
+Pass 6 added selection weak-target scaffolding for bigP3BCI-style P300 symbol
+selection.
 ```
 
 Immediate task:
