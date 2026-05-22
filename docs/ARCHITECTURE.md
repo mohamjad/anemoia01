@@ -16,3 +16,7 @@ only used to validate metric and reporting plumbing.
 Pass 2 adds the first FALCON H2 data path: DANDI asset discovery, NWB/HDF5
 inventory, trial cue extraction, character-level weak targets, and held-out
 evaluation against either built-in sanity baselines or supplied predictions.
+
+Pass 3 adds the method-comparison layer: typed feature examples, baseline
+feature transforms, centroid prediction baselines, comparison reports, and
+ranking reversal tables.
