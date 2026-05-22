@@ -34,7 +34,9 @@ from intentfidelity.protocols.falcon_h2 import (
     falcon_h2_targets_from_file,
 )
 from intentfidelity.protocols.falcon_h2_artifacts import (
+    validate_falcon_h2_feature_baseline_bundle,
     validate_falcon_h2_artifact_bundle,
+    write_falcon_h2_feature_baseline_bundle,
     write_falcon_h2_artifact_bundle,
 )
 from intentfidelity.protocols.comparison import (
@@ -86,5 +88,7 @@ __all__ = [
     "synthetic_baseline_eval",
     "validate_artifact_bundle",
     "validate_falcon_h2_artifact_bundle",
+    "validate_falcon_h2_feature_baseline_bundle",
     "write_falcon_h2_artifact_bundle",
+    "write_falcon_h2_feature_baseline_bundle",
 ]

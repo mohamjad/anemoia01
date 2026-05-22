@@ -34,7 +34,9 @@ from intentfidelity.protocols import (
     naturalistic_eval_result,
     selection_eval_result,
     validate_falcon_h2_artifact_bundle,
+    validate_falcon_h2_feature_baseline_bundle,
     write_falcon_h2_artifact_bundle,
+    write_falcon_h2_feature_baseline_bundle,
 )
 from intentfidelity.protocols import falcon_h2_targets_from_file
 from intentfidelity.protocols import falcon_h2_prediction_eval
@@ -103,6 +105,16 @@ def build_parser() -> argparse.ArgumentParser:
     falcon_h2_feature_baseline.add_argument("train_nwb", type=Path)
     falcon_h2_feature_baseline.add_argument("test_nwb", type=Path)
     _add_handler(falcon_h2_feature_baseline, _eval_falcon_h2_feature_baseline)
+    falcon_h2_feature_bundle = eval_subparsers.add_parser("falcon-h2-feature-bundle")
+    falcon_h2_feature_bundle.add_argument("train_source", type=Path)
+    falcon_h2_feature_bundle.add_argument("test_source", type=Path)
+    falcon_h2_feature_bundle.add_argument("output_dir", type=Path)
+    falcon_h2_feature_bundle.add_argument(
+        "--evidence-level",
+        choices=tuple(level.value for level in EvidenceLevel),
+        default=EvidenceLevel.DOWNLOADED_DATASET_EVIDENCE.value,
+    )
+    _add_handler(falcon_h2_feature_bundle, _eval_falcon_h2_feature_bundle)
     falcon_h2_bundle = eval_subparsers.add_parser("falcon-h2-bundle")
     falcon_h2_bundle.add_argument("source", type=Path)
     falcon_h2_bundle.add_argument("output_dir", type=Path)
@@ -117,6 +129,14 @@ def build_parser() -> argparse.ArgumentParser:
     )
     falcon_h2_validate_bundle.add_argument("bundle_dir", type=Path)
     _add_handler(falcon_h2_validate_bundle, _eval_falcon_h2_validate_bundle)
+    falcon_h2_validate_feature_bundle = eval_subparsers.add_parser(
+        "falcon-h2-validate-feature-bundle"
+    )
+    falcon_h2_validate_feature_bundle.add_argument("bundle_dir", type=Path)
+    _add_handler(
+        falcon_h2_validate_feature_bundle,
+        _eval_falcon_h2_validate_feature_bundle,
+    )
     synthetic_eval = eval_subparsers.add_parser("synthetic-baselines")
     _add_handler(synthetic_eval, _eval_synthetic_baselines)
     communication_eval = eval_subparsers.add_parser("communication")
@@ -285,6 +305,17 @@ def _eval_falcon_h2_feature_baseline(args: argparse.Namespace) -> None:
     print(json.dumps(result.to_dict(), indent=2, sort_keys=True))
 
 
+def _eval_falcon_h2_feature_bundle(args: argparse.Namespace) -> None:
+    bundle = write_falcon_h2_feature_baseline_bundle(
+        args.train_source,
+        args.test_source,
+        args.output_dir,
+        evidence_level=EvidenceLevel(args.evidence_level),
+        command=_falcon_h2_feature_bundle_command(args),
+    )
+    print(json.dumps(bundle.to_dict(), indent=2, sort_keys=True))
+
+
 def _eval_falcon_h2_bundle(args: argparse.Namespace) -> None:
     bundle = write_falcon_h2_artifact_bundle(
         args.source,
@@ -297,6 +328,13 @@ def _eval_falcon_h2_bundle(args: argparse.Namespace) -> None:
 
 def _eval_falcon_h2_validate_bundle(args: argparse.Namespace) -> None:
     report = validate_falcon_h2_artifact_bundle(args.bundle_dir)
+    print(json.dumps(report.to_dict(), indent=2, sort_keys=True))
+    if not report.is_valid:
+        raise SystemExit(1)
+
+
+def _eval_falcon_h2_validate_feature_bundle(args: argparse.Namespace) -> None:
+    report = validate_falcon_h2_feature_baseline_bundle(args.bundle_dir)
     print(json.dumps(report.to_dict(), indent=2, sort_keys=True))
     if not report.is_valid:
         raise SystemExit(1)
@@ -443,6 +481,14 @@ def _falcon_h2_bundle_command(args: argparse.Namespace) -> str:
     return (
         "intentfidelity eval falcon-h2-bundle "
         f"{args.source} {args.output_dir} "
+        f"--evidence-level {args.evidence_level}"
+    )
+
+
+def _falcon_h2_feature_bundle_command(args: argparse.Namespace) -> str:
+    return (
+        "intentfidelity eval falcon-h2-feature-bundle "
+        f"{args.train_source} {args.test_source} {args.output_dir} "
         f"--evidence-level {args.evidence_level}"
     )
 

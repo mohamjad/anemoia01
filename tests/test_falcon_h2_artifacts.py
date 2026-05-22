@@ -9,6 +9,8 @@ from intentfidelity.protocols import load_eval_result
 from intentfidelity.protocols.artifacts import EvidenceLevel, load_artifact_bundle
 from intentfidelity.protocols.falcon_h2_artifacts import (
     validate_falcon_h2_artifact_bundle,
+    validate_falcon_h2_feature_baseline_bundle,
+    write_falcon_h2_feature_baseline_bundle,
     write_falcon_h2_artifact_bundle,
 )
 
@@ -122,6 +124,42 @@ def test_validate_falcon_h2_bundle_checks_report_scope(tmp_path: Path) -> None:
     assert "eval_card_missing_evidence_scope" in {
         issue.code for issue in report.issues
     }
+
+
+def test_falcon_h2_feature_baseline_bundle_writes_method_artifacts(
+    tmp_path: Path,
+) -> None:
+    train = _write_h2_file(tmp_path / "sub-T5-held-in-calib_ses-20230416.nwb")
+    test = _write_h2_file(tmp_path / "sub-T5-held-out-calib_ses-20230417.nwb")
+    output_dir = tmp_path / "feature-bundle"
+
+    bundle = write_falcon_h2_feature_baseline_bundle(train, test, output_dir)
+
+    expected_files = {
+        "train_inventory.json",
+        "test_inventory.json",
+        "targets.jsonl",
+        "predictions.jsonl",
+        "baseline_runs.json",
+        "result.json",
+        "eval_card.md",
+        "comparison.md",
+        "bundle_manifest.json",
+    }
+    result = load_eval_result(output_dir / "result.json")
+    report = validate_falcon_h2_feature_baseline_bundle(output_dir)
+
+    assert {path.name for path in output_dir.iterdir()} == expected_files
+    assert bundle.metadata["train_example_count"] == 2
+    assert bundle.metadata["test_example_count"] == 2
+    assert bundle.metadata["prediction_count"] == 6
+    assert [score.method_id for score in result.method_scores] == [
+        "identity_centroid",
+        "session_centered_centroid",
+        "whitened_centroid",
+    ]
+    assert result.method_scores[0].conventional_score >= 0.0
+    assert report.is_valid is True
 
 
 def test_falcon_h2_bundle_accepts_inventory_root(tmp_path: Path) -> None:

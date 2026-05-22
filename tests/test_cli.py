@@ -121,6 +121,36 @@ def test_falcon_h2_feature_baseline_command_outputs_json(tmp_path: Path, capsys)
     ]
 
 
+def test_falcon_h2_feature_bundle_command_writes_method_artifacts(
+    tmp_path: Path,
+    capsys,
+) -> None:
+    train = _write_cli_h2_file(tmp_path, "sub-T5-held-in-calib_ses-20230416.nwb")
+    test = _write_cli_h2_file(tmp_path, "sub-T5-held-out-calib_ses-20230417.nwb")
+    output_dir = tmp_path / "feature-bundle"
+
+    assert (
+        main(
+            [
+                "eval",
+                "falcon-h2-feature-bundle",
+                str(train),
+                str(test),
+                str(output_dir),
+            ]
+        )
+        == 0
+    )
+
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["metadata"]["prediction_count"] == 6
+    assert (output_dir / "baseline_runs.json").exists()
+
+    assert main(["eval", "falcon-h2-validate-feature-bundle", str(output_dir)]) == 0
+    validation = json.loads(capsys.readouterr().out)
+    assert validation["is_valid"] is True
+
+
 def test_falcon_h2_targets_command_writes_jsonl(tmp_path: Path, capsys) -> None:
     path = _write_cli_h2_file(tmp_path)
     output = tmp_path / "targets.jsonl"
