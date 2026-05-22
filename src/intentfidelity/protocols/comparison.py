@@ -26,6 +26,7 @@ class MethodComparisonReport:
                 "conventional_ranking": list(self.ranking.conventional_ranking),
                 "intent_fidelity_ranking": list(self.ranking.intent_fidelity_ranking),
                 "kendall_tau_distance": self.ranking.kendall_tau_distance,
+                "reversal_rate": self.ranking.reversal_rate,
                 "has_disagreement": self.ranking.has_disagreement,
             },
             "over_adaptation_events": [
