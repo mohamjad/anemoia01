@@ -1,7 +1,6 @@
 # Expected Outputs
 
-- communication eval result
-- LM-heavy versus LM-light comparison
+- language-prior attribution JSON
+- LM-heavy versus LM-light intent-fidelity delta
 - attribution notes for weak target fidelity
-- claim card draft
-
+- claim card draft with scaffold-only evidence scope
