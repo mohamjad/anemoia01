@@ -12,6 +12,7 @@ from intentfidelity.protocols.schemas import (
 from intentfidelity.protocols.io import load_eval_result, save_eval_result
 from intentfidelity.protocols.falcon_h2 import (
     falcon_h2_baseline_eval,
+    falcon_h2_prediction_eval,
     falcon_h2_targets_from_file,
 )
 
@@ -22,6 +23,7 @@ __all__ = [
     "communication_result",
     "few_shot_recalibration_result",
     "falcon_h2_baseline_eval",
+    "falcon_h2_prediction_eval",
     "falcon_h2_targets_from_file",
     "held_out_session_result",
     "load_eval_result",
