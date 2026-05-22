@@ -6,7 +6,7 @@ from pathlib import Path
 import sys
 
 from intentfidelity.baselines import read_labeled_examples_csv, run_centroid_baseline
-from intentfidelity.figures import render_ranking_reversal
+from intentfidelity.figures import render_comparison_table, render_ranking_reversal
 from intentfidelity.ingest import inventory_falcon_h2, list_hdf5_datasets
 from intentfidelity.labels import read_predictions_jsonl, write_weak_targets_jsonl
 from intentfidelity.protocols import (
@@ -106,6 +106,9 @@ def build_parser() -> argparse.ArgumentParser:
     ranking = figure_subparsers.add_parser("ranking-reversal")
     ranking.add_argument("result_json", type=Path)
     _add_handler(ranking, _figure_ranking_reversal)
+    comparison_table = figure_subparsers.add_parser("comparison-table")
+    comparison_table.add_argument("result_json", type=Path)
+    _add_handler(comparison_table, _figure_comparison_table)
 
     baselines_parser = subparsers.add_parser("baselines")
     baselines_subparsers = baselines_parser.add_subparsers(dest="baselines_command")
@@ -235,6 +238,10 @@ def _report_eval_card(args: argparse.Namespace) -> None:
 
 def _figure_ranking_reversal(args: argparse.Namespace) -> None:
     print(render_ranking_reversal(_load_eval_result(args.result_json)), end="")
+
+
+def _figure_comparison_table(args: argparse.Namespace) -> None:
+    print(render_comparison_table(compare_eval_results(_load_eval_result(args.result_json))), end="")
 
 
 def _baselines_centroid(args: argparse.Namespace) -> None:

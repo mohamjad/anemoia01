@@ -61,6 +61,9 @@ def test_eval_summary_and_figure_commands(tmp_path: Path, capsys) -> None:
     assert main(["figure", "ranking-reversal", str(path)]) == 0
     assert "accuracy_first -> proxy_faithful" in capsys.readouterr().out
 
+    assert main(["figure", "comparison-table", str(path)]) == 0
+    assert "reversal_rate" in capsys.readouterr().out
+
     assert main(["eval", "compare", str(path), "--format", "markdown"]) == 0
     assert "Method Comparison Report" in capsys.readouterr().out
 
