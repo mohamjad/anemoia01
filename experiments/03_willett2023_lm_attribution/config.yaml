@@ -3,4 +3,5 @@ dataset_id: willett2023
 protocol: communication
 status: scaffold
 resource_manifest: willett2023
-
+runner: synthetic_protocol_scaffold
+primary_report: language_prior_attribution
