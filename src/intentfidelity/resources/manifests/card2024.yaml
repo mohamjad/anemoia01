@@ -17,5 +17,6 @@ known_limitations:
   - language-model attribution requires a later protocol
 first_pass_role: conceptual speech path and later communication evaluation target
 metadata:
-  evidence_stage: manifest only
-
+  evidence_stage: synthetic protocol scaffold
+  scaffold_protocol: communication
+  scaffold_metric: character_error_rate
