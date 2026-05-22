@@ -12,6 +12,7 @@ from intentfidelity.reports.authorization import render_authorization_markdown
 from intentfidelity.reports.comparison import render_comparison_markdown
 from intentfidelity.reports.communication import render_communication_markdown
 from intentfidelity.reports.language_prior import render_language_prior_markdown
+from intentfidelity.reports.naturalistic import render_naturalistic_markdown
 
 __all__ = [
     "ClaimCard",
@@ -24,4 +25,5 @@ __all__ = [
     "render_comparison_markdown",
     "render_communication_markdown",
     "render_language_prior_markdown",
+    "render_naturalistic_markdown",
 ]

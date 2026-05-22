@@ -1,6 +1,6 @@
 from intentfidelity.labels import NaturalisticEvent, Prediction
 from intentfidelity.protocols import naturalistic_eval_result
-from intentfidelity.reports.naturalistic import render_naturalistic_markdown
+from intentfidelity.reports import render_naturalistic_markdown
 
 
 def test_render_naturalistic_markdown_includes_proxy_summary() -> None:
