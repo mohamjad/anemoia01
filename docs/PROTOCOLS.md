@@ -18,3 +18,7 @@ FALCON H2 now has a held-out-session path that can:
 - export declared weak targets
 - score target-construction sanity baselines
 - score external prediction JSONL files
+- run centroid feature baselines over character-window neural summaries
+
+Method comparison reports can summarize ranking disagreement for one result and
+over-adaptation events between two results.
