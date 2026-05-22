@@ -1,7 +1,6 @@
 # Expected Outputs
 
-- naturalistic weak-label eval result
-- declared proxy source summary
+- executable naturalistic weak-label eval JSON
+- declared proxy confidence and ambiguity summary
 - ranking disagreement report
-- dataset and eval cards
-
+- dataset and eval cards with scaffold-only evidence scope
