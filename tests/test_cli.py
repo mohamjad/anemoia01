@@ -56,3 +56,18 @@ def test_eval_summary_and_figure_commands(tmp_path: Path, capsys) -> None:
 
     assert main(["figure", "ranking-reversal", str(path)]) == 0
     assert "accuracy_first -> proxy_faithful" in capsys.readouterr().out
+
+
+def test_falcon_h2_inventory_command_reports_layout(tmp_path: Path, capsys) -> None:
+    h2_root = tmp_path / "h2"
+    for split in ("held_in_calib", "held_out_calib", "minival"):
+        split_dir = h2_root / split
+        split_dir.mkdir(parents=True)
+        (split_dir / f"{split}.nwb").write_bytes(b"nwb")
+
+    assert main(["ingest", "falcon-h2-inventory", str(tmp_path), "--json"]) == 0
+
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["dataset_id"] == "falcon_h2"
+    assert payload["is_valid"] is True
+    assert payload["file_count"] == 3

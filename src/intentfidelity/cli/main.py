@@ -1,10 +1,12 @@
 from __future__ import annotations
 
 import argparse
+import json
 from pathlib import Path
 import sys
 
 from intentfidelity.figures import render_ranking_reversal
+from intentfidelity.ingest import inventory_falcon_h2
 from intentfidelity.protocols import EvalResult, load_eval_result
 from intentfidelity.reports import DatasetCard, EvalCard, render_json, render_markdown
 from intentfidelity.resources import get_manifest, load_manifests
@@ -41,6 +43,13 @@ def build_parser() -> argparse.ArgumentParser:
     eval_summary = eval_subparsers.add_parser("summarize")
     eval_summary.add_argument("result_json", type=Path)
     _add_handler(eval_summary, _eval_summarize)
+
+    ingest_parser = subparsers.add_parser("ingest")
+    ingest_subparsers = ingest_parser.add_subparsers(dest="ingest_command")
+    falcon_h2_inventory = ingest_subparsers.add_parser("falcon-h2-inventory")
+    falcon_h2_inventory.add_argument("data_root", type=Path)
+    falcon_h2_inventory.add_argument("--json", action="store_true")
+    _add_handler(falcon_h2_inventory, _ingest_falcon_h2_inventory)
 
     report_parser = subparsers.add_parser("report")
     report_subparsers = report_parser.add_subparsers(dest="report_command")
@@ -96,6 +105,21 @@ def _eval_summarize(args: argparse.Namespace) -> None:
     print(f"Methods: {len(result.method_scores)}")
     if result.ranking_disagreement is not None:
         print(f"Ranking disagreement: {result.ranking_disagreement.has_disagreement}")
+
+
+def _ingest_falcon_h2_inventory(args: argparse.Namespace) -> None:
+    inventory = inventory_falcon_h2(args.data_root)
+    if args.json:
+        print(json.dumps(inventory.to_dict(), indent=2, sort_keys=True))
+        return
+
+    print(f"Dataset: {inventory.dataset_id}")
+    print(f"Root: {inventory.root}")
+    print(f"Valid: {inventory.is_valid}")
+    print(f"Files: {len(inventory.files)}")
+    for issue in inventory.issues:
+        location = f" ({issue.path})" if issue.path else ""
+        print(f"{issue.severity.value}: {issue.code}: {issue.message}{location}")
 
 
 def _report_eval_card(args: argparse.Namespace) -> None:
