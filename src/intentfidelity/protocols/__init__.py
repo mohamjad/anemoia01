@@ -22,6 +22,7 @@ from intentfidelity.protocols.comparison import (
 )
 from intentfidelity.protocols.synthetic import synthetic_baseline_eval
 from intentfidelity.protocols.communication import communication_eval_result
+from intentfidelity.protocols.language_prior import language_prior_report
 
 __all__ = [
     "EvalResult",
@@ -38,6 +39,7 @@ __all__ = [
     "falcon_h2_targets_from_file",
     "held_out_session_result",
     "load_eval_result",
+    "language_prior_report",
     "naturalistic_weak_label_result",
     "save_eval_result",
     "synthetic_baseline_eval",
