@@ -22,3 +22,5 @@ Required fields:
 The registry validates shape and ordering, but it does not imply that ingestion
 or real-data evaluation has been implemented.
 
+For FALCON H2, the manifest also records the DANDI identifier, source URL,
+expected split directories, and the current evidence stage for the pass-2 path.
