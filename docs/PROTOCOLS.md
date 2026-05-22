@@ -1,6 +1,6 @@
 # Protocols
 
-Pass 1 defines result schemas for:
+The protocol layer defines result schemas and evaluators for:
 
 - held-out session
 - few-shot recalibration
@@ -9,8 +9,8 @@ Pass 1 defines result schemas for:
 - naturalistic weak-label evaluation
 
 Each protocol produces an `EvalResult` with method scores and optional ranking
-disagreement metadata. Concrete dataset ingestion and split generation are pass
-2 work.
+disagreement metadata. Dataset-specific ingestion remains explicit and separate
+from protocol scoring.
 
 FALCON H2 now has a held-out-session path that can:
 

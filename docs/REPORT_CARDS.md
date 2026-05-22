@@ -1,6 +1,6 @@
 # Report Cards
 
-Pass 1 supports three report-card types:
+The reporting layer supports three general card types:
 
 - `DatasetCard` from resource manifests
 - `ClaimCard` for scoped evaluation claims

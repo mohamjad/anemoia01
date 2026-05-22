@@ -3,7 +3,7 @@
 Metrics operate on declared weak target distributions and prediction
 distributions with matching support.
 
-Implemented in pass 1:
+Implemented so far:
 
 - log loss
 - Brier score
