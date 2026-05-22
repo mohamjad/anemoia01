@@ -1,0 +1,8 @@
+experiment_id: synthetic_sanity_check
+dataset_id: synthetic
+protocol: held_out_session
+status: scaffold
+notes:
+  - sanity check only
+  - no real-data evidence
+
