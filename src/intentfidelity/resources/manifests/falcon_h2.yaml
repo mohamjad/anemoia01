@@ -23,7 +23,11 @@ metadata:
   doi: 10.48324/dandi.000950/0.241029.1403
   expected_local_root: data/h2
   expected_splits:
+    - sub-T5-held-in-calib
+    - sub-T5-held-in-minival
+    - sub-T5-held-out-calib
+  normalized_split_aliases:
     - held_in_calib
     - held_out_calib
     - minival
-  evidence_stage: inventory path
+  evidence_stage: trial target extraction path
