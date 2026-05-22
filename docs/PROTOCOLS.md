@@ -30,3 +30,7 @@ Pass 4 adds executable communication and authorization scaffolds:
 - authorization scores predictions against authorization-state weak targets
 
 These scaffolds expose the protocol contracts before real speech-path ingestion.
+
+Pass 5 adds a naturalistic weak-label evaluator for AJILE12-style behavior
+proxies. It scores predictions against confidence-weighted weak targets and
+records proxy confidence and ambiguity metadata on the `EvalResult`.
