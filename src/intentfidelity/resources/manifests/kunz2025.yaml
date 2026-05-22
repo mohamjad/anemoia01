@@ -13,7 +13,7 @@ weak_proxy_sources:
   - timing windows
   - behavioral or endorsement signals
 known_limitations:
-  - ingestion is not implemented in pass 1
+  - real-data ingestion is not implemented yet
   - authorization-state proxies need explicit protocol design
 first_pass_role: authorization and declared weak-target evaluation target
 metadata:

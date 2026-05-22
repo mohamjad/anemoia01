@@ -13,7 +13,7 @@ weak_proxy_sources:
   - session metadata
   - task context
 known_limitations:
-  - ingestion is not implemented in pass 1
+  - real-data ingestion is not implemented yet
   - weak labels may be behaviorally confounded
 first_pass_role: naturalistic weak-label evaluation target
 metadata:

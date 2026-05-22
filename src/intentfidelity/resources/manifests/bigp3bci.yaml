@@ -13,7 +13,7 @@ weak_proxy_sources:
   - timing windows
   - session metadata
 known_limitations:
-  - ingestion is not implemented in pass 1
+  - real-data ingestion is not implemented yet
   - target distributions require task-specific event alignment
 first_pass_role: weak-target registry coverage for non-invasive BCI data
 metadata:

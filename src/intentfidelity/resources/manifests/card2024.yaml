@@ -13,7 +13,7 @@ weak_proxy_sources:
   - timing windows
   - session metadata
 known_limitations:
-  - ingestion is not implemented in pass 1
+  - real-data ingestion is not implemented yet
   - language-model attribution requires a later protocol
 first_pass_role: conceptual speech path and later communication evaluation target
 metadata:
