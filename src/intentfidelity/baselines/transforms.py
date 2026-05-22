@@ -69,6 +69,38 @@ def whitening_transform(examples: Sequence[LabeledExample], epsilon: float = 1e-
     return FeatureTransform("whitening", offsets=offsets, scales=scales)
 
 
+def whitening_coloring_transform(
+    source_examples: Sequence[LabeledExample],
+    reference_examples: Sequence[LabeledExample],
+    epsilon: float = 1e-9,
+) -> FeatureTransform:
+    dimension = feature_dimension(source_examples)
+    if feature_dimension(reference_examples) != dimension:
+        raise ValueError("source and reference examples must share feature dimension")
+
+    reference_mean = _mean_vector([example.features for example in reference_examples], dimension)
+    reference_std = tuple(
+        _std_at_index([example.features for example in reference_examples], reference_mean, index)
+        for index in range(dimension)
+    )
+    grouped = _examples_by_session(source_examples)
+    offsets: dict[str, tuple[float, ...]] = {}
+    scales: dict[str, tuple[float, ...]] = {}
+    for session, session_examples in grouped.items():
+        vectors = [example.features for example in session_examples]
+        session_mean = _mean_vector(vectors, dimension)
+        session_scales = tuple(
+            reference_std[index] / max(_std_at_index(vectors, session_mean, index), epsilon)
+            for index in range(dimension)
+        )
+        offsets[session] = tuple(
+            session_mean[index] - reference_mean[index] / max(session_scales[index], epsilon)
+            for index in range(dimension)
+        )
+        scales[session] = session_scales
+    return FeatureTransform("whitening_coloring", offsets=offsets, scales=scales)
+
+
 def _mean_vector(vectors: Sequence[tuple[float, ...]], dimension: int) -> tuple[float, ...]:
     return tuple(sum(vector[index] for vector in vectors) / len(vectors) for index in range(dimension))
 
