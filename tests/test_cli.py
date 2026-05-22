@@ -173,6 +173,26 @@ def test_communication_command_scores_text_jsonl(tmp_path: Path, capsys) -> None
     assert payload["method_scores"][0]["method_id"] == "decoder"
 
 
+def test_language_prior_command_outputs_attribution(tmp_path: Path, capsys) -> None:
+    result = EvalResult(
+        dataset_id="willett2023",
+        protocol=ProtocolType.COMMUNICATION,
+        method_scores=(
+            MethodScore("lm_light", 0.2, 0.2),
+            MethodScore("lm_heavy", 0.1, 0.4),
+        ),
+        primary_metric="character_error_rate",
+    )
+    path = tmp_path / "result.json"
+    path.write_text(json.dumps(result.to_dict()), encoding="utf-8")
+
+    assert main(["eval", "language-prior", str(path), "--format", "markdown"]) == 0
+
+    output = capsys.readouterr().out
+    assert "Language Prior Attribution" in output
+    assert "lm_heavy_worse" in output
+
+
 def test_nwb_summary_command_lists_hdf5_datasets(tmp_path: Path, capsys) -> None:
     path = tmp_path / "sample.nwb"
     with h5py.File(path, "w") as handle:

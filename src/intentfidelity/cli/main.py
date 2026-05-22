@@ -24,12 +24,16 @@ from intentfidelity.protocols import (
     communication_eval_result,
     compare_eval_results,
     falcon_h2_baseline_eval,
+    language_prior_report,
     load_eval_result,
 )
 from intentfidelity.protocols import falcon_h2_targets_from_file
 from intentfidelity.protocols import falcon_h2_prediction_eval
 from intentfidelity.reports import DatasetCard, EvalCard, render_json, render_markdown
-from intentfidelity.reports import render_comparison_markdown
+from intentfidelity.reports import (
+    render_comparison_markdown,
+    render_language_prior_markdown,
+)
 from intentfidelity.resources import fetch_dandi_assets, get_manifest, load_manifests
 
 
@@ -100,6 +104,14 @@ def build_parser() -> argparse.ArgumentParser:
         default="character_error_rate",
     )
     _add_handler(communication_eval, _eval_communication)
+    language_prior_eval = eval_subparsers.add_parser("language-prior")
+    language_prior_eval.add_argument("result_json", type=Path)
+    language_prior_eval.add_argument("--lm-light-method-id", default="lm_light")
+    language_prior_eval.add_argument("--lm-heavy-method-id", default="lm_heavy")
+    language_prior_eval.add_argument(
+        "--format", choices=("json", "markdown"), default="json"
+    )
+    _add_handler(language_prior_eval, _eval_language_prior)
 
     ingest_parser = subparsers.add_parser("ingest")
     ingest_subparsers = ingest_parser.add_subparsers(dest="ingest_command")
@@ -243,6 +255,18 @@ def _eval_communication(args: argparse.Namespace) -> None:
         metric=args.metric,
     )
     print(json.dumps(result.to_dict(), indent=2, sort_keys=True))
+
+
+def _eval_language_prior(args: argparse.Namespace) -> None:
+    attribution = language_prior_report(
+        _load_eval_result(args.result_json),
+        lm_light_method_id=args.lm_light_method_id,
+        lm_heavy_method_id=args.lm_heavy_method_id,
+    )
+    if args.format == "markdown":
+        print(render_language_prior_markdown(attribution), end="")
+        return
+    print(json.dumps(attribution.to_dict(), indent=2, sort_keys=True))
 
 
 def _ingest_falcon_h2_inventory(args: argparse.Namespace) -> None:
