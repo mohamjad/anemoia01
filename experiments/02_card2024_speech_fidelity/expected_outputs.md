@@ -1,7 +1,6 @@
 # Expected Outputs
 
-- communication protocol summary
+- executable communication eval JSON
 - weak target construction notes
-- decoder and language-prior comparison report
+- decoder text error comparison report
 - eval card
-
