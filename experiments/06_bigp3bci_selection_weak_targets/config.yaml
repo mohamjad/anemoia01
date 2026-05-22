@@ -1,0 +1,7 @@
+experiment_id: bigp3bci_selection_weak_targets
+dataset_id: bigp3bci
+protocol: selection
+status: scaffold
+resource_manifest: bigp3bci
+runner: synthetic_protocol_scaffold
+target_type: p300_selection_proxy
