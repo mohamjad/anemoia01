@@ -17,5 +17,6 @@ known_limitations:
   - target distributions require task-specific event alignment
 first_pass_role: weak-target registry coverage for non-invasive BCI data
 metadata:
-  evidence_stage: manifest only
-
+  evidence_stage: synthetic protocol scaffold
+  scaffold_protocol: selection
+  scaffold_target_type: p300_selection_proxy
