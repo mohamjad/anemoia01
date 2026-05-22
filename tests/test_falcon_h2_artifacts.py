@@ -93,6 +93,37 @@ def test_validate_falcon_h2_bundle_requires_falcon_artifact_kinds(
     assert report.issues[0].code == "missing_generated_artifact"
 
 
+def test_validate_falcon_h2_bundle_checks_result_counts(tmp_path: Path) -> None:
+    source = _write_h2_file(tmp_path / "sub-T5-held-out-calib_ses-20230417.nwb")
+    output_dir = tmp_path / "bundle"
+    write_falcon_h2_artifact_bundle(source, output_dir)
+    result_path = output_dir / "result.json"
+    payload = json.loads(result_path.read_text(encoding="utf-8"))
+    payload["metadata"]["target_count"] = 999
+    result_path.write_text(json.dumps(payload), encoding="utf-8")
+
+    report = validate_falcon_h2_artifact_bundle(output_dir)
+
+    assert report.is_valid is False
+    assert "result_target_count_mismatch" in {
+        issue.code for issue in report.issues
+    }
+
+
+def test_validate_falcon_h2_bundle_checks_report_scope(tmp_path: Path) -> None:
+    source = _write_h2_file(tmp_path / "sub-T5-held-out-calib_ses-20230417.nwb")
+    output_dir = tmp_path / "bundle"
+    write_falcon_h2_artifact_bundle(source, output_dir)
+    (output_dir / "eval_card.md").write_text("# Eval Card\n", encoding="utf-8")
+
+    report = validate_falcon_h2_artifact_bundle(output_dir)
+
+    assert report.is_valid is False
+    assert "eval_card_missing_evidence_scope" in {
+        issue.code for issue in report.issues
+    }
+
+
 def test_falcon_h2_bundle_accepts_inventory_root(tmp_path: Path) -> None:
     h2_root = tmp_path / "h2"
     _write_h2_file(h2_root / "held_in_calib" / "sub-T5-held-in-calib_ses-20230417.nwb")

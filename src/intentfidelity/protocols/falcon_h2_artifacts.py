@@ -21,15 +21,20 @@ from intentfidelity.ingest.schemas import (
 from intentfidelity.labels import (
     Prediction,
     WeakTarget,
+    read_predictions_jsonl,
+    read_weak_targets_jsonl,
     weak_targets_from_trials,
     write_predictions_jsonl,
     write_weak_targets_jsonl,
 )
 from intentfidelity.protocols.artifacts import (
     ArtifactBundle,
+    ArtifactValidationIssue,
     ArtifactValidationReport,
+    ArtifactValidationSeverity,
     EvidenceLevel,
     GeneratedArtifact,
+    load_artifact_bundle,
     save_artifact_bundle,
     validate_artifact_bundle,
 )
@@ -39,7 +44,7 @@ from intentfidelity.protocols.falcon_h2 import (
     falcon_h2_prediction_result_from_targets,
     falcon_h2_split_from_path,
 )
-from intentfidelity.protocols.io import save_eval_result
+from intentfidelity.protocols.io import load_eval_result, save_eval_result
 from intentfidelity.protocols.schemas import ProtocolType
 from intentfidelity.reports import EvalCard, render_comparison_markdown, render_markdown
 
@@ -168,9 +173,108 @@ def write_falcon_h2_artifact_bundle(
 def validate_falcon_h2_artifact_bundle(
     bundle_dir: str | Path,
 ) -> ArtifactValidationReport:
-    return validate_artifact_bundle(
+    report = validate_artifact_bundle(
         bundle_dir,
         required_kinds=FALCON_H2_BUNDLE_REQUIRED_KINDS,
+    )
+    if not report.is_valid:
+        return report
+
+    issues = list(report.issues)
+    root = Path(bundle_dir)
+    manifest_path = root / "bundle_manifest.json"
+    bundle = load_artifact_bundle(manifest_path)
+    artifacts = {artifact.kind: artifact.path for artifact in bundle.generated_files}
+
+    targets = read_weak_targets_jsonl(artifacts["targets_jsonl"])
+    predictions = read_predictions_jsonl(artifacts["predictions_jsonl"])
+    result = load_eval_result(artifacts["result_json"])
+    eval_card = artifacts["eval_card_markdown"].read_text(encoding="utf-8")
+    comparison = artifacts["comparison_markdown"].read_text(encoding="utf-8")
+
+    _append_count_issue(
+        issues,
+        "target_count_mismatch",
+        bundle.metadata.get("target_count"),
+        len(targets),
+        manifest_path,
+    )
+    _append_count_issue(
+        issues,
+        "prediction_count_mismatch",
+        bundle.metadata.get("prediction_count"),
+        len(predictions),
+        manifest_path,
+    )
+    _append_count_issue(
+        issues,
+        "result_target_count_mismatch",
+        result.metadata.get("target_count"),
+        len(targets),
+        artifacts["result_json"],
+    )
+    _append_count_issue(
+        issues,
+        "result_prediction_count_mismatch",
+        result.metadata.get("prediction_count"),
+        len(predictions),
+        artifacts["result_json"],
+    )
+
+    if result.dataset_id != FALCON_H2_DATASET_ID:
+        issues.append(
+            _error(
+                "unexpected_result_dataset_id",
+                "result.json must be for dataset_id falcon_h2.",
+                artifacts["result_json"],
+            )
+        )
+    if result.metadata.get("evidence_level") != bundle.evidence_level.value:
+        issues.append(
+            _error(
+                "evidence_level_mismatch",
+                "result.json evidence_level must match bundle_manifest.json.",
+                artifacts["result_json"],
+            )
+        )
+    if not _has_valid_source_file_hashes(bundle.metadata.get("source_files")):
+        issues.append(
+            _error(
+                "missing_source_file_hashes",
+                "bundle_manifest.json must include SHA-256 hashes for source files.",
+                manifest_path,
+            )
+        )
+    if bundle.evidence_level.value not in eval_card:
+        issues.append(
+            _error(
+                "eval_card_missing_evidence_scope",
+                "eval_card.md must include the bundle evidence level.",
+                artifacts["eval_card_markdown"],
+            )
+        )
+    if "declared weak target distributions" not in eval_card:
+        issues.append(
+            _error(
+                "eval_card_missing_proxy_scope",
+                "eval_card.md must state that scoring uses declared weak targets.",
+                artifacts["eval_card_markdown"],
+            )
+        )
+    if "not directly observed true intent" not in comparison:
+        issues.append(
+            _error(
+                "comparison_missing_intent_limitation",
+                "comparison.md must state that true intent is not directly observed.",
+                artifacts["comparison_markdown"],
+            )
+        )
+
+    return ArtifactValidationReport(
+        bundle_dir=report.bundle_dir,
+        manifest_path=report.manifest_path,
+        checked_files=report.checked_files,
+        issues=tuple(issues),
     )
 
 
@@ -321,6 +425,49 @@ def _sha256_file(path: Path) -> str:
         for chunk in iter(lambda: handle.read(1024 * 1024), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def _append_count_issue(
+    issues: list[ArtifactValidationIssue],
+    code: str,
+    observed: object,
+    expected: int,
+    path: Path,
+) -> None:
+    if observed == expected:
+        return
+    issues.append(
+        _error(
+            code,
+            f"metadata count {observed!r} does not match artifact count {expected}.",
+            path,
+        )
+    )
+
+
+def _has_valid_source_file_hashes(source_files: object) -> bool:
+    if not isinstance(source_files, (list, tuple)) or not source_files:
+        return False
+    for item in source_files:
+        if not isinstance(item, dict):
+            return False
+        digest = item.get("sha256")
+        if not isinstance(digest, str) or len(digest) != 64:
+            return False
+    return True
+
+
+def _error(
+    code: str,
+    message: str,
+    path: Path,
+) -> ArtifactValidationIssue:
+    return ArtifactValidationIssue(
+        ArtifactValidationSeverity.ERROR,
+        code,
+        message,
+        path,
+    )
 
 
 def _write_json(payload: dict, path: Path) -> None:
