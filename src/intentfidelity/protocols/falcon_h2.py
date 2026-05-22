@@ -97,6 +97,29 @@ def falcon_h2_prediction_result_from_targets(
     )
 
 
+def falcon_h2_method_comparison_result_from_targets(
+    targets: tuple[WeakTarget, ...],
+    predictions_by_method: dict[str, tuple[Prediction, ...]],
+    *,
+    metadata: dict | None = None,
+) -> EvalResult:
+    if not targets:
+        raise ValueError("cannot compare FALCON H2 methods without weak targets")
+
+    scores = tuple(
+        _comparison_score_predictions(method_id, targets, predictions)
+        for method_id, predictions in sorted(predictions_by_method.items())
+    )
+    return EvalResult(
+        dataset_id="falcon_h2",
+        protocol=ProtocolType.HELD_OUT_SESSION,
+        method_scores=scores,
+        primary_metric="intent_fidelity_log_loss",
+        ranking_disagreement=ranking_disagreement(scores) if len(scores) > 1 else None,
+        metadata=dict(metadata or {}),
+    )
+
+
 def falcon_h2_feature_baseline_eval(train_path, test_path) -> EvalResult:
     train_examples = load_falcon_h2_labeled_examples(
         train_path, falcon_h2_split_from_path(train_path)
@@ -151,6 +174,35 @@ def _score_predictions(
         conventional_score=mean_loss,
         intent_fidelity_score=mean_loss,
     )
+
+
+def _comparison_score_predictions(
+    method_id: str,
+    targets: tuple[WeakTarget, ...],
+    predictions: tuple[Prediction, ...],
+) -> MethodScore:
+    predictions_by_sample = {prediction.sample_id: prediction for prediction in predictions}
+    losses: list[float] = []
+    top1_errors: list[float] = []
+    for target in targets:
+        prediction = predictions_by_sample.get(target.sample_id)
+        if prediction is None:
+            raise ValueError(f"missing prediction for sample_id: {target.sample_id}")
+        losses.append(intent_fidelity_loss(target, prediction).value)
+        top1_errors.append(
+            0.0
+            if _top_label(prediction.probabilities) == _top_label(target.probabilities)
+            else 1.0
+        )
+    return MethodScore(
+        method_id=method_id,
+        conventional_score=sum(top1_errors) / len(top1_errors),
+        intent_fidelity_score=sum(losses) / len(losses),
+    )
+
+
+def _top_label(probabilities: dict[str, float]) -> str:
+    return sorted(probabilities.items(), key=lambda item: (-item[1], item[0]))[0][0]
 
 
 def falcon_h2_split_from_path(path) -> IngestSplit:

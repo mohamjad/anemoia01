@@ -4,6 +4,7 @@ from intentfidelity.protocols.falcon_h2 import (
     falcon_h2_baseline_eval,
     falcon_h2_baseline_predictions,
     falcon_h2_feature_baseline_eval,
+    falcon_h2_method_comparison_result_from_targets,
     falcon_h2_prediction_eval,
     falcon_h2_prediction_result_from_targets,
     falcon_h2_split_from_path,
@@ -87,6 +88,35 @@ def test_falcon_h2_prediction_result_scores_existing_targets(tmp_path) -> None:
     assert result.method_scores[0].intent_fidelity_score == 0.0
 
 
+def test_falcon_h2_method_comparison_uses_top1_error_and_log_loss(tmp_path) -> None:
+    targets = falcon_h2_targets_from_file(_write_h2_file(tmp_path))
+    good = tuple(
+        Prediction(target.sample_id, target.probabilities, "good") for target in targets
+    )
+    bad = tuple(
+        Prediction(
+            target.sample_id,
+            {
+                label: 1.0 if label != _top_target_label(target) else 0.0
+                for label in target.support
+            },
+            "bad",
+        )
+        for target in targets
+    )
+
+    result = falcon_h2_method_comparison_result_from_targets(
+        targets,
+        {"good": good, "bad": bad},
+    )
+
+    scores = {score.method_id: score for score in result.method_scores}
+    assert scores["good"].conventional_score == 0.0
+    assert scores["good"].intent_fidelity_score == 0.0
+    assert scores["bad"].conventional_score == 1.0
+    assert scores["bad"].intent_fidelity_score > 0.0
+
+
 def test_falcon_h2_feature_baseline_eval_scores_centroid_predictions(tmp_path) -> None:
     train_path = _write_h2_file(tmp_path, name="sub-T5-held-in-calib_ses-20230417.nwb")
     test_path = _write_h2_file(tmp_path, name="sub-T5-held-out-calib_ses-20230418.nwb")
@@ -112,3 +142,7 @@ def _write_h2_file(tmp_path, name="sub-T5-held-out-calib_ses-20230417.nwb"):
         handle.create_dataset("acquisition/binned_spikes/timestamps", data=[0.25, 1.25])
         handle.create_dataset("acquisition/eval_mask/data", data=[True])
     return path
+
+
+def _top_target_label(target):
+    return max(target.probabilities, key=target.probabilities.get)
