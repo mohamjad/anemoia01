@@ -97,7 +97,11 @@ def test_falcon_h2_feature_baseline_command_outputs_json(tmp_path: Path, capsys)
     assert main(["eval", "falcon-h2-feature-baseline", str(train), str(test)]) == 0
 
     payload = json.loads(capsys.readouterr().out)
-    assert payload["method_scores"][0]["method_id"] == "identity_centroid"
+    assert [score["method_id"] for score in payload["method_scores"]] == [
+        "identity_centroid",
+        "session_centered_centroid",
+        "whitened_centroid",
+    ]
 
 
 def test_falcon_h2_targets_command_writes_jsonl(tmp_path: Path, capsys) -> None:
