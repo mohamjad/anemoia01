@@ -28,13 +28,18 @@ Start with:
 
 ```text
 docs/SOURCE_OF_TRUTH.md
+docs/HANDOFF.md
+docs/NEXT_STEPS.md
 docs/IMPLEMENTATION_PLAN.md
 docs/NEXT_CHAT_BRIEF.md
 docs/ARCHITECTURE.md
 ```
 
-Useful pass-1 references:
+Core references:
 
+- `docs/SYSTEM_MAP.md`
+- `docs/DEVELOPMENT.md`
+- `docs/RELIABILITY.md`
 - `docs/RESOURCE_MANIFESTS.md`
 - `docs/METRICS.md`
 - `docs/PROTOCOLS.md`
