@@ -15,6 +15,8 @@ Implemented in pass 1:
 - over-adaptation detection
 - expected calibration error
 
+For FALCON H2 pass 2, `intent_fidelity_log_loss` is computed over character
+targets derived from declared handwriting prompt cues and trial timing windows.
+
 These metrics evaluate fidelity to declared proxies. They do not claim direct
 measurement of true intent.
-
