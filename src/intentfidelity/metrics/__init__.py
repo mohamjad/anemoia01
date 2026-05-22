@@ -19,6 +19,7 @@ from intentfidelity.metrics.comparison import (
     ranking_disagreement,
 )
 from intentfidelity.metrics.evaluation import score_predictions
+from intentfidelity.metrics.method_scores import method_scores_from_metrics
 
 __all__ = [
     "DistributionMetric",
@@ -34,6 +35,7 @@ __all__ = [
     "kl_divergence",
     "log_loss",
     "mean_metric",
+    "method_scores_from_metrics",
     "ranking_disagreement",
     "score_predictions",
 ]
