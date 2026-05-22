@@ -22,12 +22,17 @@ from intentfidelity.metrics.evaluation import score_predictions
 from intentfidelity.metrics.method_scores import method_scores_from_metrics
 from intentfidelity.metrics.edit_distance import edit_distance, normalized_edit_distance
 from intentfidelity.metrics.text import character_error_rate, word_error_rate
+from intentfidelity.metrics.language_prior import (
+    LanguagePriorAttribution,
+    language_prior_attribution,
+)
 
 __all__ = [
     "DistributionMetric",
     "MethodScore",
     "OverAdaptationEvent",
     "RankingDisagreement",
+    "LanguagePriorAttribution",
     "brier_score",
     "detect_over_adaptation",
     "edit_distance",
@@ -36,6 +41,7 @@ __all__ = [
     "intent_fidelity_loss",
     "jensen_shannon_divergence",
     "kl_divergence",
+    "language_prior_attribution",
     "log_loss",
     "mean_metric",
     "method_scores_from_metrics",
