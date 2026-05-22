@@ -26,3 +26,7 @@ transcript targets, text predictions, language-prior attribution, authorization
 events, and dedicated report renderers. These modules keep proxy construction,
 metrics, protocols, and reports separate so real-data ingestion can attach to
 the same contracts later.
+
+Pass 5 adds the naturalistic weak-label path: behavior proxy events, event IO,
+proxy ambiguity summaries, an AJILE12 scaffold runner, and a naturalistic report
+renderer.
