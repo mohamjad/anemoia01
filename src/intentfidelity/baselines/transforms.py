@@ -53,8 +53,33 @@ def session_centering_transform(examples: Sequence[LabeledExample]) -> FeatureTr
     )
 
 
+def whitening_transform(examples: Sequence[LabeledExample], epsilon: float = 1e-9) -> FeatureTransform:
+    dimension = feature_dimension(examples)
+    grouped = _examples_by_session(examples)
+    offsets: dict[str, tuple[float, ...]] = {}
+    scales: dict[str, tuple[float, ...]] = {}
+    for session, session_examples in grouped.items():
+        vectors = [example.features for example in session_examples]
+        mean = _mean_vector(vectors, dimension)
+        offsets[session] = mean
+        scales[session] = tuple(
+            1.0 / max(_std_at_index(vectors, mean, index), epsilon)
+            for index in range(dimension)
+        )
+    return FeatureTransform("whitening", offsets=offsets, scales=scales)
+
+
 def _mean_vector(vectors: Sequence[tuple[float, ...]], dimension: int) -> tuple[float, ...]:
     return tuple(sum(vector[index] for vector in vectors) / len(vectors) for index in range(dimension))
+
+
+def _std_at_index(
+    vectors: Sequence[tuple[float, ...]],
+    mean: tuple[float, ...],
+    index: int,
+) -> float:
+    variance = sum((vector[index] - mean[index]) ** 2 for vector in vectors) / len(vectors)
+    return variance**0.5
 
 
 def _apply_affine(
