@@ -1,7 +1,7 @@
 # FALCON H2 Ranking Disagreement
 
-Purpose: prepare the first real-data path for held-out-session comparisons
-between conventional decoder metrics and intent-fidelity metrics.
+Purpose: run the first real-data path for FALCON H2 inventory, weak target
+export, and held-out-session intent-fidelity evaluation.
 
-No ingestion is implemented in pass 1.
-
+Built-in baselines are target-construction sanity checks. Decoder evidence
+requires external predictions.
