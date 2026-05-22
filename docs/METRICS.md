@@ -18,6 +18,7 @@ Implemented in pass 1:
 - character error rate
 - word error rate
 - language-prior attribution delta
+- naturalistic proxy confidence and ambiguity summary
 
 For FALCON H2 pass 2, `intent_fidelity_log_loss` is computed over character
 targets derived from declared handwriting prompt cues and trial timing windows.
