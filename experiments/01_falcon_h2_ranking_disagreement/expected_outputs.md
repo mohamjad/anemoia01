@@ -1,7 +1,8 @@
 # Expected Outputs
 
 - held-out-session split summary
-- conventional metric ranking
-- intent-fidelity metric ranking
-- ranking disagreement report
-
+- FALCON H2 inventory JSON
+- exported weak target JSONL
+- target-construction sanity baseline eval JSON
+- external prediction eval JSON when predictions are supplied
+- eval card
