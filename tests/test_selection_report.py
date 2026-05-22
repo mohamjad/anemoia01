@@ -1,6 +1,6 @@
 from intentfidelity.labels import P300SelectionEvent, Prediction
 from intentfidelity.protocols import selection_eval_result
-from intentfidelity.reports.selection import render_selection_markdown
+from intentfidelity.reports import render_selection_markdown
 
 
 def test_render_selection_markdown_includes_proxy_summary() -> None:
