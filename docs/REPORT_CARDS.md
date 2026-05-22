@@ -17,6 +17,7 @@ Pass 4 adds focused Markdown renderers for:
 - communication evaluation results
 - language-prior attribution summaries
 - authorization evaluation results
+- naturalistic weak-label evaluation results
 
 These renderers keep the same constraint as eval cards: they describe fidelity
 to declared proxies, not direct measurement of true intent.
