@@ -16,6 +16,9 @@ intentfidelity eval falcon-h2-targets data/h2/sub-T5-held-out-calib/example.nwb 
 intentfidelity eval falcon-h2-baselines data/h2/sub-T5-held-out-calib/example.nwb
 intentfidelity eval falcon-h2-feature-baseline train.nwb test.nwb
 intentfidelity eval falcon-h2-predictions data/h2/sub-T5-held-out-calib/example.nwb outputs/predictions.jsonl
+intentfidelity eval communication text-targets.jsonl text-predictions.jsonl --dataset-id card2024
+intentfidelity eval language-prior outputs/results.json --format markdown
+intentfidelity eval authorization authorization-events.jsonl authorization-predictions.jsonl --dataset-id kunz2025
 intentfidelity eval summarize outputs/results.json
 intentfidelity eval compare outputs/results.json --format markdown
 intentfidelity report dataset-card falcon_h2
