@@ -7,7 +7,7 @@ import sys
 
 from intentfidelity.figures import render_ranking_reversal
 from intentfidelity.ingest import inventory_falcon_h2
-from intentfidelity.protocols import EvalResult, load_eval_result
+from intentfidelity.protocols import EvalResult, falcon_h2_baseline_eval, load_eval_result
 from intentfidelity.reports import DatasetCard, EvalCard, render_json, render_markdown
 from intentfidelity.resources import get_manifest, load_manifests
 
@@ -43,6 +43,10 @@ def build_parser() -> argparse.ArgumentParser:
     eval_summary = eval_subparsers.add_parser("summarize")
     eval_summary.add_argument("result_json", type=Path)
     _add_handler(eval_summary, _eval_summarize)
+    falcon_h2_eval = eval_subparsers.add_parser("falcon-h2-baselines")
+    falcon_h2_eval.add_argument("nwb_file", type=Path)
+    falcon_h2_eval.add_argument("--output", type=Path)
+    _add_handler(falcon_h2_eval, _eval_falcon_h2_baselines)
 
     ingest_parser = subparsers.add_parser("ingest")
     ingest_subparsers = ingest_parser.add_subparsers(dest="ingest_command")
@@ -105,6 +109,17 @@ def _eval_summarize(args: argparse.Namespace) -> None:
     print(f"Methods: {len(result.method_scores)}")
     if result.ranking_disagreement is not None:
         print(f"Ranking disagreement: {result.ranking_disagreement.has_disagreement}")
+
+
+def _eval_falcon_h2_baselines(args: argparse.Namespace) -> None:
+    result = falcon_h2_baseline_eval(args.nwb_file)
+    rendered = json.dumps(result.to_dict(), indent=2, sort_keys=True)
+    if args.output:
+        args.output.parent.mkdir(parents=True, exist_ok=True)
+        args.output.write_text(rendered + "\n", encoding="utf-8")
+        print(f"Wrote {args.output}")
+        return
+    print(rendered)
 
 
 def _ingest_falcon_h2_inventory(args: argparse.Namespace) -> None:

@@ -1,6 +1,8 @@
 import json
 from pathlib import Path
 
+import h5py
+
 from intentfidelity.cli.main import main
 from intentfidelity.metrics import MethodScore, ranking_disagreement
 from intentfidelity.protocols import EvalResult, ProtocolType
@@ -71,3 +73,19 @@ def test_falcon_h2_inventory_command_reports_layout(tmp_path: Path, capsys) -> N
     assert payload["dataset_id"] == "falcon_h2"
     assert payload["is_valid"] is True
     assert payload["file_count"] == 3
+
+
+def test_falcon_h2_baseline_eval_command_outputs_json(tmp_path: Path, capsys) -> None:
+    path = tmp_path / "sub-T5-held-out-calib_ses-20230417.nwb"
+    with h5py.File(path, "w") as handle:
+        trials = handle.create_group("intervals/trials")
+        trials.create_dataset("cue", data=[b"ab"])
+        trials.create_dataset("start_time", data=[0.0])
+        trials.create_dataset("stop_time", data=[2.0])
+        trials.create_dataset("id", data=[1])
+
+    assert main(["eval", "falcon-h2-baselines", str(path)]) == 0
+
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["dataset_id"] == "falcon_h2"
+    assert len(payload["method_scores"]) == 2
