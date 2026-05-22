@@ -31,12 +31,15 @@ from intentfidelity.labels.io import (
     write_predictions_jsonl,
     write_weak_targets_jsonl,
 )
+from intentfidelity.labels.text import TextPrediction, TextTarget, normalize_text
 
 __all__ = [
     "DistributionValidationError",
     "HANDWRITING_SOURCE_TYPE",
     "Prediction",
     "SPACE_TOKEN",
+    "TextPrediction",
+    "TextTarget",
     "HandwritingCue",
     "WeakTarget",
     "align_probabilities",
@@ -44,6 +47,7 @@ __all__ = [
     "cue_support",
     "normalize_probabilities",
     "normalize_h2_cue",
+    "normalize_text",
     "prediction_from_dict",
     "read_predictions_jsonl",
     "read_weak_targets_jsonl",
