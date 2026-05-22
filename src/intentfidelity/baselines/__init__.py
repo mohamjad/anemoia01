@@ -6,7 +6,11 @@ from intentfidelity.baselines.registry import (
     list_baselines,
     list_implemented_baselines,
 )
-from intentfidelity.baselines.predictions import proxy_oracle_prediction, uniform_prediction
+from intentfidelity.baselines.predictions import (
+    project_prediction_to_target_support,
+    proxy_oracle_prediction,
+    uniform_prediction,
+)
 from intentfidelity.baselines.examples import (
     LabeledExample,
     feature_dimension,
@@ -49,6 +53,7 @@ __all__ = [
     "list_baselines",
     "list_implemented_baselines",
     "proxy_oracle_prediction",
+    "project_prediction_to_target_support",
     "read_labeled_examples_csv",
     "run_centroid_baseline",
     "run_default_centroid_baselines",
