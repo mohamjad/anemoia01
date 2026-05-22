@@ -22,3 +22,11 @@ FALCON H2 now has a held-out-session path that can:
 
 Method comparison reports can summarize ranking disagreement for one result and
 over-adaptation events between two results.
+
+Pass 4 adds executable communication and authorization scaffolds:
+
+- communication scores text predictions against declared transcript proxies
+- language-prior attribution compares LM-light and LM-heavy method scores
+- authorization scores predictions against authorization-state weak targets
+
+These scaffolds expose the protocol contracts before real speech-path ingestion.
