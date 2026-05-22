@@ -18,6 +18,11 @@ FALCON_H2_EXPECTED_SPLITS: tuple[IngestSplit, ...] = (
     IngestSplit.HELD_OUT_CALIB,
     IngestSplit.MINIVAL,
 )
+FALCON_H2_SPLIT_DIRECTORIES: dict[IngestSplit, tuple[str, ...]] = {
+    IngestSplit.HELD_IN_CALIB: ("sub-T5-held-in-calib", "held_in_calib"),
+    IngestSplit.HELD_OUT_CALIB: ("sub-T5-held-out-calib", "held_out_calib"),
+    IngestSplit.MINIVAL: ("sub-T5-held-in-minival", "minival"),
+}
 FALCON_H2_FILE_SUFFIXES = (".nwb", ".h5", ".hdf5")
 
 
@@ -56,7 +61,7 @@ def inventory_falcon_h2(data_root: str | Path) -> DatasetInventory:
         return DatasetInventory(FALCON_H2_DATASET_ID, h2_root, (), tuple(issues))
 
     for split in FALCON_H2_EXPECTED_SPLITS:
-        split_dir = h2_root / split.value
+        split_dir = _resolve_split_directory(h2_root, split)
         if not split_dir.exists():
             issues.append(
                 ValidationIssue(
@@ -107,6 +112,14 @@ def inventory_falcon_h2(data_root: str | Path) -> DatasetInventory:
     )
 
 
+def _resolve_split_directory(h2_root: Path, split: IngestSplit) -> Path:
+    for directory_name in FALCON_H2_SPLIT_DIRECTORIES[split]:
+        candidate = h2_root / directory_name
+        if candidate.exists():
+            return candidate
+    return h2_root / FALCON_H2_SPLIT_DIRECTORIES[split][0]
+
+
 def _find_data_files(directory: Path) -> tuple[Path, ...]:
     return tuple(
         sorted(
@@ -118,4 +131,3 @@ def _find_data_files(directory: Path) -> tuple[Path, ...]:
             key=lambda path: str(path),
         )
     )
-
