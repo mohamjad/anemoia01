@@ -1,7 +1,11 @@
 from __future__ import annotations
 
 from intentfidelity.baselines import proxy_oracle_prediction, uniform_prediction
-from intentfidelity.ingest import IngestSplit, load_falcon_h2_trials
+from intentfidelity.ingest import (
+    IngestSplit,
+    load_falcon_h2_trials,
+)
+from intentfidelity.ingest.falcon_examples import load_falcon_h2_labeled_examples
 from intentfidelity.labels import WeakTarget, weak_targets_from_trials
 from intentfidelity.metrics import (
     DistributionMetric,
@@ -63,6 +67,18 @@ def falcon_h2_prediction_eval(
             "baseline_scope": "external predictions against declared weak targets",
         },
     )
+
+
+def falcon_h2_feature_baseline_eval(train_path, test_path) -> EvalResult:
+    train_examples = load_falcon_h2_labeled_examples(train_path, _split_from_path(train_path))
+    test_examples = load_falcon_h2_labeled_examples(test_path, _split_from_path(test_path))
+    if not train_examples or not test_examples:
+        raise ValueError("train and test files must produce labeled examples")
+
+    from intentfidelity.baselines import run_centroid_baseline
+
+    run = run_centroid_baseline(train_examples, test_examples, method_id="identity_centroid")
+    return falcon_h2_prediction_eval(test_path, {run.method_id: run.predictions})
 
 
 def _score_baseline(method_id: str, targets: tuple[WeakTarget, ...]) -> MethodScore:
