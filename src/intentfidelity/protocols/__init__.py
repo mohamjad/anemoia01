@@ -10,6 +10,13 @@ from intentfidelity.protocols.schemas import (
     naturalistic_weak_label_result,
     selection_result,
 )
+from intentfidelity.protocols.artifacts import (
+    ArtifactBundle,
+    EvidenceLevel,
+    GeneratedArtifact,
+    load_artifact_bundle,
+    save_artifact_bundle,
+)
 from intentfidelity.protocols.io import load_eval_result, save_eval_result
 from intentfidelity.protocols.falcon_h2 import (
     falcon_h2_baseline_eval,
@@ -30,6 +37,9 @@ from intentfidelity.protocols.selection import selection_eval_result
 
 __all__ = [
     "EvalResult",
+    "ArtifactBundle",
+    "EvidenceLevel",
+    "GeneratedArtifact",
     "MethodComparisonReport",
     "ProtocolType",
     "authorization_result",
@@ -43,10 +53,12 @@ __all__ = [
     "falcon_h2_prediction_eval",
     "falcon_h2_targets_from_file",
     "held_out_session_result",
+    "load_artifact_bundle",
     "load_eval_result",
     "language_prior_report",
     "naturalistic_weak_label_result",
     "naturalistic_eval_result",
+    "save_artifact_bundle",
     "save_eval_result",
     "selection_result",
     "selection_eval_result",
