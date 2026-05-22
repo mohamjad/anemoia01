@@ -1,0 +1,21 @@
+dataset_id: ajile12
+title: AJILE12
+domain: naturalistic multi-session neural-interface data
+status: planned
+priority: 5
+access: research dataset
+modalities:
+  - neural recordings
+  - naturalistic behavior
+weak_proxy_sources:
+  - behavioral outputs
+  - timing windows
+  - session metadata
+  - task context
+known_limitations:
+  - ingestion is not implemented in pass 1
+  - weak labels may be behaviorally confounded
+first_pass_role: naturalistic weak-label evaluation target
+metadata:
+  evidence_stage: manifest only
+

@@ -1,0 +1,21 @@
+dataset_id: card2024
+title: Card 2024 speech neuroprosthesis
+domain: speech neuroprosthesis evaluation
+status: reference
+priority: 2
+access: research publication and associated resources
+modalities:
+  - intracortical neural recordings
+  - speech or text outputs
+weak_proxy_sources:
+  - prompted speech targets
+  - decoded text outputs
+  - timing windows
+  - session metadata
+known_limitations:
+  - ingestion is not implemented in pass 1
+  - language-model attribution requires a later protocol
+first_pass_role: conceptual speech path and later communication evaluation target
+metadata:
+  evidence_stage: manifest only
+

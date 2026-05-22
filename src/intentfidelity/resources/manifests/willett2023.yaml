@@ -1,0 +1,21 @@
+dataset_id: willett2023
+title: Willett 2023 speech neuroprosthesis
+domain: speech neuroprosthesis evaluation
+status: reference
+priority: 3
+access: research publication and associated resources
+modalities:
+  - intracortical neural recordings
+  - attempted speech or handwriting-related outputs
+weak_proxy_sources:
+  - prompted targets
+  - decoded text outputs
+  - timing windows
+  - session metadata
+known_limitations:
+  - ingestion is not implemented in pass 1
+  - weak target construction is dataset-specific future work
+first_pass_role: conceptual speech path and language-prior attribution target
+metadata:
+  evidence_stage: manifest only
+

@@ -1,0 +1,22 @@
+dataset_id: falcon_h2
+title: FALCON H2
+domain: multi-session motor neural-interface evaluation
+status: active
+priority: 1
+access: public research resource
+modalities:
+  - intracortical neural recordings
+  - behavioral task outputs
+weak_proxy_sources:
+  - task prompts
+  - timing windows
+  - behavioral outputs
+  - session metadata
+known_limitations:
+  - ingestion is not implemented in pass 1
+  - manifest does not assert direct access to intent
+first_pass_role: first real-data target for held-out-session ranking disagreement
+metadata:
+  resource_family: FALCON
+  evidence_stage: manifest only
+

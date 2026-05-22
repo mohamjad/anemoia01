@@ -1,0 +1,21 @@
+dataset_id: kunz2025
+title: Kunz 2025 inner and attempted speech
+domain: inner and attempted speech evaluation
+status: planned
+priority: 4
+access: research publication and associated resources
+modalities:
+  - neural recordings
+  - inner or attempted speech task outputs
+weak_proxy_sources:
+  - task prompts
+  - authorization states
+  - timing windows
+  - behavioral or endorsement signals
+known_limitations:
+  - ingestion is not implemented in pass 1
+  - authorization-state proxies need explicit protocol design
+first_pass_role: authorization and declared weak-target evaluation target
+metadata:
+  evidence_stage: manifest only
+
