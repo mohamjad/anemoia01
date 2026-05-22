@@ -5,4 +5,7 @@ status: scaffold
 notes:
   - sanity check only
   - no real-data evidence
-
+baselines:
+  - identity_centroid
+  - session_centered_centroid
+  - whitened_centroid
