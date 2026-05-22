@@ -30,6 +30,13 @@ Current task frontier:
 Move from synthetic protocol scaffolds into real-data ingestion and evaluation.
 ```
 
+Read these before starting the next implementation pass:
+
+- `docs/HANDOFF.md`
+- `docs/NEXT_STEPS.md`
+- `docs/SYSTEM_MAP.md`
+- `docs/RELIABILITY.md`
+
 Completed scaffold passes:
 
 1. Core package, schemas, metrics, reports, CLI, and tests.
