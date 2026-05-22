@@ -28,6 +28,14 @@ def test_report_dataset_card_command(capsys) -> None:
     assert payload["dataset_id"] == "falcon_h2"
 
 
+def test_resources_card_command(capsys) -> None:
+    assert main(["resources", "card", "falcon_h2"]) == 0
+
+    output = capsys.readouterr().out
+    assert "# FALCON H2" in output
+    assert "Weak Proxy Sources" in output
+
+
 def test_eval_summary_and_figure_commands(tmp_path: Path, capsys) -> None:
     scores = (
         MethodScore("accuracy_first", 0.1, 0.4),
@@ -48,4 +56,3 @@ def test_eval_summary_and_figure_commands(tmp_path: Path, capsys) -> None:
 
     assert main(["figure", "ranking-reversal", str(path)]) == 0
     assert "accuracy_first -> proxy_faithful" in capsys.readouterr().out
-

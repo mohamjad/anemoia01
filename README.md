@@ -30,4 +30,13 @@ Start with:
 docs/SOURCE_OF_TRUTH.md
 docs/IMPLEMENTATION_PLAN.md
 docs/NEXT_CHAT_BRIEF.md
+docs/ARCHITECTURE.md
 ```
+
+Useful pass-1 references:
+
+- `docs/RESOURCE_MANIFESTS.md`
+- `docs/METRICS.md`
+- `docs/PROTOCOLS.md`
+- `docs/REPORT_CARDS.md`
+- `docs/CLI.md`
