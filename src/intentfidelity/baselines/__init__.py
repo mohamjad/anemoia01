@@ -24,6 +24,7 @@ from intentfidelity.baselines.io import (
     read_labeled_examples_csv,
     write_labeled_examples_csv,
 )
+from intentfidelity.baselines.synthetic import synthetic_shift_examples
 
 __all__ = [
     "BaselineRun",
@@ -42,6 +43,7 @@ __all__ = [
     "run_centroid_baseline",
     "sessions_from_examples",
     "session_centering_transform",
+    "synthetic_shift_examples",
     "uniform_prediction",
     "whitening_coloring_transform",
     "whitening_transform",
