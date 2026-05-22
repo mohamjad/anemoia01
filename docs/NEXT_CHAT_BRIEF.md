@@ -18,6 +18,8 @@ Current status:
 ```text
 Pass 4 added communication, language-prior attribution, and authorization
 protocol scaffolds for the speech-path resources.
+Pass 5 added naturalistic weak-label scaffolding for AJILE12-style behavior
+proxies.
 ```
 
 Immediate task:
