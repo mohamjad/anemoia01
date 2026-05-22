@@ -8,6 +8,7 @@ from intentfidelity.reports.cards import (
     render_json,
     render_markdown,
 )
+from intentfidelity.reports.authorization import render_authorization_markdown
 from intentfidelity.reports.comparison import render_comparison_markdown
 from intentfidelity.reports.communication import render_communication_markdown
 from intentfidelity.reports.language_prior import render_language_prior_markdown
@@ -18,6 +19,7 @@ __all__ = [
     "EvalCard",
     "default_claim_card",
     "render_json",
+    "render_authorization_markdown",
     "render_markdown",
     "render_comparison_markdown",
     "render_communication_markdown",

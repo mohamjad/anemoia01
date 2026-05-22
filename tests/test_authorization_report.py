@@ -4,7 +4,7 @@ from intentfidelity.labels import (
     Prediction,
 )
 from intentfidelity.protocols import authorization_eval_result
-from intentfidelity.reports.authorization import render_authorization_markdown
+from intentfidelity.reports import render_authorization_markdown
 
 
 def test_render_authorization_markdown_describes_uncertainty_scope() -> None:
