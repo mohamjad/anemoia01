@@ -52,6 +52,10 @@ from intentfidelity.labels.naturalistic import (
     NaturalisticEvent,
     weak_target_from_naturalistic_event,
 )
+from intentfidelity.labels.naturalistic_io import (
+    read_naturalistic_events_jsonl,
+    write_naturalistic_events_jsonl,
+)
 
 __all__ = [
     "AuthorizationEvent",
@@ -75,6 +79,7 @@ __all__ = [
     "prediction_from_dict",
     "read_predictions_jsonl",
     "read_authorization_events_jsonl",
+    "read_naturalistic_events_jsonl",
     "read_text_predictions_jsonl",
     "read_text_targets_jsonl",
     "read_weak_targets_jsonl",
@@ -87,6 +92,7 @@ __all__ = [
     "weak_targets_from_trials",
     "write_predictions_jsonl",
     "write_authorization_events_jsonl",
+    "write_naturalistic_events_jsonl",
     "write_text_predictions_jsonl",
     "write_text_targets_jsonl",
     "write_weak_targets_jsonl",

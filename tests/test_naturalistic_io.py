@@ -1,5 +1,5 @@
-from intentfidelity.labels import NaturalisticEvent
-from intentfidelity.labels.naturalistic_io import (
+from intentfidelity.labels import (
+    NaturalisticEvent,
     read_naturalistic_events_jsonl,
     write_naturalistic_events_jsonl,
 )
