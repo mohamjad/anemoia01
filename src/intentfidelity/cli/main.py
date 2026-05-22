@@ -15,6 +15,7 @@ from intentfidelity.figures import render_comparison_table, render_ranking_rever
 from intentfidelity.ingest import inventory_falcon_h2, list_hdf5_datasets
 from intentfidelity.labels import (
     read_authorization_events_jsonl,
+    read_naturalistic_events_jsonl,
     read_predictions_jsonl,
     read_text_predictions_jsonl,
     read_text_targets_jsonl,
@@ -28,6 +29,7 @@ from intentfidelity.protocols import (
     falcon_h2_baseline_eval,
     language_prior_report,
     load_eval_result,
+    naturalistic_eval_result,
 )
 from intentfidelity.protocols import falcon_h2_targets_from_file
 from intentfidelity.protocols import falcon_h2_prediction_eval
@@ -35,6 +37,7 @@ from intentfidelity.reports import DatasetCard, EvalCard, render_json, render_ma
 from intentfidelity.reports import (
     render_comparison_markdown,
     render_language_prior_markdown,
+    render_naturalistic_markdown,
 )
 from intentfidelity.resources import fetch_dandi_assets, get_manifest, load_manifests
 
@@ -119,6 +122,14 @@ def build_parser() -> argparse.ArgumentParser:
     authorization_eval.add_argument("predictions_jsonl", type=Path)
     authorization_eval.add_argument("--dataset-id", required=True)
     _add_handler(authorization_eval, _eval_authorization)
+    naturalistic_eval = eval_subparsers.add_parser("naturalistic")
+    naturalistic_eval.add_argument("events_jsonl", type=Path)
+    naturalistic_eval.add_argument("predictions_jsonl", type=Path)
+    naturalistic_eval.add_argument("--dataset-id", required=True)
+    naturalistic_eval.add_argument(
+        "--format", choices=("json", "markdown"), default="json"
+    )
+    _add_handler(naturalistic_eval, _eval_naturalistic)
 
     ingest_parser = subparsers.add_parser("ingest")
     ingest_subparsers = ingest_parser.add_subparsers(dest="ingest_command")
@@ -282,6 +293,18 @@ def _eval_authorization(args: argparse.Namespace) -> None:
         _predictions_by_method(read_predictions_jsonl(args.predictions_jsonl)),
         dataset_id=args.dataset_id,
     )
+    print(json.dumps(result.to_dict(), indent=2, sort_keys=True))
+
+
+def _eval_naturalistic(args: argparse.Namespace) -> None:
+    result = naturalistic_eval_result(
+        read_naturalistic_events_jsonl(args.events_jsonl),
+        _predictions_by_method(read_predictions_jsonl(args.predictions_jsonl)),
+        dataset_id=args.dataset_id,
+    )
+    if args.format == "markdown":
+        print(render_naturalistic_markdown(result), end="")
+        return
     print(json.dumps(result.to_dict(), indent=2, sort_keys=True))
 
 
