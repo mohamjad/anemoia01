@@ -23,6 +23,10 @@ from intentfidelity.ingest.nwb_hdf5 import (
 )
 from intentfidelity.ingest.falcon_session import FalconSessionKey, session_date_from_path
 from intentfidelity.ingest.falcon_trials import FalconH2Trial, load_falcon_h2_trials
+from intentfidelity.ingest.falcon_neural import (
+    FalconH2NeuralSummary,
+    summarize_falcon_h2_neural,
+)
 
 __all__ = [
     "DataFile",
@@ -32,6 +36,7 @@ __all__ = [
     "FALCON_H2_EXPECTED_SPLITS",
     "FalconSessionKey",
     "FalconH2Trial",
+    "FalconH2NeuralSummary",
     "ValidationIssue",
     "ValidationSeverity",
     "Hdf5DatasetInfo",
@@ -44,4 +49,5 @@ __all__ = [
     "require_dataset",
     "resolve_falcon_h2_root",
     "session_date_from_path",
+    "summarize_falcon_h2_neural",
 ]
