@@ -7,9 +7,10 @@ import sys
 
 from intentfidelity.figures import render_ranking_reversal
 from intentfidelity.ingest import inventory_falcon_h2
-from intentfidelity.labels import write_weak_targets_jsonl
+from intentfidelity.labels import read_predictions_jsonl, write_weak_targets_jsonl
 from intentfidelity.protocols import EvalResult, falcon_h2_baseline_eval, load_eval_result
 from intentfidelity.protocols import falcon_h2_targets_from_file
+from intentfidelity.protocols import falcon_h2_prediction_eval
 from intentfidelity.reports import DatasetCard, EvalCard, render_json, render_markdown
 from intentfidelity.resources import fetch_dandi_assets, get_manifest, load_manifests
 
@@ -56,6 +57,10 @@ def build_parser() -> argparse.ArgumentParser:
     falcon_h2_targets.add_argument("nwb_file", type=Path)
     falcon_h2_targets.add_argument("output_jsonl", type=Path)
     _add_handler(falcon_h2_targets, _eval_falcon_h2_targets)
+    falcon_h2_predictions = eval_subparsers.add_parser("falcon-h2-predictions")
+    falcon_h2_predictions.add_argument("nwb_file", type=Path)
+    falcon_h2_predictions.add_argument("predictions_jsonl", type=Path)
+    _add_handler(falcon_h2_predictions, _eval_falcon_h2_predictions)
 
     ingest_parser = subparsers.add_parser("ingest")
     ingest_subparsers = ingest_parser.add_subparsers(dest="ingest_command")
@@ -146,6 +151,12 @@ def _eval_falcon_h2_targets(args: argparse.Namespace) -> None:
     print(f"Wrote {len(targets)} weak targets to {args.output_jsonl}")
 
 
+def _eval_falcon_h2_predictions(args: argparse.Namespace) -> None:
+    grouped = _predictions_by_method(read_predictions_jsonl(args.predictions_jsonl))
+    result = falcon_h2_prediction_eval(args.nwb_file, grouped)
+    print(json.dumps(result.to_dict(), indent=2, sort_keys=True))
+
+
 def _ingest_falcon_h2_inventory(args: argparse.Namespace) -> None:
     inventory = inventory_falcon_h2(args.data_root)
     if args.json:
@@ -179,6 +190,13 @@ def _print_card(card: object, output_format: str) -> None:
         print(render_json(card))
         return
     print(render_markdown(card), end="")
+
+
+def _predictions_by_method(predictions) -> dict[str, tuple]:
+    grouped: dict[str, list] = {}
+    for prediction in predictions:
+        grouped.setdefault(prediction.method_id, []).append(prediction)
+    return {method_id: tuple(values) for method_id, values in grouped.items()}
 
 
 if __name__ == "__main__":

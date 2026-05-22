@@ -4,6 +4,7 @@ from pathlib import Path
 import h5py
 
 from intentfidelity.cli.main import main
+from intentfidelity.labels import Prediction, write_predictions_jsonl
 from intentfidelity.metrics import MethodScore, ranking_disagreement
 from intentfidelity.protocols import EvalResult, ProtocolType
 
@@ -93,6 +94,21 @@ def test_falcon_h2_targets_command_writes_jsonl(tmp_path: Path, capsys) -> None:
 
     assert "Wrote 2 weak targets" in capsys.readouterr().out
     assert len(output.read_text(encoding="utf-8").splitlines()) == 2
+
+
+def test_falcon_h2_predictions_command_scores_jsonl(tmp_path: Path, capsys) -> None:
+    path = _write_cli_h2_file(tmp_path)
+    predictions = (
+        Prediction("falcon_h2:2023-04-17:trial-1:char-000", {"a": 1.0, "b": 0.0}, "decoder"),
+        Prediction("falcon_h2:2023-04-17:trial-1:char-001", {"a": 0.0, "b": 1.0}, "decoder"),
+    )
+    prediction_path = tmp_path / "predictions.jsonl"
+    write_predictions_jsonl(predictions, prediction_path)
+
+    assert main(["eval", "falcon-h2-predictions", str(path), str(prediction_path)]) == 0
+
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["method_scores"][0]["method_id"] == "decoder"
 
 
 def test_falcon_h2_assets_command_can_be_patched(monkeypatch, capsys) -> None:
