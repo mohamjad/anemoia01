@@ -19,6 +19,7 @@ from intentfidelity.protocols.comparison import (
     MethodComparisonReport,
     compare_eval_results,
 )
+from intentfidelity.protocols.synthetic import synthetic_baseline_eval
 
 __all__ = [
     "EvalResult",
@@ -35,4 +36,5 @@ __all__ = [
     "load_eval_result",
     "naturalistic_weak_label_result",
     "save_eval_result",
+    "synthetic_baseline_eval",
 ]
