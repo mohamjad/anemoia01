@@ -3,7 +3,8 @@ title: FALCON H2
 domain: multi-session motor neural-interface evaluation
 status: active
 priority: 1
-access: public research resource
+access: public DANDI research resource
+source_url: https://dandiarchive.org/dandiset/000950
 modalities:
   - intracortical neural recordings
   - behavioral task outputs
@@ -13,10 +14,16 @@ weak_proxy_sources:
   - behavioral outputs
   - session metadata
 known_limitations:
-  - ingestion is not implemented in pass 1
+  - pass 2 inventory validation does not parse NWB trial contents yet
   - manifest does not assert direct access to intent
 first_pass_role: first real-data target for held-out-session ranking disagreement
 metadata:
   resource_family: FALCON
-  evidence_stage: manifest only
-
+  dandi_id: "000950"
+  doi: 10.48324/dandi.000950/0.241029.1403
+  expected_local_root: data/h2
+  expected_splits:
+    - held_in_calib
+    - held_out_calib
+    - minival
+  evidence_stage: inventory path

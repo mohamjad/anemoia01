@@ -26,6 +26,8 @@ def test_get_manifest_returns_dataset_record() -> None:
     manifest = get_manifest("falcon_h2")
 
     assert manifest.title == "FALCON H2"
+    assert manifest.source_url == "https://dandiarchive.org/dandiset/000950"
+    assert manifest.metadata["expected_local_root"] == "data/h2"
     assert manifest.first_pass_role.startswith("first real-data target")
 
 
