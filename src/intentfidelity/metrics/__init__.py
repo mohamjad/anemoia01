@@ -26,6 +26,10 @@ from intentfidelity.metrics.language_prior import (
     LanguagePriorAttribution,
     language_prior_attribution,
 )
+from intentfidelity.metrics.naturalistic import (
+    NaturalisticProxySummary,
+    summarize_naturalistic_proxy,
+)
 
 __all__ = [
     "DistributionMetric",
@@ -33,6 +37,7 @@ __all__ = [
     "OverAdaptationEvent",
     "RankingDisagreement",
     "LanguagePriorAttribution",
+    "NaturalisticProxySummary",
     "brier_score",
     "detect_over_adaptation",
     "edit_distance",
@@ -48,6 +53,7 @@ __all__ = [
     "normalized_edit_distance",
     "ranking_disagreement",
     "score_predictions",
+    "summarize_naturalistic_proxy",
     "character_error_rate",
     "word_error_rate",
 ]

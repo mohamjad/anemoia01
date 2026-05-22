@@ -1,7 +1,7 @@
 import pytest
 
 from intentfidelity.labels import NaturalisticEvent
-from intentfidelity.metrics.naturalistic import summarize_naturalistic_proxy
+from intentfidelity.metrics import summarize_naturalistic_proxy
 
 
 def test_summarize_naturalistic_proxy_reports_confidence_and_sessions() -> None:
