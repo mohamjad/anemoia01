@@ -38,8 +38,15 @@ from intentfidelity.labels.text_io import (
     write_text_predictions_jsonl,
     write_text_targets_jsonl,
 )
+from intentfidelity.labels.authorization import (
+    AuthorizationEvent,
+    AuthorizationState,
+    weak_target_from_authorization_event,
+)
 
 __all__ = [
+    "AuthorizationEvent",
+    "AuthorizationState",
     "DistributionValidationError",
     "HANDWRITING_SOURCE_TYPE",
     "Prediction",
@@ -62,6 +69,7 @@ __all__ = [
     "require_same_support",
     "weak_target_from_dict",
     "weak_target_from_handwriting_cue",
+    "weak_target_from_authorization_event",
     "handwriting_cues_from_trial",
     "weak_targets_from_trials",
     "write_predictions_jsonl",
