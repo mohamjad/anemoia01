@@ -6,6 +6,7 @@ from pathlib import Path
 import sys
 
 from intentfidelity.ingest import inventory_falcon_h2
+from intentfidelity.protocols import falcon_h2_baseline_eval
 
 
 def main(argv: list[str] | None = None) -> int:
@@ -14,9 +15,18 @@ def main(argv: list[str] | None = None) -> int:
     )
     parser.add_argument("data_root", type=Path)
     parser.add_argument("--json", action="store_true")
+    parser.add_argument("--eval-first-file", action="store_true")
     args = parser.parse_args(argv)
 
     inventory = inventory_falcon_h2(args.data_root)
+    if args.eval_first_file:
+        if not inventory.files:
+            print("No FALCON H2 files available for evaluation.")
+            return 2
+        result = falcon_h2_baseline_eval(inventory.files[0].path)
+        print(json.dumps(result.to_dict(), indent=2, sort_keys=True))
+        return 0
+
     if args.json:
         print(json.dumps(inventory.to_dict(), indent=2, sort_keys=True))
     else:
