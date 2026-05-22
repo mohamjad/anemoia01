@@ -10,6 +10,9 @@ set.
 The next major phase should move selected paths from scaffolded protocol
 contracts into real-data ingestion and evidence generation.
 
+Concrete handoff and reliability guidance lives in `docs/HANDOFF.md`,
+`docs/NEXT_STEPS.md`, `docs/DEVELOPMENT.md`, and `docs/RELIABILITY.md`.
+
 ## Pass 1
 
 Build architecture, docs, schemas, metrics, CLI, and tests.

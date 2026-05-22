@@ -10,6 +10,8 @@
 - reports render dataset, claim, and eval cards
 - the CLI exposes registry, summary, report, and figure entry points
 
+For module ownership and extension boundaries, see `docs/SYSTEM_MAP.md`.
+
 Pass 1 intentionally stops before real dataset ingestion. Synthetic checks are
 only used to validate metric and reporting plumbing.
 
