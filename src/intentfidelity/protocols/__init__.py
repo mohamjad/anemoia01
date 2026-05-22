@@ -9,6 +9,7 @@ from intentfidelity.protocols.schemas import (
     held_out_session_result,
     naturalistic_weak_label_result,
 )
+from intentfidelity.protocols.io import load_eval_result, save_eval_result
 
 __all__ = [
     "EvalResult",
@@ -17,6 +18,7 @@ __all__ = [
     "communication_result",
     "few_shot_recalibration_result",
     "held_out_session_result",
+    "load_eval_result",
     "naturalistic_weak_label_result",
+    "save_eval_result",
 ]
-
