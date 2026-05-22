@@ -30,3 +30,7 @@ the same contracts later.
 Pass 5 adds the naturalistic weak-label path: behavior proxy events, event IO,
 proxy ambiguity summaries, an AJILE12 scaffold runner, and a naturalistic report
 renderer.
+
+Pass 6 adds the selection weak-target path for bigP3BCI-style P300 symbol
+selection: event schemas, event IO, selection proxy summaries, a selection
+protocol, a report renderer, and an executable scaffold runner.
