@@ -46,6 +46,12 @@ Baseline sanity eval:
 intentfidelity eval falcon-h2-baselines data/h2/sub-T5-held-out-calib/example.nwb
 ```
 
+Feature baseline eval:
+
+```text
+intentfidelity eval falcon-h2-feature-baseline data/h2/sub-T5-held-in-calib/train.nwb data/h2/sub-T5-held-out-calib/test.nwb
+```
+
 External prediction eval:
 
 ```text
