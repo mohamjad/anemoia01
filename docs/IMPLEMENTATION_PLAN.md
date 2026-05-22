@@ -1,5 +1,15 @@
 # Implementation Plan
 
+## Current Status
+
+Passes 1-6 have established the package architecture, resource manifests, weak
+target schemas, scoring metrics, protocol scaffolds, CLI paths, reports,
+baseline comparison, and executable synthetic scaffolds for the first resource
+set.
+
+The next major phase should move selected paths from scaffolded protocol
+contracts into real-data ingestion and evidence generation.
+
 ## Pass 1
 
 Build architecture, docs, schemas, metrics, CLI, and tests.
