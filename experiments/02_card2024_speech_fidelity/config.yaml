@@ -3,4 +3,5 @@ dataset_id: card2024
 protocol: communication
 status: scaffold
 resource_manifest: card2024
-
+runner: synthetic_protocol_scaffold
+primary_metric: character_error_rate
