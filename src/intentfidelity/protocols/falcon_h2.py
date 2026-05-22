@@ -75,10 +75,13 @@ def falcon_h2_feature_baseline_eval(train_path, test_path) -> EvalResult:
     if not train_examples or not test_examples:
         raise ValueError("train and test files must produce labeled examples")
 
-    from intentfidelity.baselines import run_centroid_baseline
+    from intentfidelity.baselines import run_default_centroid_baselines
 
-    run = run_centroid_baseline(train_examples, test_examples, method_id="identity_centroid")
-    return falcon_h2_prediction_eval(test_path, {run.method_id: run.predictions})
+    runs = run_default_centroid_baselines(train_examples, test_examples)
+    return falcon_h2_prediction_eval(
+        test_path,
+        {run.method_id: run.predictions for run in runs},
+    )
 
 
 def _score_baseline(method_id: str, targets: tuple[WeakTarget, ...]) -> MethodScore:

@@ -50,7 +50,11 @@ def test_falcon_h2_feature_baseline_eval_scores_centroid_predictions(tmp_path) -
 
     result = falcon_h2_feature_baseline_eval(train_path, test_path)
 
-    assert result.method_scores[0].method_id == "identity_centroid"
+    assert [score.method_id for score in result.method_scores] == [
+        "identity_centroid",
+        "session_centered_centroid",
+        "whitened_centroid",
+    ]
 
 
 def _write_h2_file(tmp_path, name="sub-T5-held-out-calib_ses-20230417.nwb"):
