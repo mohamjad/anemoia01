@@ -8,6 +8,7 @@ from intentfidelity.reports.cards import (
     render_json,
     render_markdown,
 )
+from intentfidelity.reports.comparison import render_comparison_markdown
 
 __all__ = [
     "ClaimCard",
@@ -16,5 +17,5 @@ __all__ = [
     "default_claim_card",
     "render_json",
     "render_markdown",
+    "render_comparison_markdown",
 ]
-
