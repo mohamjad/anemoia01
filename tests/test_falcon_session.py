@@ -13,6 +13,10 @@ def test_session_date_from_path_extracts_dandiset_name() -> None:
     )
 
 
+def test_session_date_from_path_accepts_download_alias() -> None:
+    assert session_date_from_path("held_out_20230417.nwb") == "2023-04-17"
+
+
 def test_session_date_from_path_rejects_unknown_names() -> None:
     with pytest.raises(ValueError, match="cannot infer"):
         session_date_from_path("session.nwb")
@@ -27,4 +31,3 @@ def test_falcon_session_key_normalizes_path() -> None:
     )
 
     assert key.source_path == Path("x.nwb")
-

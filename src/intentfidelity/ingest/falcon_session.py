@@ -8,7 +8,7 @@ from typing import Any
 from intentfidelity.ingest.schemas import IngestSplit
 
 
-SESSION_PATTERN = re.compile(r"ses-(?P<date>\d{8})")
+SESSION_PATTERN = re.compile(r"(?:ses-)?(?P<date>\d{8})")
 
 
 @dataclass(frozen=True)
@@ -35,4 +35,3 @@ def session_date_from_path(path: str | Path) -> str:
         raise ValueError(f"cannot infer session date from path: {name}")
     raw = match.group("date")
     return f"{raw[:4]}-{raw[4:6]}-{raw[6:]}"
-
