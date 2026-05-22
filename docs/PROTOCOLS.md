@@ -12,3 +12,9 @@ Each protocol produces an `EvalResult` with method scores and optional ranking
 disagreement metadata. Concrete dataset ingestion and split generation are pass
 2 work.
 
+FALCON H2 now has a held-out-session path that can:
+
+- parse trial cue windows from NWB/HDF5 files
+- export declared weak targets
+- score target-construction sanity baselines
+- score external prediction JSONL files
