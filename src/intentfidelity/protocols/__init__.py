@@ -26,6 +26,7 @@ from intentfidelity.protocols.communication import communication_eval_result
 from intentfidelity.protocols.language_prior import language_prior_report
 from intentfidelity.protocols.authorization import authorization_eval_result
 from intentfidelity.protocols.naturalistic import naturalistic_eval_result
+from intentfidelity.protocols.selection import selection_eval_result
 
 __all__ = [
     "EvalResult",
@@ -48,5 +49,6 @@ __all__ = [
     "naturalistic_eval_result",
     "save_eval_result",
     "selection_result",
+    "selection_eval_result",
     "synthetic_baseline_eval",
 ]

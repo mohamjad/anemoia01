@@ -1,5 +1,5 @@
 from intentfidelity.labels import P300SelectionEvent, Prediction
-from intentfidelity.protocols.selection import selection_eval_result
+from intentfidelity.protocols import selection_eval_result
 
 
 def test_selection_eval_result_scores_predictions_and_summary() -> None:
