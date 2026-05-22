@@ -1,0 +1,6 @@
+experiment_id: kunz2025_authorized_intent
+dataset_id: kunz2025
+protocol: authorization
+status: scaffold
+resource_manifest: kunz2025
+
