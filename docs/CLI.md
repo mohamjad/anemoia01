@@ -6,7 +6,12 @@ Initial commands:
 intentfidelity resources list
 intentfidelity resources validate
 intentfidelity resources card falcon_h2
+intentfidelity resources falcon-h2-assets --json
 intentfidelity ingest falcon-h2-inventory data --json
+intentfidelity ingest nwb-summary data/h2/sub-T5-held-out-calib/example.nwb
+intentfidelity eval falcon-h2-targets data/h2/sub-T5-held-out-calib/example.nwb outputs/targets.jsonl
+intentfidelity eval falcon-h2-baselines data/h2/sub-T5-held-out-calib/example.nwb
+intentfidelity eval falcon-h2-predictions data/h2/sub-T5-held-out-calib/example.nwb outputs/predictions.jsonl
 intentfidelity eval summarize outputs/results.json
 intentfidelity report dataset-card falcon_h2
 intentfidelity report eval-card outputs/results.json
