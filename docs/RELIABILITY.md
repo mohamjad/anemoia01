@@ -63,8 +63,18 @@ A complete evaluation handoff should include:
 - data provenance and limitations
 
 The FALCON H2 bundle command writes these artifacts directly and records
-`evidence_level`, `target_type`, file counts, target counts, and prediction
-counts in `bundle_manifest.json` and `result.json` metadata.
+`evidence_level`, `target_type`, package version, command text, source file
+hashes, file counts, target counts, and prediction counts in
+`bundle_manifest.json` and `result.json` metadata.
+
+Validate completed FALCON H2 bundles with:
+
+```text
+intentfidelity eval falcon-h2-validate-bundle outputs/falcon-h2-bundle
+```
+
+The validator checks file presence, loadability, count consistency, provenance
+hashes, evidence-level consistency, and report proxy-scope language.
 
 ## Review Checklist
 

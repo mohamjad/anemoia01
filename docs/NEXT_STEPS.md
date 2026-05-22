@@ -44,7 +44,13 @@ data root
 3. Inspect `eval_card.md`, `comparison.md`, and `bundle_manifest.json` before
    treating the output as a reported result.
 
-4. Keep fixture results scoped as fixture evidence. Do not describe them as
+4. Validate the completed bundle:
+
+   ```text
+   intentfidelity eval falcon-h2-validate-bundle outputs/falcon-h2-bundle
+   ```
+
+5. Keep fixture results scoped as fixture evidence. Do not describe them as
    downloaded dataset evidence.
 
 ## Acceptance Criteria
@@ -57,6 +63,8 @@ data root
 - Docs explain how to reproduce the run.
 - A downloaded-data bundle should record the local data path and exact command
   used to generate artifacts.
+- `intentfidelity eval falcon-h2-validate-bundle` passes for the generated
+  bundle.
 
 ## Deferred Work
 

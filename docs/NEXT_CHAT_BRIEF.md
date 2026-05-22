@@ -52,6 +52,7 @@ FALCON H2 bundle command:
 
 ```text
 intentfidelity eval falcon-h2-bundle <nwb-or-data-root> <output-dir>
+intentfidelity eval falcon-h2-validate-bundle <output-dir>
 ```
 
 The command defaults to `fixture_evidence`. Use `--evidence-level

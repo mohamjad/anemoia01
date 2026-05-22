@@ -52,6 +52,34 @@ intentfidelity eval falcon-h2-bundle data outputs/falcon-h2-bundle --evidence-le
 The downloaded-data label only describes local provenance. The resulting scores
 still evaluate fidelity to declared weak target distributions.
 
+## Validation
+
+Validate a completed bundle with:
+
+```text
+intentfidelity eval falcon-h2-validate-bundle outputs/falcon-h2-bundle
+```
+
+The validator checks that expected files exist, the result can be loaded,
+target and prediction counts match metadata, evidence level is consistent, the
+reports include proxy-scope language, and source files have SHA-256 hashes in
+the bundle manifest.
+
+Validation is a contract check. It does not turn fixture evidence into
+downloaded dataset evidence.
+
+## Provenance
+
+`bundle_manifest.json` and `result.json` metadata record:
+
+- evidence level
+- target type
+- generated timestamp
+- package version
+- command used when generated through the CLI
+- source file path, split, size, and SHA-256 hash
+- target and prediction counts
+
 ## Data Root Contract
 
 When the input is a directory, the existing FALCON H2 inventory contract is

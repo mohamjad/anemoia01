@@ -70,3 +70,7 @@ The implementation keeps ingestion, target construction, baseline prediction,
 protocol scoring, and report rendering in separate modules. Bundle metadata
 records evidence level and target type so fixture results are not confused with
 downloaded dataset evidence.
+
+FALCON H2 bundle validation checks the generated file contract, result and JSONL
+loadability, count consistency, source-file hashes, evidence-level consistency,
+and report language that keeps proxy limitations visible.

@@ -53,6 +53,15 @@ defaults to `fixture_evidence`; pass `--evidence-level
 downloaded_dataset_evidence` only for local runs against downloaded FALCON H2
 files.
 
+Validate completed bundles with:
+
+```text
+intentfidelity eval falcon-h2-validate-bundle outputs/falcon-h2-bundle
+```
+
+The validator checks expected artifacts, loadability, count consistency,
+source-file hashes, evidence-level consistency, and report proxy-scope wording.
+
 ## Invariants
 
 - Do not claim direct access to true intent.
