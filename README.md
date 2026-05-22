@@ -1,53 +1,162 @@
 # anemoia01
 
-Private implementation engine for intent-fidelity evaluation infrastructure.
+`anemoia01` is intent-fidelity evaluation infrastructure for adaptive neural
+interfaces.
 
-Neural interfaces are usually evaluated by how well decoded outputs match
-observed targets. That remains necessary, but it is not always sufficient. In
-long-running adaptive systems, neural activity, recording conditions, user
-strategy, labels, and decoders can all change. When supervision is weak,
-delayed, self-paced, or behaviorally confounded, the method that improves
-conventional decoder metrics may not be the method that remains most faithful
-to the user's task-relevant intended state.
-
-This repo is for building that evaluation layer.
-
-It should become:
-
-- a resource registry for neural-interface datasets
-- a weak-target construction system
-- an intent-fidelity metric library
-- a protocol engine for held-out-session and recalibration evaluations
-- a comparison layer for ranking disagreement and over-adaptation
-- a reporting layer for dataset cards, claim cards, eval cards, and figures
-
-This is not a BCI decoder. It does not claim to observe true intent. It does not
-claim all drift is plasticity.
-
-Start with:
+Core idea:
 
 ```text
-docs/SOURCE_OF_TRUTH.md
-docs/HANDOFF.md
-docs/NEXT_STEPS.md
-docs/IMPLEMENTATION_PLAN.md
-docs/NEXT_CHAT_BRIEF.md
-docs/ARCHITECTURE.md
+Decoder accuracy is necessary, but it is not always enough.
 ```
 
-Core references:
+In long-running neural interfaces, labels can be weak, delayed, self-paced,
+behaviorally confounded, or mediated by adaptive decoders and language models.
+Under those conditions, a method can improve a conventional decoder metric
+while becoming less faithful to the declared task proxy the system is supposed
+to preserve.
 
-- `docs/SYSTEM_MAP.md`
-- `docs/DEVELOPMENT.md`
-- `docs/RELIABILITY.md`
-- `docs/RESOURCE_MANIFESTS.md`
-- `docs/METRICS.md`
-- `docs/PROTOCOLS.md`
-- `docs/REPORT_CARDS.md`
-- `docs/CLI.md`
-- `docs/FALCON_H2_PASS2.md`
-- `docs/FALCON_H2_FORMAT.md`
-- `docs/PASS3_METHOD_COMPARISON.md`
-- `docs/PASS4_COMMUNICATION_AUTHORIZATION.md`
-- `docs/PASS5_NATURALISTIC_WEAK_LABELS.md`
-- `docs/PASS6_SELECTION_WEAK_TARGETS.md`
+This repo builds the evaluation layer for that failure mode.
+
+It does not claim direct access to true intent. It evaluates fidelity to
+declared weak target distributions constructed from explicit proxies such as
+task prompts, timing windows, behavioral outputs, endorsement signals, language
+priors, authorization states, and session metadata.
+
+## What Exists Now
+
+The repo has a working end-to-end FALCON H2 artifact path:
+
+```text
+NWB/HDF5 file or FALCON H2 data root
+-> inventory
+-> declared cue-character weak targets
+-> deterministic baseline predictions
+-> EvalResult JSON
+-> eval card
+-> comparison report
+-> bundle manifest
+-> bundle validation
+```
+
+The current downloaded-data run is intentionally narrow:
+
+- source: DANDI FALCON H2, dandiset `000950`, version `0.241029.1403`
+- data: one downloaded NWB file per required split
+- targets: 588 declared cue-character weak target proxies
+- predictions: 1176 deterministic sanity-baseline predictions
+- methods: `proxy_oracle` and `uniform_prior`
+- validation: bundle contract passed with no issues
+
+This is evidence that the local artifact flow works on downloaded FALCON H2
+files. It is not a full FALCON H2 benchmark and it is not evidence of direct
+intent measurement.
+
+See `docs/FALCON_H2_LOCAL_RUN.md` for exact files, hashes, commands, counts,
+and scope notes.
+
+## Why This Matters
+
+Conventional neural-interface evaluation often asks:
+
+```text
+Did the decoded output match the observed target?
+```
+
+That remains important. This repo adds a second question:
+
+```text
+Did the method remain faithful to the declared weak target distribution under
+the protocol being evaluated?
+```
+
+The point is not to replace decoder metrics. The point is to detect cases where
+conventional metrics and proxy-fidelity metrics select different methods, or
+where adaptation improves a conventional score while worsening fidelity to the
+declared proxy.
+
+The infrastructure is organized around:
+
+- resource manifests for open neural-interface datasets
+- dataset-specific ingestion
+- weak target construction
+- prediction import and baseline prediction
+- protocol scoring
+- ranking disagreement and over-adaptation checks
+- eval cards, comparison reports, and reproducible artifact bundles
+
+## Run The Current FALCON H2 Flow
+
+Install for local development or run with `PYTHONPATH=src`.
+
+Inventory a local FALCON H2 root:
+
+```text
+PYTHONPATH=src python -m intentfidelity.cli.main ingest falcon-h2-inventory data/external --json
+```
+
+Generate a bundle:
+
+```text
+PYTHONPATH=src python -m intentfidelity.cli.main eval falcon-h2-bundle data/external outputs/falcon-h2-bundle --evidence-level downloaded_dataset_evidence
+```
+
+Validate the bundle:
+
+```text
+PYTHONPATH=src python -m intentfidelity.cli.main eval falcon-h2-validate-bundle outputs/falcon-h2-bundle
+```
+
+Run tests:
+
+```text
+pytest -q
+```
+
+## Repository Map
+
+Start here:
+
+- `docs/SOURCE_OF_TRUTH.md` - product and measurement contract
+- `docs/FALCON_H2_LOCAL_RUN.md` - current downloaded-data artifact run
+- `docs/FALCON_H2_BUNDLE.md` - bundle contract and validation behavior
+- `docs/SYSTEM_MAP.md` - module responsibilities and data flow
+- `docs/RELIABILITY.md` - evidence levels and verification gates
+- `docs/HANDOFF.md` - current status and invariants
+- `docs/NEXT_STEPS.md` - next implementation steps
+
+Core implementation:
+
+- `src/intentfidelity/ingest/` - dataset-specific readers and inventories
+- `src/intentfidelity/labels/` - weak targets, predictions, and JSONL IO
+- `src/intentfidelity/metrics/` - scoring and comparison metrics
+- `src/intentfidelity/protocols/` - evaluation results and artifact bundles
+- `src/intentfidelity/reports/` - Markdown and JSON reports
+- `src/intentfidelity/cli/` - command-line orchestration
+
+## Claim Discipline
+
+Use this language:
+
+- intent fidelity
+- weak target distribution
+- intent proxy
+- fidelity to declared weak target
+- ranking disagreement
+- over-adaptation
+- held-out-session reliability
+
+Avoid this language:
+
+- the system observes true intent
+- the metric measures what the brain means
+- fixture results are real dataset evidence
+- sanity baselines are decoder submissions
+- the current minimal run is a full benchmark
+
+The core claim should stay narrow:
+
+```text
+Decoder accuracy can be insufficient under weak supervision and
+nonstationarity, so adaptive neural interfaces need explicit evaluation of
+fidelity to declared weak target proxies.
+```

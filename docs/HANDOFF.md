@@ -3,6 +3,11 @@
 This repository is the implementation engine for intent-fidelity evaluation
 infrastructure for adaptive neural interfaces.
 
+For the concise repo argument, read `README.md` and `docs/ARGUMENT.md` first.
+The short version is: decoder accuracy remains necessary, but adaptive neural
+interfaces also need reproducible evaluation artifacts that score fidelity to
+declared weak target proxies under explicit protocols.
+
 ## Current State
 
 The repo now has six scaffold passes:

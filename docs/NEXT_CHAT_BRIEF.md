@@ -4,6 +4,12 @@ Build `anemoia01` as a clean infrastructure repo for intent-fidelity evaluation.
 
 Do not transform `neurodrift-lab` in place.
 
+Repo-facing explanation now lives in:
+
+- `README.md`
+- `docs/ARGUMENT.md`
+- `docs/FALCON_H2_LOCAL_RUN.md`
+
 Use `neurodrift-lab` only as reference material for:
 
 - weak target distributions

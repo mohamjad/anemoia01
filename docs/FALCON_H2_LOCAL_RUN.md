@@ -14,6 +14,37 @@ plumbing and reporting check over declared cue-character weak target proxies.
 It is not a full FALCON H2 benchmark and does not claim direct access to true
 intent.
 
+## Interpretation
+
+This run matters because it moves the FALCON H2 path from fixture-only plumbing
+to a validated local artifact bundle over downloaded NWB files.
+
+The result should be read as an infrastructure result:
+
+```text
+downloaded NWB files
+-> typed inventory
+-> declared cue-character weak targets
+-> deterministic sanity-baseline predictions
+-> protocol result
+-> eval card
+-> comparison report
+-> validated bundle manifest
+```
+
+The `proxy_oracle` baseline copies the declared weak target and should achieve
+zero loss. The `uniform_prior` baseline spreads probability over the declared
+support and should perform worse. That ordering is a sanity check for the
+bundle flow, not evidence that a neural decoder is better or worse.
+
+The useful claim is narrow:
+
+```text
+The repository can generate and validate a reproducible FALCON H2 local
+downloaded-data artifact bundle whose targets, predictions, scores, reports,
+and provenance are inspectable.
+```
+
 ## Source
 
 DANDI dandiset:
