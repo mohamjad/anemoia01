@@ -44,3 +44,4 @@ Useful pass-1 references:
 - `docs/FALCON_H2_FORMAT.md`
 - `docs/PASS3_METHOD_COMPARISON.md`
 - `docs/PASS4_COMMUNICATION_AUTHORIZATION.md`
+- `docs/PASS5_NATURALISTIC_WEAK_LABELS.md`
