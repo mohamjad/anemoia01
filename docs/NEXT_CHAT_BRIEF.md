@@ -24,26 +24,20 @@ Pass 6 added selection weak-target scaffolding for bigP3BCI-style P300 symbol
 selection.
 ```
 
-Immediate task:
+Current task frontier:
 
 ```text
-Implement pass 1:
-architecture, docs, schemas, metrics, resource manifests, CLI, tests.
+Move from synthetic protocol scaffolds into real-data ingestion and evaluation.
 ```
 
-Start with small commits:
+Completed scaffold passes:
 
-1. Python package scaffold.
-2. Resource manifest schema.
-3. Initial dataset manifests.
-4. Weak target schemas.
-5. Proper scoring metrics.
-6. Intent-fidelity metrics.
-7. Ranking disagreement and over-adaptation.
-8. Protocol result schemas.
-9. Report cards.
-10. CLI.
-11. Tests.
+1. Core package, schemas, metrics, reports, CLI, and tests.
+2. FALCON H2 ingestion and held-out-session evaluation.
+3. Method comparison, baselines, ranking disagreement, and over-adaptation.
+4. Communication, language-prior, and authorization scaffolds.
+5. Naturalistic weak-label scaffolding.
+6. Selection weak-target scaffolding.
 
 Do not backdate commits or fabricate history.
 
@@ -53,4 +47,5 @@ Keep claims narrow:
 decoder accuracy can be insufficient under weak supervision and nonstationarity
 ```
 
-The first real-data target after pass 1 is FALCON H2.
+The next real-data target should be FALCON H2 evidence or a carefully scoped
+dataset-specific ingestion path selected by the user.
