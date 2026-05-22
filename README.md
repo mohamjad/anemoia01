@@ -40,3 +40,5 @@ Useful pass-1 references:
 - `docs/PROTOCOLS.md`
 - `docs/REPORT_CARDS.md`
 - `docs/CLI.md`
+- `docs/FALCON_H2_PASS2.md`
+- `docs/FALCON_H2_FORMAT.md`
