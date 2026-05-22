@@ -148,6 +148,22 @@ def test_falcon_h2_bundle_command_writes_artifacts(tmp_path: Path, capsys) -> No
     ).read_text(encoding="utf-8")
 
 
+def test_falcon_h2_validate_bundle_command_reports_valid_bundle(
+    tmp_path: Path,
+    capsys,
+) -> None:
+    path = _write_cli_h2_file(tmp_path)
+    output_dir = tmp_path / "bundle"
+    assert main(["eval", "falcon-h2-bundle", str(path), str(output_dir)]) == 0
+    capsys.readouterr()
+
+    assert main(["eval", "falcon-h2-validate-bundle", str(output_dir)]) == 0
+
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["is_valid"] is True
+    assert payload["issues"] == []
+
+
 def test_falcon_h2_predictions_command_scores_jsonl(tmp_path: Path, capsys) -> None:
     path = _write_cli_h2_file(tmp_path)
     predictions = (

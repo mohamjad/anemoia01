@@ -33,6 +33,7 @@ from intentfidelity.protocols import (
     load_eval_result,
     naturalistic_eval_result,
     selection_eval_result,
+    validate_falcon_h2_artifact_bundle,
     write_falcon_h2_artifact_bundle,
 )
 from intentfidelity.protocols import falcon_h2_targets_from_file
@@ -111,6 +112,11 @@ def build_parser() -> argparse.ArgumentParser:
         default=EvidenceLevel.FIXTURE_EVIDENCE.value,
     )
     _add_handler(falcon_h2_bundle, _eval_falcon_h2_bundle)
+    falcon_h2_validate_bundle = eval_subparsers.add_parser(
+        "falcon-h2-validate-bundle"
+    )
+    falcon_h2_validate_bundle.add_argument("bundle_dir", type=Path)
+    _add_handler(falcon_h2_validate_bundle, _eval_falcon_h2_validate_bundle)
     synthetic_eval = eval_subparsers.add_parser("synthetic-baselines")
     _add_handler(synthetic_eval, _eval_synthetic_baselines)
     communication_eval = eval_subparsers.add_parser("communication")
@@ -288,6 +294,13 @@ def _eval_falcon_h2_bundle(args: argparse.Namespace) -> None:
     print(json.dumps(bundle.to_dict(), indent=2, sort_keys=True))
 
 
+def _eval_falcon_h2_validate_bundle(args: argparse.Namespace) -> None:
+    report = validate_falcon_h2_artifact_bundle(args.bundle_dir)
+    print(json.dumps(report.to_dict(), indent=2, sort_keys=True))
+    if not report.is_valid:
+        raise SystemExit(1)
+
+
 def _eval_synthetic_baselines(_: argparse.Namespace) -> None:
     from intentfidelity.protocols import synthetic_baseline_eval
 
@@ -379,7 +392,8 @@ def _figure_ranking_reversal(args: argparse.Namespace) -> None:
 
 
 def _figure_comparison_table(args: argparse.Namespace) -> None:
-    print(render_comparison_table(compare_eval_results(_load_eval_result(args.result_json))), end="")
+    report = compare_eval_results(_load_eval_result(args.result_json))
+    print(render_comparison_table(report), end="")
 
 
 def _baselines_centroid(args: argparse.Namespace) -> None:

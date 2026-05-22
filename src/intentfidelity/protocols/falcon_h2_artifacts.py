@@ -24,9 +24,11 @@ from intentfidelity.labels import (
 )
 from intentfidelity.protocols.artifacts import (
     ArtifactBundle,
+    ArtifactValidationReport,
     EvidenceLevel,
     GeneratedArtifact,
     save_artifact_bundle,
+    validate_artifact_bundle,
 )
 from intentfidelity.protocols.comparison import compare_eval_results
 from intentfidelity.protocols.falcon_h2 import (
@@ -37,6 +39,17 @@ from intentfidelity.protocols.falcon_h2 import (
 from intentfidelity.protocols.io import save_eval_result
 from intentfidelity.protocols.schemas import ProtocolType
 from intentfidelity.reports import EvalCard, render_comparison_markdown, render_markdown
+
+
+FALCON_H2_BUNDLE_REQUIRED_KINDS: tuple[str, ...] = (
+    "inventory_json",
+    "targets_jsonl",
+    "predictions_jsonl",
+    "result_json",
+    "eval_card_markdown",
+    "comparison_markdown",
+    "bundle_manifest_json",
+)
 
 
 def write_falcon_h2_artifact_bundle(
@@ -130,6 +143,15 @@ def write_falcon_h2_artifact_bundle(
     )
     save_artifact_bundle(bundle, paths.bundle_manifest_json)
     return bundle
+
+
+def validate_falcon_h2_artifact_bundle(
+    bundle_dir: str | Path,
+) -> ArtifactValidationReport:
+    return validate_artifact_bundle(
+        bundle_dir,
+        required_kinds=FALCON_H2_BUNDLE_REQUIRED_KINDS,
+    )
 
 
 class _BundlePaths:

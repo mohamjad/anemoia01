@@ -7,7 +7,10 @@ import pytest
 from intentfidelity.labels import read_predictions_jsonl, read_weak_targets_jsonl
 from intentfidelity.protocols import load_eval_result
 from intentfidelity.protocols.artifacts import EvidenceLevel, load_artifact_bundle
-from intentfidelity.protocols.falcon_h2_artifacts import write_falcon_h2_artifact_bundle
+from intentfidelity.protocols.falcon_h2_artifacts import (
+    validate_falcon_h2_artifact_bundle,
+    write_falcon_h2_artifact_bundle,
+)
 
 
 def test_falcon_h2_bundle_writes_complete_fixture_artifacts(tmp_path: Path) -> None:
@@ -56,6 +59,31 @@ def test_falcon_h2_bundle_writes_complete_fixture_artifacts(tmp_path: Path) -> N
     assert "fixture_evidence" in eval_card
     assert "not downloaded FALCON H2 dataset evidence" in eval_card
     assert "declared weak target distributions" in comparison
+
+
+def test_validate_falcon_h2_bundle_accepts_complete_bundle(tmp_path: Path) -> None:
+    source = _write_h2_file(tmp_path / "sub-T5-held-out-calib_ses-20230417.nwb")
+    output_dir = tmp_path / "bundle"
+    write_falcon_h2_artifact_bundle(source, output_dir)
+
+    report = validate_falcon_h2_artifact_bundle(output_dir)
+
+    assert report.is_valid is True
+    assert report.issues == ()
+
+
+def test_validate_falcon_h2_bundle_requires_falcon_artifact_kinds(
+    tmp_path: Path,
+) -> None:
+    source = _write_h2_file(tmp_path / "sub-T5-held-out-calib_ses-20230417.nwb")
+    output_dir = tmp_path / "bundle"
+    write_falcon_h2_artifact_bundle(source, output_dir)
+    (output_dir / "comparison.md").unlink()
+
+    report = validate_falcon_h2_artifact_bundle(output_dir)
+
+    assert report.is_valid is False
+    assert report.issues[0].code == "missing_generated_artifact"
 
 
 def test_falcon_h2_bundle_accepts_inventory_root(tmp_path: Path) -> None:
