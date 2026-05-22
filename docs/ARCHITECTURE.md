@@ -20,3 +20,9 @@ evaluation against either built-in sanity baselines or supplied predictions.
 Pass 3 adds the method-comparison layer: typed feature examples, baseline
 feature transforms, centroid prediction baselines, comparison reports, and
 ranking reversal tables.
+
+Pass 4 adds the first speech-path and authorization protocol scaffolds:
+transcript targets, text predictions, language-prior attribution, authorization
+events, and dedicated report renderers. These modules keep proxy construction,
+metrics, protocols, and reports separate so real-data ingestion can attach to
+the same contracts later.
