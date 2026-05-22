@@ -1,0 +1,2 @@
+"""Figure-generation entry points."""
+

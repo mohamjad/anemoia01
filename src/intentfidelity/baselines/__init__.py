@@ -1,0 +1,2 @@
+"""Baseline method registry."""
+
