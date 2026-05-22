@@ -17,5 +17,6 @@ known_limitations:
   - authorization-state proxies need explicit protocol design
 first_pass_role: authorization and declared weak-target evaluation target
 metadata:
-  evidence_stage: manifest only
-
+  evidence_stage: synthetic protocol scaffold
+  scaffold_protocol: authorization
+  scaffold_target_type: authorization_state_proxy
