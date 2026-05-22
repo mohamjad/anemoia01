@@ -30,6 +30,10 @@ from intentfidelity.metrics.naturalistic import (
     NaturalisticProxySummary,
     summarize_naturalistic_proxy,
 )
+from intentfidelity.metrics.selection import (
+    SelectionProxySummary,
+    summarize_selection_proxy,
+)
 
 __all__ = [
     "DistributionMetric",
@@ -38,6 +42,7 @@ __all__ = [
     "RankingDisagreement",
     "LanguagePriorAttribution",
     "NaturalisticProxySummary",
+    "SelectionProxySummary",
     "brier_score",
     "detect_over_adaptation",
     "edit_distance",
@@ -54,6 +59,7 @@ __all__ = [
     "ranking_disagreement",
     "score_predictions",
     "summarize_naturalistic_proxy",
+    "summarize_selection_proxy",
     "character_error_rate",
     "word_error_rate",
 ]

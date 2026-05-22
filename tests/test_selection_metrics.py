@@ -1,7 +1,7 @@
 import pytest
 
 from intentfidelity.labels import P300SelectionEvent
-from intentfidelity.metrics.selection import summarize_selection_proxy
+from intentfidelity.metrics import summarize_selection_proxy
 
 
 def test_summarize_selection_proxy_reports_accuracy_and_sessions() -> None:
