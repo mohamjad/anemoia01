@@ -113,6 +113,9 @@ FALCON H2 is the first infrastructure path.
 
 Card/Willett/Kunz are the conceptual speech path.
 
+AJILE12 and bigP3BCI are scaffold paths for naturalistic weak labels and
+P300-style selection weak targets.
+
 ## Old Repo Relationship
 
 `neurodrift-lab` remains the exploratory thesis prototype.
