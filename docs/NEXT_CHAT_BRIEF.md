@@ -13,6 +13,13 @@ Use `neurodrift-lab` only as reference material for:
 - synthetic sanity checks
 - CLI/test discipline
 
+Current status:
+
+```text
+Pass 4 added communication, language-prior attribution, and authorization
+protocol scaffolds for the speech-path resources.
+```
+
 Immediate task:
 
 ```text
