@@ -6,6 +6,7 @@ from typing import Callable, Sequence
 from intentfidelity.baselines.examples import LabeledExample
 from intentfidelity.baselines.nearest_centroid import fit_nearest_centroid
 from intentfidelity.baselines.transforms import FeatureTransform, identity_transform
+from intentfidelity.baselines.transforms import session_centering_transform, whitening_transform
 from intentfidelity.labels import Prediction
 
 
@@ -38,3 +39,28 @@ def run_centroid_baseline(
         predictions=model.predict(transformed_test),
     )
 
+
+def run_default_centroid_baselines(
+    train_examples: Sequence[LabeledExample],
+    test_examples: Sequence[LabeledExample],
+) -> tuple[BaselineRun, ...]:
+    return (
+        run_centroid_baseline(
+            train_examples,
+            test_examples,
+            method_id="identity_centroid",
+            transform_factory=identity_transform,
+        ),
+        run_centroid_baseline(
+            train_examples,
+            test_examples,
+            method_id="session_centered_centroid",
+            transform_factory=session_centering_transform,
+        ),
+        run_centroid_baseline(
+            train_examples,
+            test_examples,
+            method_id="whitened_centroid",
+            transform_factory=whitening_transform,
+        ),
+    )
