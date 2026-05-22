@@ -3,4 +3,5 @@ dataset_id: ajile12
 protocol: naturalistic_weak_label
 status: scaffold
 resource_manifest: ajile12
-
+runner: synthetic_protocol_scaffold
+target_type: naturalistic_behavior_proxy
