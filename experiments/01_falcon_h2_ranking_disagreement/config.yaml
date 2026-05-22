@@ -3,4 +3,10 @@ dataset_id: falcon_h2
 protocol: held_out_session
 status: scaffold
 resource_manifest: falcon_h2
-
+expected_data_roots:
+  - data/h2
+  - data/000950
+outputs:
+  inventory: outputs/falcon_h2_inventory.json
+  weak_targets: outputs/falcon_h2_targets.jsonl
+  eval_result: outputs/falcon_h2_eval.json
