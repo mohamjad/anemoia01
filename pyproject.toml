@@ -9,6 +9,7 @@ description = "Intent-fidelity evaluation infrastructure for adaptive neural int
 readme = "README.md"
 requires-python = ">=3.11"
 dependencies = [
+  "h5py>=3.10",
   "PyYAML>=6.0",
 ]
 
