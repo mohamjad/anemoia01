@@ -20,6 +20,7 @@ intentfidelity eval communication text-targets.jsonl text-predictions.jsonl --da
 intentfidelity eval language-prior outputs/results.json --format markdown
 intentfidelity eval authorization authorization-events.jsonl authorization-predictions.jsonl --dataset-id kunz2025
 intentfidelity eval naturalistic naturalistic-events.jsonl naturalistic-predictions.jsonl --dataset-id ajile12 --format markdown
+intentfidelity eval selection p300-events.jsonl p300-predictions.jsonl --dataset-id bigp3bci --format markdown
 intentfidelity eval summarize outputs/results.json
 intentfidelity eval compare outputs/results.json --format markdown
 intentfidelity report dataset-card falcon_h2
