@@ -8,7 +8,7 @@ from intentfidelity.labels.falcon_h2 import (
 
 def test_handwriting_cues_from_trial_allocates_character_windows() -> None:
     trial = FalconH2Trial(
-        sample_id="falcon_h2:2023-04-17:trial-1",
+        sample_id="falcon_h2:held_out_calib:2023-04-17:trial-1",
         session_date="2023-04-17",
         split=IngestSplit.HELD_OUT_CALIB,
         cue="a>b",
@@ -25,12 +25,25 @@ def test_handwriting_cues_from_trial_allocates_character_windows() -> None:
 
 def test_weak_targets_from_trials_uses_shared_support() -> None:
     trials = (
-        FalconH2Trial("falcon_h2:2023-04-17:trial-1", "2023-04-17", IngestSplit.MINIVAL, "ab", 0, 2),
-        FalconH2Trial("falcon_h2:2023-04-17:trial-2", "2023-04-17", IngestSplit.MINIVAL, "c", 2, 3),
+        FalconH2Trial(
+            "falcon_h2:minival:2023-04-17:trial-1",
+            "2023-04-17",
+            IngestSplit.MINIVAL,
+            "ab",
+            0,
+            2,
+        ),
+        FalconH2Trial(
+            "falcon_h2:minival:2023-04-17:trial-2",
+            "2023-04-17",
+            IngestSplit.MINIVAL,
+            "c",
+            2,
+            3,
+        ),
     )
 
     targets = weak_targets_from_trials(trials)
 
     assert len(targets) == 3
     assert targets[0].support == ("a", "b", "c")
-

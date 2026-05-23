@@ -201,8 +201,16 @@ def test_falcon_h2_validate_bundle_command_reports_valid_bundle(
 def test_falcon_h2_predictions_command_scores_jsonl(tmp_path: Path, capsys) -> None:
     path = _write_cli_h2_file(tmp_path)
     predictions = (
-        Prediction("falcon_h2:2023-04-17:trial-1:char-000", {"a": 1.0, "b": 0.0}, "decoder"),
-        Prediction("falcon_h2:2023-04-17:trial-1:char-001", {"a": 0.0, "b": 1.0}, "decoder"),
+        Prediction(
+            "falcon_h2:held_out_calib:2023-04-17:trial-1:char-000",
+            {"a": 1.0, "b": 0.0},
+            "decoder",
+        ),
+        Prediction(
+            "falcon_h2:held_out_calib:2023-04-17:trial-1:char-001",
+            {"a": 0.0, "b": 1.0},
+            "decoder",
+        ),
     )
     prediction_path = tmp_path / "predictions.jsonl"
     write_predictions_jsonl(predictions, prediction_path)

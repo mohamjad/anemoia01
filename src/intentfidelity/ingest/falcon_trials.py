@@ -46,7 +46,10 @@ def load_falcon_h2_trials(path: str | Path, split: IngestSplit) -> tuple[FalconH
         block_num = int(block_nums[index]) if block_nums is not None else None
         trials.append(
             FalconH2Trial(
-                sample_id=f"{FALCON_H2_DATASET_ID}:{session_date}:trial-{trial_id}",
+                sample_id=(
+                    f"{FALCON_H2_DATASET_ID}:{split.value}:"
+                    f"{session_date}:trial-{trial_id}"
+                ),
                 session_date=session_date,
                 split=split,
                 cue=str(cue),
@@ -73,4 +76,3 @@ def _optional_scalar(handle: h5py.File, path: str) -> Any:
     if path not in handle:
         return None
     return decode_scalar(handle[path][()])
-
