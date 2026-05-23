@@ -39,6 +39,19 @@ def test_resources_validate_command(capsys) -> None:
     assert "Validated 6 resource manifests." in capsys.readouterr().out
 
 
+def test_audit_repo_command_outputs_json(capsys) -> None:
+    assert main(["audit", "repo", "--json"]) == 0
+
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["passed"] is True
+    assert {check["name"] for check in payload["checks"]} == {
+        "required_docs",
+        "resource_manifests",
+        "evidence_boundaries",
+        "db_state_files",
+    }
+
+
 def test_report_dataset_card_command(capsys) -> None:
     assert main(["report", "dataset-card", "falcon_h2", "--format", "json"]) == 0
 

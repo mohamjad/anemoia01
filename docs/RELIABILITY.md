@@ -8,6 +8,7 @@ scope-limited, and explicit about its proxy assumptions.
 Always run:
 
 ```text
+intentfidelity audit repo --json
 pytest -q
 git status --short --branch
 ```
@@ -80,6 +81,7 @@ hashes, evidence-level consistency, and report proxy-scope language.
 
 Before handing off a pass, check:
 
+- `intentfidelity audit repo --json` passes
 - authoritative docs reflect the current state
 - no stale pass status remains in manifests or experiment docs
 - new public APIs are exported from package `__init__.py` files

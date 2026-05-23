@@ -13,10 +13,10 @@ Why FALCON H2:
 - character weak targets and prediction scoring already exist
 - method comparison and reporting are already wired
 
-## Pass Objective
+## Current Completed Flow
 
-The current bundle implementation produces a reproducible local evaluation
-bundle from FALCON H2 files:
+The current implementation produces a reproducible local evaluation bundle from
+FALCON H2 files:
 
 ```text
 data root
@@ -28,30 +28,43 @@ data root
 -> comparison report
 ```
 
-## Concrete Work Items
+The repo also has a bigP3BCI raw EDF+ inventory contract. That contract stops
+at file inventory; it does not parse EDF+ annotations or produce selection
+targets.
 
-1. Run the fixture-backed bundle command when checking the local contract:
+## Closeout Checks
+
+Run these before treating a pass as ready to hand off:
+
+1. Run the repository posture audit:
+
+   ```text
+   intentfidelity audit repo --json
+   ```
+
+2. Run the fixture-backed bundle command when checking the local FALCON H2
+   contract:
 
    ```text
    intentfidelity eval falcon-h2-bundle <fixture.nwb> outputs/falcon-h2-fixture
    ```
 
-2. For downloaded FALCON H2 files, run:
+3. For downloaded FALCON H2 files, run:
 
    ```text
    intentfidelity eval falcon-h2-bundle data outputs/falcon-h2-bundle --evidence-level downloaded_dataset_evidence
    ```
 
-3. Inspect `eval_card.md`, `comparison.md`, and `bundle_manifest.json` before
+4. Inspect `eval_card.md`, `comparison.md`, and `bundle_manifest.json` before
    treating the output as a reported result.
 
-4. Validate the completed bundle:
+5. Validate the completed bundle:
 
    ```text
    intentfidelity eval falcon-h2-validate-bundle outputs/falcon-h2-bundle
    ```
 
-5. Keep fixture results scoped as fixture evidence. Do not describe them as
+6. Keep fixture results scoped as fixture evidence. Do not describe them as
    downloaded dataset evidence.
 
 ## Acceptance Criteria
@@ -67,13 +80,18 @@ data root
 - `intentfidelity eval falcon-h2-validate-bundle` passes for the generated
   bundle.
 
-## Deferred Work
+## Highest-Value Remaining Work
 
-Only after the FALCON H2 bundle is stable:
+The repo should not expand the thesis language until one of these concrete
+evidence upgrades exists:
 
-- richer FALCON H2 method families beyond centroid baselines
-- real Card/Willett speech-path ingestion
-- Kunz authorization event extraction
-- AJILE12 naturalistic event extraction
-- bigP3BCI event alignment and symbol target extraction
-- CI and coverage thresholds
+1. Richer FALCON H2 method families beyond centroid baselines, recorded through
+   the same validated artifact bundle and reported whether ranking disagreement
+   appears or not.
+2. bigP3BCI EDF+ annotation parsing into typed P300 selection events, followed
+   by weak target construction and a validated real-data artifact path.
+3. CI and coverage thresholds so the audit/test gates run outside local
+   discipline.
+4. Real Card/Willett speech-path ingestion, Kunz authorization extraction, or
+   AJILE12 naturalistic extraction only after a raw contract is written and
+   fixture-backed.

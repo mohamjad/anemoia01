@@ -5,6 +5,7 @@ import json
 from pathlib import Path
 import sys
 
+from intentfidelity.audit import audit_repository
 from intentfidelity.baselines import (
     list_baselines,
     list_implemented_baselines,
@@ -71,6 +72,13 @@ def build_parser() -> argparse.ArgumentParser:
         description="Intent-fidelity evaluation infrastructure CLI.",
     )
     subparsers = parser.add_subparsers(dest="command")
+
+    audit_parser = subparsers.add_parser("audit")
+    audit_subparsers = audit_parser.add_subparsers(dest="audit_command")
+    repo_audit = audit_subparsers.add_parser("repo")
+    repo_audit.add_argument("repo_root", type=Path, nargs="?", default=Path("."))
+    repo_audit.add_argument("--json", action="store_true")
+    _add_handler(repo_audit, _audit_repo)
 
     resources_parser = subparsers.add_parser("resources")
     resources_subparsers = resources_parser.add_subparsers(dest="resources_command")
@@ -239,6 +247,23 @@ def _add_handler(
 def _resources_list(_: argparse.Namespace) -> None:
     for manifest in load_manifests():
         print(f"{manifest.dataset_id}\t{manifest.status}\t{manifest.title}")
+
+
+def _audit_repo(args: argparse.Namespace) -> None:
+    report = audit_repository(args.repo_root)
+    if args.json:
+        print(json.dumps(report.to_dict(), indent=2, sort_keys=True))
+        if not report.passed:
+            raise SystemExit(1)
+        return
+
+    print(f"Repository audit: {report.repo_root}")
+    print(f"Passed: {report.passed}")
+    for check in report.checks:
+        status = "PASS" if check.passed else "FAIL"
+        print(f"{status}\t{check.name}\t{check.message}")
+    if not report.passed:
+        raise SystemExit(1)
 
 
 def _resources_validate(_: argparse.Namespace) -> None:

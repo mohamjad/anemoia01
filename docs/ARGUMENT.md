@@ -124,10 +124,10 @@ comparisons against declared cue-character weak target proxies.
 
 It does not yet support these claims:
 
-- full FALCON H2 benchmark coverage
 - superiority of a neural decoder
-- real ranking disagreement among the tested FALCON H2 feature baselines
+- broad ranking disagreement across datasets or method families
 - direct measurement of true intent
+- state-of-the-art decoder benchmarking
 
 The full-coverage feature-baseline result finds a narrow ranking disagreement:
 proxy top-1 error selects `whitened_centroid`, while intent-fidelity log loss
@@ -164,19 +164,25 @@ or broader dataset claims are credible.
 
 ## Next Stronger Claim
 
-The next substantive step is not more framing. It is stronger method evidence.
+The next substantive step is stronger evidence, not broader language.
 
-Recommended next implementation:
+Two upgrades would make the thesis materially stronger:
 
 ```text
-FALCON H2 train/test NWB files
--> feature-window examples
--> centroid or session-normalized baselines
--> prediction JSONL
--> EvalResult JSON
--> ranking disagreement report
+FALCON H2
+-> richer method families
+-> same artifact bundle contract
+-> ranking-disagreement or null-result report
+```
+
+```text
+bigP3BCI
+-> EDF+ annotation parsing
+-> typed P300 selection events
+-> weak target construction
+-> protocol scoring
 -> validated artifact bundle
 ```
 
-That would move the repo from artifact plumbing evidence toward method
-comparison evidence while staying within the same measurement contract.
+Both paths keep the claim narrow: evaluate fidelity to declared proxies, record
+null results honestly, and avoid claims about direct access to true intent.

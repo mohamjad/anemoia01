@@ -121,6 +121,12 @@ Run tests:
 pytest -q
 ```
 
+Audit the repo posture:
+
+```text
+PYTHONPATH=src python -m intentfidelity.cli.main audit repo --json
+```
+
 ## Repository Map
 
 Start here:
@@ -132,6 +138,7 @@ Start here:
 - `docs/FALCON_H2_METHOD_RUN.md` - current FALCON H2 feature-baseline run
 - `docs/FALCON_H2_FULL_COVERAGE_RUN.md` - full FALCON H2 local run
 - `docs/FALCON_H2_BUNDLE.md` - bundle contract and validation behavior
+- `docs/BIGP3BCI_RAW_CONTRACT.md` - non-FALCON raw inventory boundary
 - `docs/SYSTEM_MAP.md` - module responsibilities and data flow
 - `docs/RELIABILITY.md` - evidence levels and verification gates
 - `docs/HANDOFF.md` - current status and invariants
