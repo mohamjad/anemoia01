@@ -35,21 +35,22 @@ resource manifest
 | Willett 2023 | communication and language-prior scaffold | synthetic protocol scaffold |
 | Kunz 2025 | authorization scaffold | synthetic protocol scaffold |
 | AJILE12 | naturalistic behavior proxy scaffold | synthetic protocol scaffold |
-| bigP3BCI | P300 selection proxy scaffold | synthetic protocol scaffold |
+| bigP3BCI | EDF+ raw-file inventory contract plus P300 selection proxy scaffold | raw inventory contract; no target evidence |
 
 ## Extension Pattern
 
 For a new dataset path:
 
 1. Add or update the resource manifest.
-2. Add typed event or target schemas in `labels`.
-3. Add JSONL IO beside the schema.
-4. Add any proxy summary metric in `metrics`.
-5. Add a protocol evaluator in `protocols`.
-6. Add a report renderer in `reports`.
-7. Add a CLI command only after the Python API is tested.
-8. Add or update an experiment scaffold.
-9. Update docs and evidence scope.
+2. Add a dataset-specific raw contract in `ingest`.
+3. Add typed event or target schemas in `labels`.
+4. Add JSONL IO beside the schema.
+5. Add any proxy summary metric in `metrics`.
+6. Add a protocol evaluator in `protocols`.
+7. Add a report renderer in `reports`.
+8. Add a CLI command only after the Python API is tested.
+9. Add or update an experiment scaffold.
+10. Update docs and evidence scope.
 
 ## Artifact Bundle Flow
 

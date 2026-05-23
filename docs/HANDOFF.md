@@ -23,8 +23,9 @@ The repo now has six scaffold passes:
 5. Naturalistic weak-label scaffolding for AJILE12-style behavior proxies.
 6. Selection weak-target scaffolding for bigP3BCI-style P300 symbol proxies.
 
-All non-FALCON resource paths remain synthetic protocol scaffolds. They validate
-contracts and report language, not real-data evidence.
+Non-FALCON resource paths mostly remain synthetic protocol scaffolds. bigP3BCI
+now has a raw EDF+ inventory contract, but no EDF+ annotation parser, target
+construction, or scoring path. It is not real-data evidence yet.
 
 ## Current Frontier
 
@@ -90,6 +91,7 @@ what is demonstrated, what is not demonstrated, and the current FALCON-heavy
 dataset bias risk.
 
 Read `docs/DATASET_LANDSCAPE.md` for the cross-dataset maturity map.
+Read `docs/BIGP3BCI_RAW_CONTRACT.md` before extending the non-FALCON P300 path.
 
 ## Invariants
 

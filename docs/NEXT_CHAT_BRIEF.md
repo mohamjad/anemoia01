@@ -82,6 +82,8 @@ error and intent-fidelity log loss for the top two centroid baselines.
 
 Current evidence boundaries are summarized in `docs/EVIDENCE_STATUS.md`.
 Dataset-family maturity is summarized in `docs/DATASET_LANDSCAPE.md`.
+The first non-FALCON raw-file contract is documented in
+`docs/BIGP3BCI_RAW_CONTRACT.md`; it inventories bigP3BCI EDF+ files only.
 
 Do not backdate commits or fabricate history.
 
@@ -91,5 +93,5 @@ Keep claims narrow:
 decoder accuracy can be insufficient under weak supervision and nonstationarity
 ```
 
-The next real-data target should be FALCON H2 evidence or a carefully scoped
-dataset-specific ingestion path selected by the user.
+The next real-data target should be stronger FALCON H2 method evidence or the
+next bigP3BCI step: EDF+ annotation parsing into typed selection events.

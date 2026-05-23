@@ -91,11 +91,12 @@ Every dataset should eventually become:
 
 ```text
 resource manifest
-→ weak target construction
-→ protocol split
-→ method comparison
-→ ranking disagreement report
-→ claim card
+-> dataset-specific raw contract
+-> weak target construction
+-> protocol split
+-> method comparison
+-> ranking disagreement report
+-> claim card
 ```
 
 ## First Resources
