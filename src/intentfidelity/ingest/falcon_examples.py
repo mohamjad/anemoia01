@@ -1,5 +1,6 @@
 from __future__ import annotations
 
+from bisect import bisect_left
 from pathlib import Path
 
 import h5py
@@ -19,23 +20,26 @@ def load_falcon_h2_labeled_examples(
     trials = load_falcon_h2_trials(source_path, split)
     with h5py.File(source_path, "r") as handle:
         spikes = require_dataset(handle, "acquisition/binned_spikes/data")[()]
-        timestamps = require_dataset(handle, "acquisition/binned_spikes/timestamps")[()]
+        timestamps = tuple(
+            float(value)
+            for value in require_dataset(
+                handle,
+                "acquisition/binned_spikes/timestamps",
+            )[()]
+        )
 
     examples: list[LabeledExample] = []
     for trial in trials:
         for cue in handwriting_cues_from_trial(trial):
-            indices = [
-                index
-                for index, timestamp in enumerate(timestamps)
-                if cue.window_start <= float(timestamp) < cue.window_end
-            ]
-            if not indices:
+            start_index = bisect_left(timestamps, cue.window_start)
+            stop_index = bisect_left(timestamps, cue.window_end)
+            if start_index >= stop_index:
                 continue
             examples.append(
                 LabeledExample(
                     sample_id=cue.sample_id,
                     label=cue.prompted_label,
-                    features=_mean_rows(spikes, indices),
+                    features=_mean_rows(spikes, start_index, stop_index),
                     session_id=trial.session_date,
                     metadata={
                         "source_path": str(source_path),
@@ -48,10 +52,5 @@ def load_falcon_h2_labeled_examples(
     return tuple(examples)
 
 
-def _mean_rows(matrix, indices: list[int]) -> tuple[float, ...]:
-    width = matrix.shape[1]
-    return tuple(
-        float(sum(float(matrix[index][column]) for index in indices) / len(indices))
-        for column in range(width)
-    )
-
+def _mean_rows(matrix, start_index: int, stop_index: int) -> tuple[float, ...]:
+    return tuple(float(value) for value in matrix[start_index:stop_index].mean(axis=0))
