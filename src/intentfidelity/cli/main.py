@@ -12,7 +12,12 @@ from intentfidelity.baselines import (
     run_centroid_baseline,
 )
 from intentfidelity.figures import render_comparison_table, render_ranking_reversal
-from intentfidelity.ingest import inventory_falcon_h2, list_hdf5_datasets
+from intentfidelity.ingest import (
+    BigP3BCIPhase,
+    inventory_bigp3bci,
+    inventory_falcon_h2,
+    list_hdf5_datasets,
+)
 from intentfidelity.labels import (
     read_authorization_events_jsonl,
     read_naturalistic_events_jsonl,
@@ -183,6 +188,10 @@ def build_parser() -> argparse.ArgumentParser:
     falcon_h2_inventory.add_argument("data_root", type=Path)
     falcon_h2_inventory.add_argument("--json", action="store_true")
     _add_handler(falcon_h2_inventory, _ingest_falcon_h2_inventory)
+    bigp3bci_inventory = ingest_subparsers.add_parser("bigp3bci-inventory")
+    bigp3bci_inventory.add_argument("data_root", type=Path)
+    bigp3bci_inventory.add_argument("--json", action="store_true")
+    _add_handler(bigp3bci_inventory, _ingest_bigp3bci_inventory)
     nwb_summary = ingest_subparsers.add_parser("nwb-summary")
     nwb_summary.add_argument("nwb_file", type=Path)
     _add_handler(nwb_summary, _ingest_nwb_summary)
@@ -411,6 +420,23 @@ def _ingest_falcon_h2_inventory(args: argparse.Namespace) -> None:
     print(f"Root: {inventory.root}")
     print(f"Valid: {inventory.is_valid}")
     print(f"Files: {len(inventory.files)}")
+    for issue in inventory.issues:
+        location = f" ({issue.path})" if issue.path else ""
+        print(f"{issue.severity.value}: {issue.code}: {issue.message}{location}")
+
+
+def _ingest_bigp3bci_inventory(args: argparse.Namespace) -> None:
+    inventory = inventory_bigp3bci(args.data_root)
+    if args.json:
+        print(json.dumps(inventory.to_dict(), indent=2, sort_keys=True))
+        return
+
+    print(f"Dataset: {inventory.dataset_id}")
+    print(f"Root: {inventory.root}")
+    print(f"Valid: {inventory.is_valid}")
+    print(f"Files: {len(inventory.files)}")
+    print(f"Train files: {len(inventory.files_for_phase(BigP3BCIPhase.TRAIN))}")
+    print(f"Test files: {len(inventory.files_for_phase(BigP3BCIPhase.TEST))}")
     for issue in inventory.issues:
         location = f" ({issue.path})" if issue.path else ""
         print(f"{issue.severity.value}: {issue.code}: {issue.message}{location}")

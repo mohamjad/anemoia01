@@ -97,6 +97,24 @@ def test_falcon_h2_inventory_command_reports_layout(tmp_path: Path, capsys) -> N
     assert payload["file_count"] == 3
 
 
+def test_bigp3bci_inventory_command_reports_raw_contract(
+    tmp_path: Path,
+    capsys,
+) -> None:
+    edf_dir = tmp_path / "bigP3BCI-data" / "StudyA" / "A_01" / "SE001" / "Train"
+    edf_dir.mkdir(parents=True)
+    (edf_dir / "A_01_SE001_Train01.edf").write_bytes(b"edf")
+
+    assert main(["ingest", "bigp3bci-inventory", str(tmp_path), "--json"]) == 0
+
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["dataset_id"] == "bigp3bci"
+    assert payload["is_valid"] is True
+    assert payload["file_count"] == 1
+    assert payload["contract"]["file_format"] == "EDF+"
+    assert "Raw-file inventory contract only" in payload["contract"]["evidence_scope"]
+
+
 def test_falcon_h2_baseline_eval_command_outputs_json(tmp_path: Path, capsys) -> None:
     path = _write_cli_h2_file(tmp_path)
 
