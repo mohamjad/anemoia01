@@ -14,7 +14,8 @@ weak_proxy_sources:
   - behavioral outputs
   - session metadata
 known_limitations:
-  - pass 2 inventory validation does not parse NWB trial contents yet
+  - current downloaded-data method run uses centroid-style baselines, not submitted decoders
+  - current downloaded-data method run is not full held-in split coverage
   - manifest does not assert direct access to intent
 first_pass_role: first real-data target for held-out-session ranking disagreement
 metadata:
@@ -30,4 +31,4 @@ metadata:
     - held_in_calib
     - held_out_calib
     - minival
-  evidence_stage: trial target extraction path
+  evidence_stage: downloaded-data artifact and feature-baseline bundle path

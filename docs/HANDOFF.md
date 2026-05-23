@@ -72,6 +72,16 @@ One minimal downloaded-data FALCON H2 bundle run is recorded in
 split and remains scoped to declared cue-character proxy targets and sanity
 baselines.
 
+A stronger FALCON H2 feature-baseline method run is recorded in
+`docs/FALCON_H2_METHOD_RUN.md`. It compares three centroid-style baselines on
+five held-in train sessions and five held-out calibration sessions. The result
+is a null ranking-disagreement result: proxy top-1 error and intent-fidelity
+log loss rank the tested methods the same way.
+
+Read `docs/EVIDENCE_STATUS.md` before making thesis-level claims. It records
+what is demonstrated, what is not demonstrated, and the current FALCON-heavy
+dataset bias risk.
+
 ## Invariants
 
 - Do not claim direct access to true intent.

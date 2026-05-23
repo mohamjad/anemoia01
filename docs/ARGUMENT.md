@@ -103,36 +103,47 @@ Implemented and tested:
 - bundle validation
 - source-file hashing and provenance
 
-Completed local downloaded-data run:
+Completed local downloaded-data runs:
 
-- one NWB file per required FALCON H2 split
-- 3 data files
-- 588 declared cue-character weak targets
-- 1176 deterministic sanity-baseline predictions
-- validated bundle with no issues
+- a sanity artifact bundle using one NWB file per required FALCON H2 split
+- a feature-baseline method bundle using five held-in train sessions and all
+  five held-out calibration sessions
+- three feature baselines: `identity_centroid`,
+  `session_centered_centroid`, and `whitened_centroid`
+- validated bundles with no issues
 
 This supports a narrow claim:
 
 ```text
 The repository can produce and validate a reproducible FALCON H2 local evidence
-bundle from downloaded NWB files using declared cue-character weak target
-proxies.
+bundle from downloaded NWB files, including simple feature-baseline method
+comparisons against declared cue-character weak target proxies.
 ```
 
 It does not yet support these claims:
 
 - full FALCON H2 benchmark coverage
 - superiority of a neural decoder
-- real ranking disagreement among submitted decoder methods
+- real ranking disagreement among the tested FALCON H2 feature baselines
 - direct measurement of true intent
+
+The current feature-baseline result is a null ranking-disagreement result:
+proxy top-1 error and intent-fidelity log loss ranked the three tested centroid
+baselines the same way. That is a useful empirical boundary, not a failed
+artifact.
 
 ## Why The Current Result Is Still Useful
 
-The current result is not compelling because the proxy-oracle baseline wins.
-That is expected and not the scientific point.
+The sanity result is not compelling because the proxy-oracle baseline wins. That
+is expected and not the scientific point.
 
-It is compelling as infrastructure because it shows that the repo now produces
-the evidence object the rest of the work depends on:
+The feature-baseline result is more informative: it tests plausible methods and
+finds no ranking disagreement in the current FALCON H2 subset. That means the
+repo should not claim that accuracy fails here. It should claim that the
+evidence object can now reveal agreement or disagreement explicitly.
+
+That is compelling as infrastructure because it shows that the repo now
+produces the evidence object the rest of the work depends on:
 
 ```text
 data provenance

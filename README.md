@@ -38,21 +38,27 @@ NWB/HDF5 file or FALCON H2 data root
 -> bundle validation
 ```
 
-The current downloaded-data run is intentionally narrow:
+The current downloaded-data evidence is intentionally narrow:
 
 - source: DANDI FALCON H2, dandiset `000950`, version `0.241029.1403`
-- data: one downloaded NWB file per required split
-- targets: 588 declared cue-character weak target proxies
-- predictions: 1176 deterministic sanity-baseline predictions
-- methods: `proxy_oracle` and `uniform_prior`
-- validation: bundle contract passed with no issues
+- sanity bundle: one downloaded NWB file per required split
+- feature bundle: five held-in train sessions and all five held-out calibration
+  sessions
+- feature methods: `identity_centroid`, `session_centered_centroid`,
+  `whitened_centroid`
+- feature result: no ranking disagreement between proxy top-1 error and
+  intent-fidelity log loss for those methods
 
 This is evidence that the local artifact flow works on downloaded FALCON H2
-files. It is not a full FALCON H2 benchmark and it is not evidence of direct
-intent measurement.
+files and can compare simple feature-derived methods. It is not a full FALCON
+H2 benchmark, not evidence that rankings always disagree, and not evidence of
+direct intent measurement.
 
-See `docs/FALCON_H2_LOCAL_RUN.md` for exact files, hashes, commands, counts,
-and scope notes.
+See:
+
+- `docs/FALCON_H2_LOCAL_RUN.md` for the sanity artifact bundle
+- `docs/FALCON_H2_METHOD_RUN.md` for the feature-baseline method run
+- `docs/EVIDENCE_STATUS.md` for the current empirical boundary
 
 ## Why This Matters
 
@@ -117,7 +123,9 @@ pytest -q
 Start here:
 
 - `docs/SOURCE_OF_TRUTH.md` - product and measurement contract
+- `docs/EVIDENCE_STATUS.md` - what is and is not empirically demonstrated
 - `docs/FALCON_H2_LOCAL_RUN.md` - current downloaded-data artifact run
+- `docs/FALCON_H2_METHOD_RUN.md` - current FALCON H2 feature-baseline run
 - `docs/FALCON_H2_BUNDLE.md` - bundle contract and validation behavior
 - `docs/SYSTEM_MAP.md` - module responsibilities and data flow
 - `docs/RELIABILITY.md` - evidence levels and verification gates

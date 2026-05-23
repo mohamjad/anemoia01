@@ -68,6 +68,16 @@ the bundle manifest.
 Validation is a contract check. It does not turn fixture evidence into
 downloaded dataset evidence.
 
+Feature-baseline method bundles use separate commands:
+
+```text
+intentfidelity eval falcon-h2-feature-bundle <train-source> <test-source> <output-dir> --evidence-level downloaded_dataset_evidence
+intentfidelity eval falcon-h2-validate-feature-bundle <output-dir>
+```
+
+These bundles compare centroid-style methods using proxy top-1 error as the
+conventional score and intent-fidelity log loss as the primary metric.
+
 ## Provenance
 
 `bundle_manifest.json` and `result.json` metadata record:

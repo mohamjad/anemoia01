@@ -69,6 +69,13 @@ A minimal downloaded-data run is recorded in `docs/FALCON_H2_LOCAL_RUN.md`.
 It uses one NWB file per required split and reports only proxy-oracle and
 uniform sanity baselines against declared cue-character weak target proxies.
 
+A feature-baseline method run is recorded in `docs/FALCON_H2_METHOD_RUN.md`.
+It compares three centroid-style baselines on downloaded FALCON H2 data and
+finds no ranking disagreement between proxy top-1 error and intent-fidelity log
+loss for those tested methods.
+
+Current evidence boundaries are summarized in `docs/EVIDENCE_STATUS.md`.
+
 Do not backdate commits or fabricate history.
 
 Keep claims narrow:
