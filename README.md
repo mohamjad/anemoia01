@@ -99,9 +99,13 @@ The infrastructure is organized around:
 - ranking disagreement and over-adaptation checks
 - eval cards, comparison reports, and reproducible artifact bundles
 
-## Run The Current FALCON H2 Flow
+## Reproduce The Current Result
 
 Install for local development or run with `PYTHONPATH=src`.
+
+The documented downloaded-data result requires local FALCON H2 NWB files from
+DANDI dandiset `000950`, version `0.241029.1403`. The repo does not vendor
+those files.
 
 Inventory a local FALCON H2 root:
 
@@ -133,6 +137,10 @@ Audit the repo posture:
 PYTHONPATH=src python -m intentfidelity.cli.main audit repo --json
 ```
 
+The current full-coverage result is recorded in
+`docs/FALCON_H2_FULL_COVERAGE_RUN.md`. Re-running it requires the same local
+data layout and may write ignored artifacts under `outputs/`.
+
 ## Repository Map
 
 Start here:
@@ -148,7 +156,7 @@ Start here:
 - `docs/BIGP3BCI_RAW_CONTRACT.md` - non-FALCON raw inventory boundary
 - `docs/SYSTEM_MAP.md` - module responsibilities and data flow
 - `docs/RELIABILITY.md` - evidence levels and verification gates
-- `docs/HANDOFF.md` - current status and invariants
+- `CONTRIBUTING.md` - contribution rules and evidence boundaries
 - `docs/NEXT_STEPS.md` - next implementation steps
 
 Core implementation:
@@ -160,30 +168,30 @@ Core implementation:
 - `src/intentfidelity/reports/` - Markdown and JSON reports
 - `src/intentfidelity/cli/` - command-line orchestration
 
-## Claim Discipline
-
-Use this language:
-
-- intent fidelity
-- weak target distribution
-- intent proxy
-- fidelity to declared weak target
-- ranking disagreement
-- over-adaptation
-- held-out-session reliability
-
-Avoid this language:
-
-- the system observes true intent
-- the metric measures what the brain means
-- fixture results are real dataset evidence
-- sanity baselines are decoder submissions
-- the current minimal run is a full benchmark
-
-The core claim should stay narrow:
+## Current Status
 
 ```text
 Decoder accuracy can be insufficient under weak supervision and
 nonstationarity, so adaptive neural interfaces need explicit evaluation of
 fidelity to declared weak target proxies.
 ```
+
+That is the repo's architectural claim. The empirical state is narrower:
+downloaded-data FALCON H2 evidence exists; comprehensive cross-dataset evidence
+does not.
+
+## Contributing
+
+Contributions should preserve the contract boundaries:
+
+- ingestion describes raw data and dataset layout
+- labels define weak targets, events, predictions, and JSONL IO
+- metrics score distributions without dataset-specific parsing
+- protocols assemble `EvalResult` records
+- reports state evidence level and proxy limitations
+
+See `CONTRIBUTING.md` before adding datasets, metrics, or evidence claims.
+
+## License
+
+MIT. See `LICENSE`.
