@@ -2,9 +2,9 @@
 
 ## Recommended Path
 
-Use the completed FALCON H2 downloaded-data runs as the local evidence handoff,
-then expand to fuller method coverage, full split coverage, or a real
-non-FALCON ingestion path.
+Use the completed full-coverage FALCON H2 downloaded-data run as the local
+evidence handoff, then expand to richer method coverage or a real non-FALCON
+ingestion path.
 
 Why FALCON H2:
 
@@ -71,7 +71,6 @@ data root
 
 Only after the FALCON H2 bundle is stable:
 
-- full downloaded FALCON H2 split coverage instead of the minimal one-file-per-split run
 - richer FALCON H2 method families beyond centroid baselines
 - real Card/Willett speech-path ingestion
 - Kunz authorization event extraction

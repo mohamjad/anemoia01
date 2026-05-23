@@ -108,6 +108,8 @@ Completed local downloaded-data runs:
 - a sanity artifact bundle using one NWB file per required FALCON H2 split
 - a feature-baseline method bundle using five held-in train sessions and all
   five held-out calibration sessions
+- a full-coverage FALCON H2 run using all 47 local NWB assets for the sanity
+  bundle and all held-in/held-out calibration files for the method bundle
 - three feature baselines: `identity_centroid`,
   `session_centered_centroid`, and `whitened_centroid`
 - validated bundles with no issues
@@ -127,10 +129,10 @@ It does not yet support these claims:
 - real ranking disagreement among the tested FALCON H2 feature baselines
 - direct measurement of true intent
 
-The current feature-baseline result is a null ranking-disagreement result:
-proxy top-1 error and intent-fidelity log loss ranked the three tested centroid
-baselines the same way. That is a useful empirical boundary, not a failed
-artifact.
+The full-coverage feature-baseline result finds a narrow ranking disagreement:
+proxy top-1 error selects `whitened_centroid`, while intent-fidelity log loss
+selects `session_centered_centroid`. That is the repo's current strongest
+empirical result, but it is still one dataset family and one baseline family.
 
 ## Why The Current Result Is Still Useful
 
@@ -138,9 +140,10 @@ The sanity result is not compelling because the proxy-oracle baseline wins. That
 is expected and not the scientific point.
 
 The feature-baseline result is more informative: it tests plausible methods and
-finds no ranking disagreement in the current FALCON H2 subset. That means the
-repo should not claim that accuracy fails here. It should claim that the
-evidence object can now reveal agreement or disagreement explicitly.
+finds ranking disagreement in the full FALCON H2 local run. That still does not
+justify a broad claim that accuracy fails generally. It supports the narrower
+claim that the evidence object can surface real metric-ranking disagreement
+under a declared proxy contract.
 
 That is compelling as infrastructure because it shows that the repo now
 produces the evidence object the rest of the work depends on:

@@ -74,7 +74,14 @@ It compares three centroid-style baselines on downloaded FALCON H2 data and
 finds no ranking disagreement between proxy top-1 error and intent-fidelity log
 loss for those tested methods.
 
+The full-coverage FALCON H2 run is recorded in
+`docs/FALCON_H2_FULL_COVERAGE_RUN.md`. It uses all 47 local NWB assets for the
+sanity bundle and all held-in/held-out calibration files for the method bundle.
+This full method run finds a narrow ranking disagreement between proxy top-1
+error and intent-fidelity log loss for the top two centroid baselines.
+
 Current evidence boundaries are summarized in `docs/EVIDENCE_STATUS.md`.
+Dataset-family maturity is summarized in `docs/DATASET_LANDSCAPE.md`.
 
 Do not backdate commits or fabricate history.
 

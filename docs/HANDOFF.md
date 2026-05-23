@@ -78,9 +78,18 @@ five held-in train sessions and five held-out calibration sessions. The result
 is a null ranking-disagreement result: proxy top-1 error and intent-fidelity
 log loss rank the tested methods the same way.
 
+The full FALCON H2 local run is recorded in
+`docs/FALCON_H2_FULL_COVERAGE_RUN.md`. It uses all 47 NWB assets for the
+sanity bundle and all held-in/held-out calibration files for the method bundle.
+The feature-baseline result shows a narrow ranking disagreement: proxy top-1
+error ranks `whitened_centroid` first, while intent-fidelity log loss ranks
+`session_centered_centroid` first.
+
 Read `docs/EVIDENCE_STATUS.md` before making thesis-level claims. It records
 what is demonstrated, what is not demonstrated, and the current FALCON-heavy
 dataset bias risk.
+
+Read `docs/DATASET_LANDSCAPE.md` for the cross-dataset maturity map.
 
 ## Invariants
 

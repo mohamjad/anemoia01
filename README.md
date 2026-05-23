@@ -38,27 +38,30 @@ NWB/HDF5 file or FALCON H2 data root
 -> bundle validation
 ```
 
-The current downloaded-data evidence is intentionally narrow:
+The strongest current downloaded-data evidence is FALCON H2:
 
 - source: DANDI FALCON H2, dandiset `000950`, version `0.241029.1403`
-- sanity bundle: one downloaded NWB file per required split
-- feature bundle: five held-in train sessions and all five held-out calibration
-  sessions
+- full local cache: 47 NWB assets, 1.22 GB
+- sanity bundle: all 47 assets, 29,636 declared cue-character weak targets
+- feature bundle: all 21 held-in calibration sessions for training and all 5
+  held-out calibration sessions for testing
 - feature methods: `identity_centroid`, `session_centered_centroid`,
   `whitened_centroid`
-- feature result: no ranking disagreement between proxy top-1 error and
-  intent-fidelity log loss for those methods
+- feature result: proxy top-1 error and intent-fidelity log loss disagree on
+  the top two centroid baselines
 
 This is evidence that the local artifact flow works on downloaded FALCON H2
-files and can compare simple feature-derived methods. It is not a full FALCON
-H2 benchmark, not evidence that rankings always disagree, and not evidence of
-direct intent measurement.
+files and can surface a real ranking disagreement for simple feature-derived
+methods. It is not evidence that rankings always disagree, not a submitted
+decoder benchmark, and not evidence of direct intent measurement.
 
 See:
 
 - `docs/FALCON_H2_LOCAL_RUN.md` for the sanity artifact bundle
 - `docs/FALCON_H2_METHOD_RUN.md` for the feature-baseline method run
+- `docs/FALCON_H2_FULL_COVERAGE_RUN.md` for the full-coverage FALCON H2 run
 - `docs/EVIDENCE_STATUS.md` for the current empirical boundary
+- `docs/DATASET_LANDSCAPE.md` for dataset-family coverage and remaining gaps
 
 ## Why This Matters
 
@@ -124,8 +127,10 @@ Start here:
 
 - `docs/SOURCE_OF_TRUTH.md` - product and measurement contract
 - `docs/EVIDENCE_STATUS.md` - what is and is not empirically demonstrated
+- `docs/DATASET_LANDSCAPE.md` - resource families and evidence maturity
 - `docs/FALCON_H2_LOCAL_RUN.md` - current downloaded-data artifact run
 - `docs/FALCON_H2_METHOD_RUN.md` - current FALCON H2 feature-baseline run
+- `docs/FALCON_H2_FULL_COVERAGE_RUN.md` - full FALCON H2 local run
 - `docs/FALCON_H2_BUNDLE.md` - bundle contract and validation behavior
 - `docs/SYSTEM_MAP.md` - module responsibilities and data flow
 - `docs/RELIABILITY.md` - evidence levels and verification gates
