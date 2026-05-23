@@ -3,6 +3,8 @@
 Initial commands:
 
 ```text
+intentfidelity overview
+intentfidelity overview --json
 intentfidelity resources list
 intentfidelity resources validate
 intentfidelity resources card falcon_h2

@@ -28,6 +28,7 @@ from intentfidelity.labels import (
     read_text_targets_jsonl,
     write_weak_targets_jsonl,
 )
+from intentfidelity.overview import build_repo_overview, render_repo_overview
 from intentfidelity.protocols import (
     EvidenceLevel,
     EvalResult,
@@ -79,6 +80,11 @@ def build_parser() -> argparse.ArgumentParser:
     repo_audit.add_argument("repo_root", type=Path, nargs="?", default=Path("."))
     repo_audit.add_argument("--json", action="store_true")
     _add_handler(repo_audit, _audit_repo)
+
+    overview_parser = subparsers.add_parser("overview")
+    overview_parser.add_argument("repo_root", type=Path, nargs="?", default=Path("."))
+    overview_parser.add_argument("--json", action="store_true")
+    _add_handler(overview_parser, _overview)
 
     resources_parser = subparsers.add_parser("resources")
     resources_subparsers = resources_parser.add_subparsers(dest="resources_command")
@@ -264,6 +270,14 @@ def _audit_repo(args: argparse.Namespace) -> None:
         print(f"{status}\t{check.name}\t{check.message}")
     if not report.passed:
         raise SystemExit(1)
+
+
+def _overview(args: argparse.Namespace) -> None:
+    overview = build_repo_overview(args.repo_root)
+    if args.json:
+        print(json.dumps(overview.to_dict(), indent=2, sort_keys=True))
+        return
+    print(render_repo_overview(overview), end="")
 
 
 def _resources_validate(_: argparse.Namespace) -> None:

@@ -24,6 +24,12 @@ priors, authorization states, and session metadata.
 
 ## What Exists Now
 
+Fast orientation:
+
+```text
+PYTHONPATH=src python -m intentfidelity.cli.main overview
+```
+
 The repo has a working end-to-end FALCON H2 artifact path:
 
 ```text
@@ -131,6 +137,7 @@ PYTHONPATH=src python -m intentfidelity.cli.main audit repo --json
 
 Start here:
 
+- `docs/START_HERE.md` - guided first read and command path
 - `docs/SOURCE_OF_TRUTH.md` - product and measurement contract
 - `docs/EVIDENCE_STATUS.md` - what is and is not empirically demonstrated
 - `docs/DATASET_LANDSCAPE.md` - resource families and evidence maturity

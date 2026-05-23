@@ -52,6 +52,24 @@ def test_audit_repo_command_outputs_json(capsys) -> None:
     }
 
 
+def test_overview_command_outputs_navigation(capsys) -> None:
+    assert main(["overview"]) == 0
+
+    output = capsys.readouterr().out
+    assert "Intent Fidelity Repo Overview" in output
+    assert "FALCON H2" in output
+    assert "bigP3BCI" in output
+    assert "Audit passed: True" in output
+
+
+def test_overview_command_outputs_json(capsys) -> None:
+    assert main(["overview", "--json"]) == 0
+
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["audit_passed"] is True
+    assert payload["evidence_paths"][0]["name"] == "FALCON H2"
+
+
 def test_report_dataset_card_command(capsys) -> None:
     assert main(["report", "dataset-card", "falcon_h2", "--format", "json"]) == 0
 

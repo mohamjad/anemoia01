@@ -24,6 +24,8 @@ resource manifest
 | `baselines` | simple method implementations and predictions | report language |
 | `reports` | Markdown and JSON rendering | metric computation |
 | `figures` | lightweight comparison visualizations | evaluation state |
+| `audit` | repository posture checks and evidence-boundary gates | empirical scoring |
+| `overview` | navigable repo status and command guidance | hidden validation logic |
 | `cli` | command wiring around typed APIs | hidden business logic |
 
 ## Current Resource Paths
@@ -75,3 +77,17 @@ downloaded dataset evidence.
 FALCON H2 bundle validation checks the generated file contract, result and JSONL
 loadability, count consistency, source-file hashes, evidence-level consistency,
 and report language that keeps proxy limitations visible.
+
+## Navigation Layer
+
+The repo has two first-stop UX surfaces:
+
+```text
+intentfidelity overview
+intentfidelity audit repo --json
+```
+
+`overview` explains the thesis, current evidence paths, boundaries, quick
+commands, and docs to read next. `audit repo` is stricter: it checks that the
+authoritative docs and manifests still describe the implemented evidence
+posture.

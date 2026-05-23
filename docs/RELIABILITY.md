@@ -8,6 +8,7 @@ scope-limited, and explicit about its proxy assumptions.
 Always run:
 
 ```text
+intentfidelity overview
 intentfidelity audit repo --json
 pytest -q
 git status --short --branch

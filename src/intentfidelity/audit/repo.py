@@ -11,6 +11,7 @@ from intentfidelity.resources import load_manifests
 REQUIRED_DOCS: tuple[str, ...] = (
     "AGENTS.md",
     "README.md",
+    "docs/START_HERE.md",
     "docs/SOURCE_OF_TRUTH.md",
     "docs/ARGUMENT.md",
     "docs/EVIDENCE_STATUS.md",
