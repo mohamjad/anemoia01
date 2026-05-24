@@ -1,6 +1,7 @@
 from __future__ import annotations
 
 from dataclasses import dataclass
+import math
 import random
 
 from intentfidelity.labels import Prediction, WeakTarget
@@ -42,11 +43,51 @@ class BootstrapRankingDiagnostics:
 
 
 @dataclass(frozen=True)
+class MethodProxyStateDynamics:
+    method_id: str
+    mean_prediction_shift: float
+    mean_shift_tracking_error: float
+    loss_volatility: float
+
+    def to_dict(self) -> dict[str, float | str]:
+        return {
+            "method_id": self.method_id,
+            "mean_prediction_shift": self.mean_prediction_shift,
+            "mean_shift_tracking_error": self.mean_shift_tracking_error,
+            "loss_volatility": self.loss_volatility,
+        }
+
+
+@dataclass(frozen=True)
+class ProxyStateDynamics:
+    transition_count: int
+    mean_target_shift: float
+    max_target_shift: float
+    target_top_label_switch_rate: float
+    method_dynamics: tuple[MethodProxyStateDynamics, ...]
+    scope: str = (
+        "Proxy-state dynamics describe changes in declared weak targets and "
+        "prediction streams; they do not reveal latent intent directly."
+    )
+
+    def to_dict(self) -> dict[str, object]:
+        return {
+            "transition_count": self.transition_count,
+            "mean_target_shift": self.mean_target_shift,
+            "max_target_shift": self.max_target_shift,
+            "target_top_label_switch_rate": self.target_top_label_switch_rate,
+            "method_dynamics": [item.to_dict() for item in self.method_dynamics],
+            "scope": self.scope,
+        }
+
+
+@dataclass(frozen=True)
 class EvaluationDiagnostics:
     sample_count: int
     method_count: int
     method_diagnostics: tuple[MethodDiagnostics, ...]
     bootstrap_ranking: BootstrapRankingDiagnostics
+    proxy_state_dynamics: ProxyStateDynamics
     scope: str = (
         "Diagnostics are computed against declared weak target distributions, "
         "not directly observed true intent."
@@ -60,6 +101,7 @@ class EvaluationDiagnostics:
                 diagnostics.to_dict() for diagnostics in self.method_diagnostics
             ],
             "bootstrap_ranking": self.bootstrap_ranking.to_dict(),
+            "proxy_state_dynamics": self.proxy_state_dynamics.to_dict(),
             "scope": self.scope,
         }
 
@@ -109,6 +151,11 @@ def evaluation_diagnostics(
             n_resamples=n_resamples,
             seed=seed,
         ),
+        proxy_state_dynamics=_proxy_state_dynamics(
+            targets_by_id,
+            predictions_by_method,
+            ordered_sample_ids,
+        ),
     )
 
 
@@ -148,7 +195,32 @@ def render_evaluation_diagnostics_markdown(
         lines.append(
             f"- {method_id}: top frequency {frequency:.3f}, mean rank {mean_rank:.3f}"
         )
+    dynamics = diagnostics.proxy_state_dynamics
+    lines.extend(
+        [
+            "",
+            "## Proxy State Dynamics",
+            f"- Transitions: {dynamics.transition_count}",
+            f"- Mean target shift: {dynamics.mean_target_shift:.3f}",
+            f"- Max target shift: {dynamics.max_target_shift:.3f}",
+            (
+                "- Target top-label switch rate: "
+                f"{dynamics.target_top_label_switch_rate:.3f}"
+            ),
+            "| Method | Prediction shift | Shift tracking error | Loss volatility |",
+            "|---|---:|---:|---:|",
+        ]
+    )
+    for item in dynamics.method_dynamics:
+        lines.append(
+            "| "
+            f"{item.method_id} | "
+            f"{item.mean_prediction_shift:.3f} | "
+            f"{item.mean_shift_tracking_error:.3f} | "
+            f"{item.loss_volatility:.3f} |"
+        )
     lines.extend(["", "## Scope", f"- {diagnostics.scope}"])
+    lines.append(f"- {dynamics.scope}")
     return "\n".join(lines) + "\n"
 
 
@@ -220,6 +292,91 @@ def _bootstrap_ranking(
     )
 
 
+def _proxy_state_dynamics(
+    targets_by_id: dict[str, WeakTarget],
+    predictions_by_method: dict[str, dict[str, Prediction]],
+    ordered_sample_ids: tuple[str, ...],
+) -> ProxyStateDynamics:
+    transition_pairs = tuple(zip(ordered_sample_ids, ordered_sample_ids[1:]))
+    if not transition_pairs:
+        return ProxyStateDynamics(
+            transition_count=0,
+            mean_target_shift=0.0,
+            max_target_shift=0.0,
+            target_top_label_switch_rate=0.0,
+            method_dynamics=tuple(
+                MethodProxyStateDynamics(method_id, 0.0, 0.0, 0.0)
+                for method_id in sorted(predictions_by_method)
+            ),
+        )
+
+    target_shifts = tuple(
+        _distribution_shift(
+            targets_by_id[left_id].probabilities,
+            targets_by_id[right_id].probabilities,
+        )
+        for left_id, right_id in transition_pairs
+    )
+    target_switches = tuple(
+        1.0
+        if _top_label(targets_by_id[left_id].probabilities)
+        != _top_label(targets_by_id[right_id].probabilities)
+        else 0.0
+        for left_id, right_id in transition_pairs
+    )
+    return ProxyStateDynamics(
+        transition_count=len(transition_pairs),
+        mean_target_shift=sum(target_shifts) / len(target_shifts),
+        max_target_shift=max(target_shifts),
+        target_top_label_switch_rate=sum(target_switches) / len(target_switches),
+        method_dynamics=tuple(
+            _method_proxy_state_dynamics(
+                method_id,
+                predictions_by_id,
+                targets_by_id,
+                ordered_sample_ids,
+                target_shifts,
+            )
+            for method_id, predictions_by_id in sorted(predictions_by_method.items())
+        ),
+    )
+
+
+def _method_proxy_state_dynamics(
+    method_id: str,
+    predictions_by_id: dict[str, Prediction],
+    targets_by_id: dict[str, WeakTarget],
+    ordered_sample_ids: tuple[str, ...],
+    target_shifts: tuple[float, ...],
+) -> MethodProxyStateDynamics:
+    transition_pairs = tuple(zip(ordered_sample_ids, ordered_sample_ids[1:]))
+    prediction_shifts = tuple(
+        _distribution_shift(
+            predictions_by_id[left_id].probabilities,
+            predictions_by_id[right_id].probabilities,
+        )
+        for left_id, right_id in transition_pairs
+    )
+    losses = tuple(
+        log_loss(targets_by_id[sample_id], predictions_by_id[sample_id])
+        for sample_id in ordered_sample_ids
+    )
+    loss_deltas = tuple(
+        abs(right_loss - left_loss)
+        for left_loss, right_loss in zip(losses, losses[1:])
+    )
+    tracking_errors = tuple(
+        abs(prediction_shift - target_shift)
+        for prediction_shift, target_shift in zip(prediction_shifts, target_shifts)
+    )
+    return MethodProxyStateDynamics(
+        method_id=method_id,
+        mean_prediction_shift=sum(prediction_shifts) / len(prediction_shifts),
+        mean_shift_tracking_error=sum(tracking_errors) / len(tracking_errors),
+        loss_volatility=sum(loss_deltas) / len(loss_deltas),
+    )
+
+
 def _predictions_by_method(
     predictions: tuple[Prediction, ...],
 ) -> dict[str, dict[str, Prediction]]:
@@ -255,3 +412,33 @@ def _top_label(probabilities: dict[str, float]) -> str:
         probabilities,
         key=lambda label: (-probabilities[label], label),
     )
+
+
+def _distribution_shift(
+    left: dict[str, float],
+    right: dict[str, float],
+) -> float:
+    labels = set(left) | set(right)
+    midpoint = {
+        label: (left.get(label, 0.0) + right.get(label, 0.0)) / 2.0
+        for label in labels
+    }
+    return 0.5 * _kl_to_midpoint(left, midpoint, labels) + 0.5 * _kl_to_midpoint(
+        right,
+        midpoint,
+        labels,
+    )
+
+
+def _kl_to_midpoint(
+    values: dict[str, float],
+    midpoint: dict[str, float],
+    labels: set[str],
+) -> float:
+    total = 0.0
+    for label in labels:
+        probability = values.get(label, 0.0)
+        if probability <= 0.0:
+            continue
+        total += probability * math.log(probability / max(midpoint[label], 1e-12))
+    return total

@@ -18,6 +18,10 @@ declared weak target proxies and do not imply direct access to true intent.
 Fixture bundle cards also state that fixture results are not downloaded dataset
 evidence.
 
+Diagnostics include bootstrap ranking stability and proxy-state dynamics. The
+proxy-state section describes changes in declared weak targets and prediction
+streams; it does not claim access to hidden intent.
+
 Pass 4 adds focused Markdown renderers for:
 
 - communication evaluation results
