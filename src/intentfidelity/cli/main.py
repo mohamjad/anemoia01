@@ -42,8 +42,10 @@ from intentfidelity.protocols import (
     load_eval_result,
     naturalistic_eval_result,
     selection_eval_result,
+    validate_bigp3bci_artifact_bundle,
     validate_falcon_h2_artifact_bundle,
     validate_falcon_h2_feature_baseline_bundle,
+    write_bigp3bci_artifact_bundle,
     write_falcon_h2_artifact_bundle,
     write_falcon_h2_feature_baseline_bundle,
 )
@@ -158,6 +160,20 @@ def build_parser() -> argparse.ArgumentParser:
         falcon_h2_validate_feature_bundle,
         _eval_falcon_h2_validate_feature_bundle,
     )
+    bigp3bci_bundle = eval_subparsers.add_parser("bigp3bci-bundle")
+    bigp3bci_bundle.add_argument("data_root", type=Path)
+    bigp3bci_bundle.add_argument("output_dir", type=Path)
+    bigp3bci_bundle.add_argument(
+        "--evidence-level",
+        choices=tuple(level.value for level in EvidenceLevel),
+        default=EvidenceLevel.FIXTURE_EVIDENCE.value,
+    )
+    _add_handler(bigp3bci_bundle, _eval_bigp3bci_bundle)
+    bigp3bci_validate_bundle = eval_subparsers.add_parser(
+        "bigp3bci-validate-bundle"
+    )
+    bigp3bci_validate_bundle.add_argument("bundle_dir", type=Path)
+    _add_handler(bigp3bci_validate_bundle, _eval_bigp3bci_validate_bundle)
     synthetic_eval = eval_subparsers.add_parser("synthetic-baselines")
     _add_handler(synthetic_eval, _eval_synthetic_baselines)
     communication_eval = eval_subparsers.add_parser("communication")
@@ -394,6 +410,23 @@ def _eval_falcon_h2_validate_feature_bundle(args: argparse.Namespace) -> None:
         raise SystemExit(1)
 
 
+def _eval_bigp3bci_bundle(args: argparse.Namespace) -> None:
+    bundle = write_bigp3bci_artifact_bundle(
+        args.data_root,
+        args.output_dir,
+        evidence_level=EvidenceLevel(args.evidence_level),
+        command=_bigp3bci_bundle_command(args),
+    )
+    print(json.dumps(bundle.to_dict(), indent=2, sort_keys=True))
+
+
+def _eval_bigp3bci_validate_bundle(args: argparse.Namespace) -> None:
+    report = validate_bigp3bci_artifact_bundle(args.bundle_dir)
+    print(json.dumps(report.to_dict(), indent=2, sort_keys=True))
+    if not report.is_valid:
+        raise SystemExit(1)
+
+
 def _eval_synthetic_baselines(_: argparse.Namespace) -> None:
     from intentfidelity.protocols import synthetic_baseline_eval
 
@@ -566,6 +599,14 @@ def _falcon_h2_feature_bundle_command(args: argparse.Namespace) -> str:
     return (
         "intentfidelity eval falcon-h2-feature-bundle "
         f"{args.train_source} {args.test_source} {args.output_dir} "
+        f"--evidence-level {args.evidence_level}"
+    )
+
+
+def _bigp3bci_bundle_command(args: argparse.Namespace) -> str:
+    return (
+        "intentfidelity eval bigp3bci-bundle "
+        f"{args.data_root} {args.output_dir} "
         f"--evidence-level {args.evidence_level}"
     )
 

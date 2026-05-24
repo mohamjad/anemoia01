@@ -39,6 +39,10 @@ from intentfidelity.protocols.falcon_h2_artifacts import (
     write_falcon_h2_feature_baseline_bundle,
     write_falcon_h2_artifact_bundle,
 )
+from intentfidelity.protocols.bigp3bci_artifacts import (
+    validate_bigp3bci_artifact_bundle,
+    write_bigp3bci_artifact_bundle,
+)
 from intentfidelity.protocols.comparison import (
     MethodComparisonReport,
     compare_eval_results,
@@ -87,8 +91,10 @@ __all__ = [
     "selection_eval_result",
     "synthetic_baseline_eval",
     "validate_artifact_bundle",
+    "validate_bigp3bci_artifact_bundle",
     "validate_falcon_h2_artifact_bundle",
     "validate_falcon_h2_feature_baseline_bundle",
+    "write_bigp3bci_artifact_bundle",
     "write_falcon_h2_artifact_bundle",
     "write_falcon_h2_feature_baseline_bundle",
 ]

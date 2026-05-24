@@ -23,6 +23,8 @@ from intentfidelity.labels import (
 from intentfidelity.metrics import MethodScore, ranking_disagreement
 from intentfidelity.protocols import EvalResult, ProtocolType
 
+from bigp3bci_fixtures import write_bigp3bci_event_fixture
+
 
 def test_resources_list_command(capsys) -> None:
     assert main(["resources", "list"]) == 0
@@ -246,6 +248,27 @@ def test_falcon_h2_validate_bundle_command_reports_valid_bundle(
     payload = json.loads(capsys.readouterr().out)
     assert payload["is_valid"] is True
     assert payload["issues"] == []
+
+
+def test_bigp3bci_bundle_command_writes_and_validates_artifacts(
+    tmp_path: Path,
+    capsys,
+) -> None:
+    write_bigp3bci_event_fixture(tmp_path)
+    output_dir = tmp_path / "bigp3-bundle"
+
+    assert main(["eval", "bigp3bci-bundle", str(tmp_path), str(output_dir)]) == 0
+
+    payload = json.loads(capsys.readouterr().out)
+    assert payload["dataset_id"] == "bigp3bci"
+    assert payload["protocol"] == "selection"
+    assert payload["metadata"]["event_count"] == 2
+    assert (output_dir / "events.jsonl").exists()
+    assert (output_dir / "selection_report.md").exists()
+
+    assert main(["eval", "bigp3bci-validate-bundle", str(output_dir)]) == 0
+    validation = json.loads(capsys.readouterr().out)
+    assert validation["is_valid"] is True
 
 
 def test_falcon_h2_predictions_command_scores_jsonl(tmp_path: Path, capsys) -> None:
