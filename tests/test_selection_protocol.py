@@ -1,3 +1,5 @@
+import pytest
+
 from intentfidelity.labels import P300SelectionEvent, Prediction
 from intentfidelity.protocols import selection_eval_result
 
@@ -31,3 +33,30 @@ def test_selection_eval_result_reports_ranking_disagreement() -> None:
     )
 
     assert result.ranking_disagreement is not None
+
+
+def test_selection_eval_result_requires_complete_method_predictions() -> None:
+    events = (
+        P300SelectionEvent("s0", "A", ("A", "B"), 1.0),
+        P300SelectionEvent("s1", "B", ("A", "B"), 1.0),
+    )
+
+    with pytest.raises(ValueError, match="missing predictions: s1"):
+        selection_eval_result(
+            events,
+            {"decoder": (Prediction("s0", {"A": 1.0, "B": 0.0}, "decoder"),)},
+            dataset_id="bigp3bci",
+        )
+
+
+def test_selection_eval_result_preserves_protocol_metadata() -> None:
+    event = P300SelectionEvent("s0", "A", ("A", "B"), 1.0)
+    result = selection_eval_result(
+        (event,),
+        {"decoder": (Prediction("s0", {"A": 1.0, "B": 0.0}, "decoder"),)},
+        dataset_id="bigp3bci",
+        metadata={"evidence_level": "fixture_evidence"},
+    )
+
+    assert result.metadata["target_type"] == "p300_selection_proxy"
+    assert result.metadata["evidence_level"] == "fixture_evidence"

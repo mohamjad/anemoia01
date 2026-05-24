@@ -5,7 +5,11 @@ from intentfidelity.baselines.predictions import (
     proxy_oracle_prediction,
     uniform_prediction,
 )
-from intentfidelity.labels import Prediction, WeakTarget
+from intentfidelity.baselines.selection import (
+    observed_selection_feedback_prediction,
+    selection_sanity_predictions,
+)
+from intentfidelity.labels import P300SelectionEvent, Prediction, WeakTarget
 
 
 def test_uniform_prediction_uses_declared_support() -> None:
@@ -60,3 +64,29 @@ def test_project_prediction_to_target_support_requires_matching_sample_id() -> N
 
     with pytest.raises(ValueError, match="sample_id"):
         project_prediction_to_target_support(prediction, target)
+
+
+def test_observed_selection_feedback_prediction_uses_selected_symbol() -> None:
+    event = P300SelectionEvent("s0", "A", ("A", "B"), 1.0, selected_symbol="B")
+
+    prediction = observed_selection_feedback_prediction(event)
+
+    assert prediction.method_id == "observed_selection_feedback"
+    assert prediction.probabilities == {"A": 0.0, "B": 1.0}
+    assert prediction.metadata["proxy_boundary"] == "does_not_use_neural_features_or_true_intent"
+
+
+def test_selection_sanity_predictions_cover_each_event_for_each_method() -> None:
+    events = (
+        P300SelectionEvent("s0", "A", ("A", "B"), 1.0, selected_symbol="A"),
+        P300SelectionEvent("s1", "B", ("A", "B"), 1.0, selected_symbol="B"),
+    )
+
+    predictions = selection_sanity_predictions(events)
+
+    assert len(predictions) == 6
+    assert {prediction.method_id for prediction in predictions} == {
+        "observed_selection_feedback",
+        "selection_proxy_oracle",
+        "selection_uniform_prior",
+    }

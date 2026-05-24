@@ -11,6 +11,10 @@ from intentfidelity.baselines.predictions import (
     proxy_oracle_prediction,
     uniform_prediction,
 )
+from intentfidelity.baselines.selection import (
+    observed_selection_feedback_prediction,
+    selection_sanity_predictions,
+)
 from intentfidelity.baselines.examples import (
     LabeledExample,
     feature_dimension,
@@ -52,12 +56,14 @@ __all__ = [
     "labels_from_examples",
     "list_baselines",
     "list_implemented_baselines",
+    "observed_selection_feedback_prediction",
     "proxy_oracle_prediction",
     "project_prediction_to_target_support",
     "read_labeled_examples_csv",
     "run_centroid_baseline",
     "run_default_centroid_baselines",
     "sessions_from_examples",
+    "selection_sanity_predictions",
     "session_centering_transform",
     "synthetic_shift_examples",
     "uniform_prediction",
