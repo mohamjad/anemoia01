@@ -76,59 +76,126 @@ def build_parser() -> argparse.ArgumentParser:
         prog="intentfidelity",
         description="Intent-fidelity evaluation infrastructure CLI.",
     )
-    subparsers = parser.add_subparsers(dest="command")
+    subparsers = parser.add_subparsers(
+        dest="command",
+        title="commands",
+        metavar="command",
+    )
 
-    audit_parser = subparsers.add_parser("audit")
-    audit_subparsers = audit_parser.add_subparsers(dest="audit_command")
-    repo_audit = audit_subparsers.add_parser("repo")
+    audit_parser = subparsers.add_parser(
+        "audit",
+        help="run repository posture and evidence-boundary checks",
+    )
+    audit_subparsers = audit_parser.add_subparsers(
+        dest="audit_command",
+        title="audit commands",
+        metavar="audit_command",
+    )
+    repo_audit = audit_subparsers.add_parser(
+        "repo",
+        help="check docs, CI, manifests, boundaries, and state files",
+    )
     repo_audit.add_argument("repo_root", type=Path, nargs="?", default=Path("."))
     repo_audit.add_argument("--json", action="store_true")
     _add_handler(repo_audit, _audit_repo)
 
-    overview_parser = subparsers.add_parser("overview")
+    overview_parser = subparsers.add_parser(
+        "overview",
+        help="print the current evidence posture and navigation guide",
+    )
     overview_parser.add_argument("repo_root", type=Path, nargs="?", default=Path("."))
     overview_parser.add_argument("--json", action="store_true")
     _add_handler(overview_parser, _overview)
 
-    resources_parser = subparsers.add_parser("resources")
-    resources_subparsers = resources_parser.add_subparsers(dest="resources_command")
-    _add_handler(resources_subparsers.add_parser("list"), _resources_list)
-    _add_handler(resources_subparsers.add_parser("validate"), _resources_validate)
-    resources_card = resources_subparsers.add_parser("card")
+    resources_parser = subparsers.add_parser(
+        "resources",
+        help="list, validate, and summarize dataset resource manifests",
+    )
+    resources_subparsers = resources_parser.add_subparsers(
+        dest="resources_command",
+        title="resource commands",
+        metavar="resources_command",
+    )
+    _add_handler(
+        resources_subparsers.add_parser("list", help="list known dataset manifests"),
+        _resources_list,
+    )
+    _add_handler(
+        resources_subparsers.add_parser(
+            "validate",
+            help="validate bundled resource manifests",
+        ),
+        _resources_validate,
+    )
+    resources_card = resources_subparsers.add_parser(
+        "card",
+        help="render a dataset card from a manifest",
+    )
     resources_card.add_argument("dataset_id")
     resources_card.add_argument("--format", choices=("markdown", "json"), default="markdown")
     _add_handler(resources_card, _resources_card)
-    dandi_assets = resources_subparsers.add_parser("falcon-h2-assets")
+    dandi_assets = resources_subparsers.add_parser(
+        "falcon-h2-assets",
+        help="list configured FALCON H2 DANDI assets",
+    )
     dandi_assets.add_argument("--json", action="store_true")
     _add_handler(dandi_assets, _resources_falcon_h2_assets)
 
-    eval_parser = subparsers.add_parser("eval")
-    eval_subparsers = eval_parser.add_subparsers(dest="eval_command")
-    eval_summary = eval_subparsers.add_parser("summarize")
+    eval_parser = subparsers.add_parser(
+        "eval",
+        help="score predictions and write reproducible evaluation artifacts",
+    )
+    eval_subparsers = eval_parser.add_subparsers(
+        dest="eval_command",
+        title="evaluation commands",
+        metavar="eval_command",
+    )
+    eval_summary = eval_subparsers.add_parser(
+        "summarize",
+        help="summarize an EvalResult JSON file",
+    )
     eval_summary.add_argument("result_json", type=Path)
     _add_handler(eval_summary, _eval_summarize)
-    eval_compare = eval_subparsers.add_parser("compare")
+    eval_compare = eval_subparsers.add_parser(
+        "compare",
+        help="compare one or two EvalResult JSON files",
+    )
     eval_compare.add_argument("before_json", type=Path)
     eval_compare.add_argument("after_json", type=Path, nargs="?")
     eval_compare.add_argument("--format", choices=("json", "markdown"), default="json")
     _add_handler(eval_compare, _eval_compare)
-    falcon_h2_eval = eval_subparsers.add_parser("falcon-h2-baselines")
+    falcon_h2_eval = eval_subparsers.add_parser(
+        "falcon-h2-baselines",
+        help="run deterministic FALCON H2 proxy baselines for one file",
+    )
     falcon_h2_eval.add_argument("nwb_file", type=Path)
     falcon_h2_eval.add_argument("--output", type=Path)
     _add_handler(falcon_h2_eval, _eval_falcon_h2_baselines)
-    falcon_h2_targets = eval_subparsers.add_parser("falcon-h2-targets")
+    falcon_h2_targets = eval_subparsers.add_parser(
+        "falcon-h2-targets",
+        help="write FALCON H2 cue-character weak targets as JSONL",
+    )
     falcon_h2_targets.add_argument("nwb_file", type=Path)
     falcon_h2_targets.add_argument("output_jsonl", type=Path)
     _add_handler(falcon_h2_targets, _eval_falcon_h2_targets)
-    falcon_h2_predictions = eval_subparsers.add_parser("falcon-h2-predictions")
+    falcon_h2_predictions = eval_subparsers.add_parser(
+        "falcon-h2-predictions",
+        help="score prediction JSONL against a FALCON H2 file",
+    )
     falcon_h2_predictions.add_argument("nwb_file", type=Path)
     falcon_h2_predictions.add_argument("predictions_jsonl", type=Path)
     _add_handler(falcon_h2_predictions, _eval_falcon_h2_predictions)
-    falcon_h2_feature_baseline = eval_subparsers.add_parser("falcon-h2-feature-baseline")
+    falcon_h2_feature_baseline = eval_subparsers.add_parser(
+        "falcon-h2-feature-baseline",
+        help="run centroid feature baselines for train/test FALCON H2 files",
+    )
     falcon_h2_feature_baseline.add_argument("train_nwb", type=Path)
     falcon_h2_feature_baseline.add_argument("test_nwb", type=Path)
     _add_handler(falcon_h2_feature_baseline, _eval_falcon_h2_feature_baseline)
-    falcon_h2_feature_bundle = eval_subparsers.add_parser("falcon-h2-feature-bundle")
+    falcon_h2_feature_bundle = eval_subparsers.add_parser(
+        "falcon-h2-feature-bundle",
+        help="write the FALCON H2 feature-baseline artifact bundle",
+    )
     falcon_h2_feature_bundle.add_argument("train_source", type=Path)
     falcon_h2_feature_bundle.add_argument("test_source", type=Path)
     falcon_h2_feature_bundle.add_argument("output_dir", type=Path)
@@ -153,7 +220,10 @@ def build_parser() -> argparse.ArgumentParser:
         default=100,
     )
     _add_handler(falcon_h2_feature_bundle, _eval_falcon_h2_feature_bundle)
-    falcon_h2_bundle = eval_subparsers.add_parser("falcon-h2-bundle")
+    falcon_h2_bundle = eval_subparsers.add_parser(
+        "falcon-h2-bundle",
+        help="write a FALCON H2 proxy-baseline artifact bundle",
+    )
     falcon_h2_bundle.add_argument("source", type=Path)
     falcon_h2_bundle.add_argument("output_dir", type=Path)
     falcon_h2_bundle.add_argument(
@@ -163,19 +233,24 @@ def build_parser() -> argparse.ArgumentParser:
     )
     _add_handler(falcon_h2_bundle, _eval_falcon_h2_bundle)
     falcon_h2_validate_bundle = eval_subparsers.add_parser(
-        "falcon-h2-validate-bundle"
+        "falcon-h2-validate-bundle",
+        help="validate a FALCON H2 proxy-baseline artifact bundle",
     )
     falcon_h2_validate_bundle.add_argument("bundle_dir", type=Path)
     _add_handler(falcon_h2_validate_bundle, _eval_falcon_h2_validate_bundle)
     falcon_h2_validate_feature_bundle = eval_subparsers.add_parser(
-        "falcon-h2-validate-feature-bundle"
+        "falcon-h2-validate-feature-bundle",
+        help="validate a FALCON H2 feature-baseline artifact bundle",
     )
     falcon_h2_validate_feature_bundle.add_argument("bundle_dir", type=Path)
     _add_handler(
         falcon_h2_validate_feature_bundle,
         _eval_falcon_h2_validate_feature_bundle,
     )
-    bigp3bci_bundle = eval_subparsers.add_parser("bigp3bci-bundle")
+    bigp3bci_bundle = eval_subparsers.add_parser(
+        "bigp3bci-bundle",
+        help="write a bigP3BCI selection artifact bundle",
+    )
     bigp3bci_bundle.add_argument("data_root", type=Path)
     bigp3bci_bundle.add_argument("output_dir", type=Path)
     bigp3bci_bundle.add_argument(
@@ -185,13 +260,20 @@ def build_parser() -> argparse.ArgumentParser:
     )
     _add_handler(bigp3bci_bundle, _eval_bigp3bci_bundle)
     bigp3bci_validate_bundle = eval_subparsers.add_parser(
-        "bigp3bci-validate-bundle"
+        "bigp3bci-validate-bundle",
+        help="validate a bigP3BCI selection artifact bundle",
     )
     bigp3bci_validate_bundle.add_argument("bundle_dir", type=Path)
     _add_handler(bigp3bci_validate_bundle, _eval_bigp3bci_validate_bundle)
-    synthetic_eval = eval_subparsers.add_parser("synthetic-baselines")
+    synthetic_eval = eval_subparsers.add_parser(
+        "synthetic-baselines",
+        help="run the synthetic ranking-disagreement example",
+    )
     _add_handler(synthetic_eval, _eval_synthetic_baselines)
-    communication_eval = eval_subparsers.add_parser("communication")
+    communication_eval = eval_subparsers.add_parser(
+        "communication",
+        help="score text communication targets and predictions",
+    )
     communication_eval.add_argument("targets_jsonl", type=Path)
     communication_eval.add_argument("predictions_jsonl", type=Path)
     communication_eval.add_argument("--dataset-id", required=True)
@@ -201,7 +283,10 @@ def build_parser() -> argparse.ArgumentParser:
         default="character_error_rate",
     )
     _add_handler(communication_eval, _eval_communication)
-    language_prior_eval = eval_subparsers.add_parser("language-prior")
+    language_prior_eval = eval_subparsers.add_parser(
+        "language-prior",
+        help="summarize light/heavy language-prior attribution",
+    )
     language_prior_eval.add_argument("result_json", type=Path)
     language_prior_eval.add_argument("--lm-light-method-id", default="lm_light")
     language_prior_eval.add_argument("--lm-heavy-method-id", default="lm_heavy")
@@ -209,12 +294,18 @@ def build_parser() -> argparse.ArgumentParser:
         "--format", choices=("json", "markdown"), default="json"
     )
     _add_handler(language_prior_eval, _eval_language_prior)
-    authorization_eval = eval_subparsers.add_parser("authorization")
+    authorization_eval = eval_subparsers.add_parser(
+        "authorization",
+        help="score authorization-state event predictions",
+    )
     authorization_eval.add_argument("events_jsonl", type=Path)
     authorization_eval.add_argument("predictions_jsonl", type=Path)
     authorization_eval.add_argument("--dataset-id", required=True)
     _add_handler(authorization_eval, _eval_authorization)
-    naturalistic_eval = eval_subparsers.add_parser("naturalistic")
+    naturalistic_eval = eval_subparsers.add_parser(
+        "naturalistic",
+        help="score naturalistic weak-label event predictions",
+    )
     naturalistic_eval.add_argument("events_jsonl", type=Path)
     naturalistic_eval.add_argument("predictions_jsonl", type=Path)
     naturalistic_eval.add_argument("--dataset-id", required=True)
@@ -222,57 +313,118 @@ def build_parser() -> argparse.ArgumentParser:
         "--format", choices=("json", "markdown"), default="json"
     )
     _add_handler(naturalistic_eval, _eval_naturalistic)
-    selection_eval = eval_subparsers.add_parser("selection")
+    selection_eval = eval_subparsers.add_parser(
+        "selection",
+        help="score P300 or selection-event predictions",
+    )
     selection_eval.add_argument("events_jsonl", type=Path)
     selection_eval.add_argument("predictions_jsonl", type=Path)
     selection_eval.add_argument("--dataset-id", required=True)
     selection_eval.add_argument("--format", choices=("json", "markdown"), default="json")
     _add_handler(selection_eval, _eval_selection)
 
-    ingest_parser = subparsers.add_parser("ingest")
-    ingest_subparsers = ingest_parser.add_subparsers(dest="ingest_command")
-    falcon_h2_inventory = ingest_subparsers.add_parser("falcon-h2-inventory")
+    ingest_parser = subparsers.add_parser(
+        "ingest",
+        help="inspect raw dataset files and export normalized events",
+    )
+    ingest_subparsers = ingest_parser.add_subparsers(
+        dest="ingest_command",
+        title="ingest commands",
+        metavar="ingest_command",
+    )
+    falcon_h2_inventory = ingest_subparsers.add_parser(
+        "falcon-h2-inventory",
+        help="inventory FALCON H2 NWB/HDF5 files",
+    )
     falcon_h2_inventory.add_argument("data_root", type=Path)
     falcon_h2_inventory.add_argument("--json", action="store_true")
     _add_handler(falcon_h2_inventory, _ingest_falcon_h2_inventory)
-    bigp3bci_inventory = ingest_subparsers.add_parser("bigp3bci-inventory")
+    bigp3bci_inventory = ingest_subparsers.add_parser(
+        "bigp3bci-inventory",
+        help="inventory bigP3BCI EDF+ files",
+    )
     bigp3bci_inventory.add_argument("data_root", type=Path)
     bigp3bci_inventory.add_argument("--json", action="store_true")
     _add_handler(bigp3bci_inventory, _ingest_bigp3bci_inventory)
-    bigp3bci_events = ingest_subparsers.add_parser("bigp3bci-events")
+    bigp3bci_events = ingest_subparsers.add_parser(
+        "bigp3bci-events",
+        help="export bigP3BCI selection events as JSONL",
+    )
     bigp3bci_events.add_argument("data_root", type=Path)
     bigp3bci_events.add_argument("output_jsonl", type=Path)
     _add_handler(bigp3bci_events, _ingest_bigp3bci_events)
-    nwb_summary = ingest_subparsers.add_parser("nwb-summary")
+    nwb_summary = ingest_subparsers.add_parser(
+        "nwb-summary",
+        help="list datasets inside an NWB/HDF5 file",
+    )
     nwb_summary.add_argument("nwb_file", type=Path)
     _add_handler(nwb_summary, _ingest_nwb_summary)
 
-    report_parser = subparsers.add_parser("report")
-    report_subparsers = report_parser.add_subparsers(dest="report_command")
-    dataset_card = report_subparsers.add_parser("dataset-card")
+    report_parser = subparsers.add_parser(
+        "report",
+        help="render dataset and evaluation cards",
+    )
+    report_subparsers = report_parser.add_subparsers(
+        dest="report_command",
+        title="report commands",
+        metavar="report_command",
+    )
+    dataset_card = report_subparsers.add_parser(
+        "dataset-card",
+        help="render a dataset card",
+    )
     dataset_card.add_argument("dataset_id")
     dataset_card.add_argument("--format", choices=("markdown", "json"), default="markdown")
     _add_handler(dataset_card, _report_dataset_card)
-    eval_card = report_subparsers.add_parser("eval-card")
+    eval_card = report_subparsers.add_parser(
+        "eval-card",
+        help="render an eval card from EvalResult JSON",
+    )
     eval_card.add_argument("result_json", type=Path)
     eval_card.add_argument("--format", choices=("markdown", "json"), default="markdown")
     _add_handler(eval_card, _report_eval_card)
 
-    figure_parser = subparsers.add_parser("figure")
-    figure_subparsers = figure_parser.add_subparsers(dest="figure_command")
-    ranking = figure_subparsers.add_parser("ranking-reversal")
+    figure_parser = subparsers.add_parser(
+        "figure",
+        help="render lightweight text figures from evaluation results",
+    )
+    figure_subparsers = figure_parser.add_subparsers(
+        dest="figure_command",
+        title="figure commands",
+        metavar="figure_command",
+    )
+    ranking = figure_subparsers.add_parser(
+        "ranking-reversal",
+        help="render ranking reversal summary text",
+    )
     ranking.add_argument("result_json", type=Path)
     _add_handler(ranking, _figure_ranking_reversal)
-    comparison_table = figure_subparsers.add_parser("comparison-table")
+    comparison_table = figure_subparsers.add_parser(
+        "comparison-table",
+        help="render a method comparison table",
+    )
     comparison_table.add_argument("result_json", type=Path)
     _add_handler(comparison_table, _figure_comparison_table)
 
-    baselines_parser = subparsers.add_parser("baselines")
-    baselines_subparsers = baselines_parser.add_subparsers(dest="baselines_command")
-    baselines_list = baselines_subparsers.add_parser("list")
+    baselines_parser = subparsers.add_parser(
+        "baselines",
+        help="list and run lightweight baseline methods",
+    )
+    baselines_subparsers = baselines_parser.add_subparsers(
+        dest="baselines_command",
+        title="baseline commands",
+        metavar="baselines_command",
+    )
+    baselines_list = baselines_subparsers.add_parser(
+        "list",
+        help="list registered baseline methods",
+    )
     baselines_list.add_argument("--implemented", action="store_true")
     _add_handler(baselines_list, _baselines_list)
-    centroid = baselines_subparsers.add_parser("centroid")
+    centroid = baselines_subparsers.add_parser(
+        "centroid",
+        help="run nearest-centroid predictions from train/test CSV files",
+    )
     centroid.add_argument("train_csv", type=Path)
     centroid.add_argument("test_csv", type=Path)
     _add_handler(centroid, _baselines_centroid)

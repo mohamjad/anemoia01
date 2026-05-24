@@ -2,6 +2,7 @@ import json
 from pathlib import Path
 
 import h5py
+import pytest
 
 from intentfidelity.cli.main import main
 from intentfidelity.baselines import LabeledExample, write_labeled_examples_csv
@@ -24,6 +25,39 @@ from intentfidelity.metrics import MethodScore, ranking_disagreement
 from intentfidelity.protocols import EvalResult, ProtocolType
 
 from bigp3bci_fixtures import write_bigp3bci_event_fixture
+
+
+def test_top_level_help_describes_command_groups(capsys) -> None:
+    with pytest.raises(SystemExit) as exc_info:
+        main(["--help"])
+
+    output = capsys.readouterr().out
+    assert exc_info.value.code == 0
+    assert "run repository posture and evidence-boundary checks" in output
+    assert "score predictions and write reproducible evaluation artifacts" in output
+    assert "inspect raw dataset files and export normalized events" in output
+
+
+def test_eval_help_describes_artifact_bundle_commands(capsys) -> None:
+    with pytest.raises(SystemExit) as exc_info:
+        main(["eval", "--help"])
+
+    output = capsys.readouterr().out
+    assert exc_info.value.code == 0
+    assert "write the FALCON H2 feature-baseline artifact bundle" in output
+    assert "validate a FALCON H2 feature-baseline artifact bundle" in output
+    assert "write a bigP3BCI selection artifact bundle" in output
+
+
+def test_ingest_help_describes_supported_raw_inputs(capsys) -> None:
+    with pytest.raises(SystemExit) as exc_info:
+        main(["ingest", "--help"])
+
+    output = capsys.readouterr().out
+    assert exc_info.value.code == 0
+    assert "inventory FALCON H2 NWB/HDF5 files" in output
+    assert "inventory bigP3BCI EDF+ files" in output
+    assert "export bigP3BCI selection events as JSONL" in output
 
 
 def test_resources_list_command(capsys) -> None:
