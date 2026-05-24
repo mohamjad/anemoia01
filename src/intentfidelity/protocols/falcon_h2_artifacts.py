@@ -45,6 +45,10 @@ from intentfidelity.protocols.artifacts import (
     validate_artifact_bundle,
 )
 from intentfidelity.protocols.comparison import compare_eval_results
+from intentfidelity.protocols.diagnostics import (
+    evaluation_diagnostics,
+    render_evaluation_diagnostics_markdown,
+)
 from intentfidelity.protocols.falcon_h2 import (
     falcon_h2_baseline_predictions,
     falcon_h2_method_comparison_result_from_targets,
@@ -61,6 +65,8 @@ FALCON_H2_BUNDLE_REQUIRED_KINDS: tuple[str, ...] = (
     "targets_jsonl",
     "predictions_jsonl",
     "result_json",
+    "diagnostics_json",
+    "diagnostics_markdown",
     "eval_card_markdown",
     "comparison_markdown",
     "bundle_manifest_json",
@@ -73,6 +79,8 @@ FALCON_H2_FEATURE_BUNDLE_REQUIRED_KINDS: tuple[str, ...] = (
     "predictions_jsonl",
     "baseline_runs_json",
     "result_json",
+    "diagnostics_json",
+    "diagnostics_markdown",
     "eval_card_markdown",
     "comparison_markdown",
     "bundle_manifest_json",
@@ -114,12 +122,18 @@ def write_falcon_h2_artifact_bundle(
             command=command,
         ),
     )
+    diagnostics = evaluation_diagnostics(targets, predictions)
 
     paths = _BundlePaths(output)
     _write_json(inventory.to_dict(), paths.inventory_json)
     write_weak_targets_jsonl(targets, paths.targets_jsonl)
     write_predictions_jsonl(predictions, paths.predictions_jsonl)
     save_eval_result(result, paths.result_json)
+    _write_json(diagnostics.to_dict(), paths.diagnostics_json)
+    paths.diagnostics_md.write_text(
+        render_evaluation_diagnostics_markdown(diagnostics),
+        encoding="utf-8",
+    )
     paths.eval_card_md.write_text(
         render_markdown(EvalCard.from_result(result)),
         encoding="utf-8",
@@ -149,6 +163,16 @@ def write_falcon_h2_artifact_bundle(
             "result_json",
             paths.result_json,
             "EvalResult JSON for held-out-session intent-fidelity scoring.",
+        ),
+        GeneratedArtifact(
+            "diagnostics_json",
+            paths.diagnostics_json,
+            "Per-method proxy metrics and bootstrap ranking diagnostics.",
+        ),
+        GeneratedArtifact(
+            "diagnostics_markdown",
+            paths.diagnostics_md,
+            "Readable diagnostics report with bootstrap ranking stability.",
         ),
         GeneratedArtifact(
             "eval_card_markdown",
@@ -382,6 +406,7 @@ def write_falcon_h2_feature_baseline_bundle(
             ),
         },
     )
+    diagnostics = evaluation_diagnostics(scored_targets, projected_predictions)
 
     paths = _FeatureBundlePaths(output)
     _write_json(train_inventory.to_dict(), paths.train_inventory_json)
@@ -390,6 +415,11 @@ def write_falcon_h2_feature_baseline_bundle(
     write_predictions_jsonl(projected_predictions, paths.predictions_jsonl)
     _write_json(_baseline_runs_payload(runs), paths.baseline_runs_json)
     save_eval_result(result, paths.result_json)
+    _write_json(diagnostics.to_dict(), paths.diagnostics_json)
+    paths.diagnostics_md.write_text(
+        render_evaluation_diagnostics_markdown(diagnostics),
+        encoding="utf-8",
+    )
     paths.eval_card_md.write_text(
         render_markdown(EvalCard.from_result(result)),
         encoding="utf-8",
@@ -429,6 +459,16 @@ def write_falcon_h2_feature_baseline_bundle(
             "result_json",
             paths.result_json,
             "EvalResult JSON with proxy top-1 error and intent-fidelity log loss.",
+        ),
+        GeneratedArtifact(
+            "diagnostics_json",
+            paths.diagnostics_json,
+            "Per-method proxy metrics and bootstrap ranking diagnostics.",
+        ),
+        GeneratedArtifact(
+            "diagnostics_markdown",
+            paths.diagnostics_md,
+            "Readable diagnostics report with bootstrap ranking stability.",
         ),
         GeneratedArtifact(
             "eval_card_markdown",
@@ -594,6 +634,8 @@ class _BundlePaths:
         self.targets_jsonl = output_dir / "targets.jsonl"
         self.predictions_jsonl = output_dir / "predictions.jsonl"
         self.result_json = output_dir / "result.json"
+        self.diagnostics_json = output_dir / "diagnostics.json"
+        self.diagnostics_md = output_dir / "diagnostics.md"
         self.eval_card_md = output_dir / "eval_card.md"
         self.comparison_md = output_dir / "comparison.md"
         self.bundle_manifest_json = output_dir / "bundle_manifest.json"
@@ -607,6 +649,8 @@ class _FeatureBundlePaths:
         self.predictions_jsonl = output_dir / "predictions.jsonl"
         self.baseline_runs_json = output_dir / "baseline_runs.json"
         self.result_json = output_dir / "result.json"
+        self.diagnostics_json = output_dir / "diagnostics.json"
+        self.diagnostics_md = output_dir / "diagnostics.md"
         self.eval_card_md = output_dir / "eval_card.md"
         self.comparison_md = output_dir / "comparison.md"
         self.bundle_manifest_json = output_dir / "bundle_manifest.json"

@@ -29,6 +29,8 @@ def test_bigp3bci_bundle_writes_complete_fixture_artifacts(tmp_path: Path) -> No
         "targets.jsonl",
         "predictions.jsonl",
         "result.json",
+        "diagnostics.json",
+        "diagnostics.md",
         "eval_card.md",
         "selection_report.md",
         "comparison.md",
@@ -40,6 +42,8 @@ def test_bigp3bci_bundle_writes_complete_fixture_artifacts(tmp_path: Path) -> No
         "targets_jsonl",
         "predictions_jsonl",
         "result_json",
+        "diagnostics_json",
+        "diagnostics_markdown",
         "eval_card_markdown",
         "selection_report_markdown",
         "comparison_markdown",
@@ -50,6 +54,7 @@ def test_bigp3bci_bundle_writes_complete_fixture_artifacts(tmp_path: Path) -> No
     predictions = read_predictions_jsonl(output_dir / "predictions.jsonl")
     result = load_eval_result(output_dir / "result.json")
     manifest = load_artifact_bundle(output_dir / "bundle_manifest.json")
+    diagnostics = json.loads((output_dir / "diagnostics.json").read_text())
 
     assert len(events) == 2
     assert len(predictions) == 6
@@ -59,6 +64,8 @@ def test_bigp3bci_bundle_writes_complete_fixture_artifacts(tmp_path: Path) -> No
         "intentfidelity eval bigp3bci-bundle fixture bundle"
     )
     assert result.metadata["source_files"][0]["sha256"]
+    assert diagnostics["sample_count"] == 2
+    assert diagnostics["method_count"] == 3
     assert manifest.metadata["event_count"] == 2
     assert manifest.metadata["source_files"][0]["size_bytes"] == source_file.size_bytes
 
@@ -68,6 +75,9 @@ def test_bigp3bci_bundle_writes_complete_fixture_artifacts(tmp_path: Path) -> No
     )
     comparison = (output_dir / "comparison.md").read_text(encoding="utf-8")
     assert "fixture_evidence" in eval_card
+    assert "Bootstrap Ranking Stability" in (
+        output_dir / "diagnostics.md"
+    ).read_text(encoding="utf-8")
     assert "not downloaded bigP3BCI dataset evidence" in selection_report
     assert "not directly observed true intent" in comparison
 

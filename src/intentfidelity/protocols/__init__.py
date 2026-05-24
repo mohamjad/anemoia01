@@ -47,6 +47,13 @@ from intentfidelity.protocols.comparison import (
     MethodComparisonReport,
     compare_eval_results,
 )
+from intentfidelity.protocols.diagnostics import (
+    BootstrapRankingDiagnostics,
+    EvaluationDiagnostics,
+    MethodDiagnostics,
+    evaluation_diagnostics,
+    render_evaluation_diagnostics_markdown,
+)
 from intentfidelity.protocols.synthetic import synthetic_baseline_eval
 from intentfidelity.protocols.communication import communication_eval_result
 from intentfidelity.protocols.language_prior import language_prior_report
@@ -60,8 +67,11 @@ __all__ = [
     "ArtifactValidationIssue",
     "ArtifactValidationReport",
     "ArtifactValidationSeverity",
+    "BootstrapRankingDiagnostics",
     "EvidenceLevel",
+    "EvaluationDiagnostics",
     "GeneratedArtifact",
+    "MethodDiagnostics",
     "MethodComparisonReport",
     "ProtocolType",
     "authorization_result",
@@ -69,6 +79,7 @@ __all__ = [
     "communication_result",
     "communication_eval_result",
     "compare_eval_results",
+    "evaluation_diagnostics",
     "few_shot_recalibration_result",
     "falcon_h2_baseline_eval",
     "falcon_h2_baseline_predictions",
@@ -85,6 +96,7 @@ __all__ = [
     "language_prior_report",
     "naturalistic_weak_label_result",
     "naturalistic_eval_result",
+    "render_evaluation_diagnostics_markdown",
     "save_artifact_bundle",
     "save_eval_result",
     "selection_result",

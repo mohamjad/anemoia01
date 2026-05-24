@@ -31,6 +31,8 @@ def test_falcon_h2_bundle_writes_complete_fixture_artifacts(tmp_path: Path) -> N
         "targets.jsonl",
         "predictions.jsonl",
         "result.json",
+        "diagnostics.json",
+        "diagnostics.md",
         "eval_card.md",
         "comparison.md",
         "bundle_manifest.json",
@@ -41,6 +43,8 @@ def test_falcon_h2_bundle_writes_complete_fixture_artifacts(tmp_path: Path) -> N
         "targets_jsonl",
         "predictions_jsonl",
         "result_json",
+        "diagnostics_json",
+        "diagnostics_markdown",
         "eval_card_markdown",
         "comparison_markdown",
         "bundle_manifest_json",
@@ -50,6 +54,7 @@ def test_falcon_h2_bundle_writes_complete_fixture_artifacts(tmp_path: Path) -> N
     predictions = read_predictions_jsonl(output_dir / "predictions.jsonl")
     result = load_eval_result(output_dir / "result.json")
     manifest = load_artifact_bundle(output_dir / "bundle_manifest.json")
+    diagnostics = json.loads((output_dir / "diagnostics.json").read_text())
 
     assert len(targets) == 2
     assert len(predictions) == 4
@@ -60,12 +65,17 @@ def test_falcon_h2_bundle_writes_complete_fixture_artifacts(tmp_path: Path) -> N
         "intentfidelity eval falcon-h2-bundle fixture.nwb bundle"
     )
     assert result.metadata["source_files"][0]["sha256"]
+    assert diagnostics["sample_count"] == 2
+    assert diagnostics["method_count"] == 2
     assert manifest.metadata["target_count"] == 2
     assert manifest.metadata["source_files"][0]["size_bytes"] == source.stat().st_size
 
     eval_card = (output_dir / "eval_card.md").read_text(encoding="utf-8")
     comparison = (output_dir / "comparison.md").read_text(encoding="utf-8")
     assert "fixture_evidence" in eval_card
+    assert "Bootstrap Ranking Stability" in (
+        output_dir / "diagnostics.md"
+    ).read_text(encoding="utf-8")
     assert "not downloaded FALCON H2 dataset evidence" in eval_card
     assert "declared weak target distributions" in comparison
 
@@ -142,6 +152,8 @@ def test_falcon_h2_feature_baseline_bundle_writes_method_artifacts(
         "predictions.jsonl",
         "baseline_runs.json",
         "result.json",
+        "diagnostics.json",
+        "diagnostics.md",
         "eval_card.md",
         "comparison.md",
         "bundle_manifest.json",
@@ -153,6 +165,9 @@ def test_falcon_h2_feature_baseline_bundle_writes_method_artifacts(
     assert bundle.metadata["train_example_count"] == 2
     assert bundle.metadata["test_example_count"] == 2
     assert bundle.metadata["prediction_count"] == 6
+    assert json.loads((output_dir / "diagnostics.json").read_text())[
+        "method_count"
+    ] == 3
     assert [score.method_id for score in result.method_scores] == [
         "identity_centroid",
         "session_centered_centroid",

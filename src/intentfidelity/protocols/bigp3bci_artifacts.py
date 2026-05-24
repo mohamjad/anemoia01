@@ -38,6 +38,10 @@ from intentfidelity.protocols.artifacts import (
     validate_artifact_bundle,
 )
 from intentfidelity.protocols.comparison import compare_eval_results
+from intentfidelity.protocols.diagnostics import (
+    evaluation_diagnostics,
+    render_evaluation_diagnostics_markdown,
+)
 from intentfidelity.protocols.io import load_eval_result, save_eval_result
 from intentfidelity.protocols.schemas import ProtocolType
 from intentfidelity.protocols.selection import selection_eval_result
@@ -55,6 +59,8 @@ BIGP3BCI_BUNDLE_REQUIRED_KINDS: tuple[str, ...] = (
     "targets_jsonl",
     "predictions_jsonl",
     "result_json",
+    "diagnostics_json",
+    "diagnostics_markdown",
     "eval_card_markdown",
     "selection_report_markdown",
     "comparison_markdown",
@@ -100,6 +106,7 @@ def write_bigp3bci_artifact_bundle(
         dataset_id=BIGP3BCI_DATASET_ID,
         metadata=metadata,
     )
+    diagnostics = evaluation_diagnostics(targets, predictions)
 
     paths = _BundlePaths(output)
     _write_json(inventory.to_dict(), paths.inventory_json)
@@ -107,6 +114,11 @@ def write_bigp3bci_artifact_bundle(
     write_weak_targets_jsonl(targets, paths.targets_jsonl)
     write_predictions_jsonl(predictions, paths.predictions_jsonl)
     save_eval_result(result, paths.result_json)
+    _write_json(diagnostics.to_dict(), paths.diagnostics_json)
+    paths.diagnostics_md.write_text(
+        render_evaluation_diagnostics_markdown(diagnostics),
+        encoding="utf-8",
+    )
     paths.eval_card_md.write_text(
         render_markdown(EvalCard.from_result(result)),
         encoding="utf-8",
@@ -145,6 +157,16 @@ def write_bigp3bci_artifact_bundle(
             "result_json",
             paths.result_json,
             "EvalResult JSON for selection intent-fidelity proxy scoring.",
+        ),
+        GeneratedArtifact(
+            "diagnostics_json",
+            paths.diagnostics_json,
+            "Per-method proxy metrics and bootstrap ranking diagnostics.",
+        ),
+        GeneratedArtifact(
+            "diagnostics_markdown",
+            paths.diagnostics_md,
+            "Readable diagnostics report with bootstrap ranking stability.",
         ),
         GeneratedArtifact(
             "eval_card_markdown",
@@ -211,6 +233,8 @@ def validate_bigp3bci_artifact_bundle(
     targets = read_weak_targets_jsonl(artifacts["targets_jsonl"])
     predictions = read_predictions_jsonl(artifacts["predictions_jsonl"])
     result = load_eval_result(artifacts["result_json"])
+    diagnostics = json.loads(artifacts["diagnostics_json"].read_text(encoding="utf-8"))
+    diagnostics_report = artifacts["diagnostics_markdown"].read_text(encoding="utf-8")
     eval_card = artifacts["eval_card_markdown"].read_text(encoding="utf-8")
     selection_report = artifacts["selection_report_markdown"].read_text(
         encoding="utf-8"
@@ -289,6 +313,20 @@ def validate_bigp3bci_artifact_bundle(
                 artifacts["result_json"],
             )
         )
+    _append_count_issue(
+        issues,
+        "diagnostics_sample_count_mismatch",
+        diagnostics.get("sample_count"),
+        len(targets),
+        artifacts["diagnostics_json"],
+    )
+    _append_count_issue(
+        issues,
+        "diagnostics_method_count_mismatch",
+        diagnostics.get("method_count"),
+        len(_predictions_by_method(predictions)),
+        artifacts["diagnostics_json"],
+    )
     if not _bundle_has_source_file_hashes(bundle):
         issues.append(
             _error(
@@ -325,6 +363,14 @@ def validate_bigp3bci_artifact_bundle(
                 artifacts["eval_card_markdown"],
             )
         )
+    if "Bootstrap Ranking Stability" not in diagnostics_report:
+        issues.append(
+            _error(
+                "diagnostics_report_missing_bootstrap_scope",
+                "diagnostics report must include bootstrap ranking stability.",
+                artifacts["diagnostics_markdown"],
+            )
+        )
     selection_scope = "Scores use prompted symbols and selection outputs as intent proxies"
     if selection_scope not in selection_report:
         issues.append(
@@ -358,6 +404,8 @@ class _BundlePaths:
         self.targets_jsonl = output_dir / "targets.jsonl"
         self.predictions_jsonl = output_dir / "predictions.jsonl"
         self.result_json = output_dir / "result.json"
+        self.diagnostics_json = output_dir / "diagnostics.json"
+        self.diagnostics_md = output_dir / "diagnostics.md"
         self.eval_card_md = output_dir / "eval_card.md"
         self.selection_report_md = output_dir / "selection_report.md"
         self.comparison_md = output_dir / "comparison.md"
