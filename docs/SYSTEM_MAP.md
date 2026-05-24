@@ -81,9 +81,10 @@ FALCON H2 bundle validation checks the generated file contract, result and JSONL
 loadability, count consistency, source-file hashes, evidence-level consistency,
 and report language that keeps proxy limitations visible.
 
-FALCON H2 feature-baseline bundles also write a PCA/SVD latent drift probe. The
-probe summarizes neural feature-state movement and its relation to proxy loss;
-it is not a direct intent readout.
+FALCON H2 feature-baseline bundles also write a latent drift probe. The default
+backend is PCA/SVD. CEBRA is available as an optional backend through the same
+`latent_drift.json` / `latent_drift.md` contract, but it remains a neural
+feature-state probe and is not a direct intent readout.
 
 bigP3BCI follows the same artifact shape, with `events.jsonl` and
 `selection_report.md` added for the P300 selection event boundary. The current

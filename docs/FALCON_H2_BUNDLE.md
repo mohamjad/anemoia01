@@ -86,9 +86,11 @@ Feature-baseline bundles additionally write:
 - `latent_drift.json`
 - `latent_drift.md`
 
-Those files contain a deterministic PCA/SVD neural feature-state probe. The
-probe summarizes movement in low-dimensional neural features and its relation
-to proxy-fidelity loss. It does not claim to recover true intent.
+Those files contain a neural feature-state probe. The default backend is
+deterministic PCA/SVD. An optional CEBRA backend can be selected with
+`--latent-backend cebra` after installing `intentfidelity[latent-cebra]`.
+Both backends summarize movement in low-dimensional neural features and its
+relation to proxy-fidelity loss. Neither claims to recover true intent.
 
 ## Provenance
 

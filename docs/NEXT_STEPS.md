@@ -95,8 +95,9 @@ evidence upgrades exists:
 1. Richer FALCON H2 method families beyond centroid baselines, recorded through
    the same validated artifact bundle and reported whether ranking disagreement
    appears or not.
-2. Optional latent backends such as CEBRA or Dynamax behind the same
-   `latent_drift` artifact contract, only if they add useful method evidence.
+2. Optional latent backends beyond the current PCA/SVD and CEBRA paths, such
+   as Dynamax state-space probes, behind the same `latent_drift` artifact
+   contract and only if they add useful method evidence.
 3. Broader bigP3BCI downloaded-data coverage plus real neural prediction
    generation and a validated method-comparison artifact path.
 4. CI and coverage thresholds so the audit/test gates run outside local

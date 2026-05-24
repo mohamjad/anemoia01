@@ -1,7 +1,10 @@
 import json
 from pathlib import Path
+import sys
+from types import SimpleNamespace
 
 import h5py
+import numpy as np
 import pytest
 
 from intentfidelity.labels import read_predictions_jsonl, read_weak_targets_jsonl
@@ -167,6 +170,7 @@ def test_falcon_h2_feature_baseline_bundle_writes_method_artifacts(
     assert bundle.metadata["train_example_count"] == 2
     assert bundle.metadata["test_example_count"] == 2
     assert bundle.metadata["prediction_count"] == 6
+    assert bundle.metadata["latent_backend"] == "pca_svd"
     assert json.loads((output_dir / "diagnostics.json").read_text())[
         "method_count"
     ] == 3
@@ -182,6 +186,44 @@ def test_falcon_h2_feature_baseline_bundle_writes_method_artifacts(
         "whitened_centroid",
     ]
     assert result.method_scores[0].conventional_score >= 0.0
+    assert report.is_valid is True
+
+
+def test_falcon_h2_feature_bundle_can_use_optional_cebra_backend(
+    tmp_path: Path,
+    monkeypatch: pytest.MonkeyPatch,
+) -> None:
+    class FakeCebraModel:
+        def __init__(self, **kwargs: object) -> None:
+            self.output_dimension = int(kwargs["output_dimension"])
+
+        def fit(self, matrix: np.ndarray):
+            return self
+
+        def transform(self, matrix: np.ndarray) -> np.ndarray:
+            return matrix[:, : self.output_dimension]
+
+    monkeypatch.setitem(sys.modules, "cebra", SimpleNamespace(CEBRA=FakeCebraModel))
+    train = _write_h2_file(tmp_path / "sub-T5-held-in-calib_ses-20230416.nwb")
+    test = _write_h2_file(tmp_path / "sub-T5-held-out-calib_ses-20230417.nwb")
+    output_dir = tmp_path / "feature-bundle"
+
+    bundle = write_falcon_h2_feature_baseline_bundle(
+        train,
+        test,
+        output_dir,
+        latent_backend="cebra",
+        latent_components=2,
+        cebra_max_iterations=3,
+    )
+
+    latent_drift = json.loads((output_dir / "latent_drift.json").read_text())
+    report = validate_falcon_h2_feature_baseline_bundle(output_dir)
+
+    assert bundle.metadata["latent_backend"] == "cebra"
+    assert latent_drift["config"]["method_id"] == "cebra_self_supervised_latent_probe"
+    assert latent_drift["config"]["parameters"]["max_iterations"] == 3
+    assert latent_drift["latent_dimension"] == 2
     assert report.is_valid is True
 
 

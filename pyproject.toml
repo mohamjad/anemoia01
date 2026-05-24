@@ -23,6 +23,9 @@ Issues = "https://github.com/mohamjad/anemoia01/issues"
 dev = [
   "pytest>=8.0",
 ]
+latent-cebra = [
+  "cebra>=0.6,<0.7",
+]
 
 [project.scripts]
 intentfidelity = "intentfidelity.cli.main:main"

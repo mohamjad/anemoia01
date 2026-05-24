@@ -137,6 +137,21 @@ def build_parser() -> argparse.ArgumentParser:
         choices=tuple(level.value for level in EvidenceLevel),
         default=EvidenceLevel.DOWNLOADED_DATASET_EVIDENCE.value,
     )
+    falcon_h2_feature_bundle.add_argument(
+        "--latent-backend",
+        choices=("pca_svd", "cebra"),
+        default="pca_svd",
+    )
+    falcon_h2_feature_bundle.add_argument(
+        "--latent-components",
+        type=int,
+        default=3,
+    )
+    falcon_h2_feature_bundle.add_argument(
+        "--cebra-max-iterations",
+        type=int,
+        default=100,
+    )
     _add_handler(falcon_h2_feature_bundle, _eval_falcon_h2_feature_bundle)
     falcon_h2_bundle = eval_subparsers.add_parser("falcon-h2-bundle")
     falcon_h2_bundle.add_argument("source", type=Path)
@@ -382,6 +397,9 @@ def _eval_falcon_h2_feature_bundle(args: argparse.Namespace) -> None:
         args.output_dir,
         evidence_level=EvidenceLevel(args.evidence_level),
         command=_falcon_h2_feature_bundle_command(args),
+        latent_backend=args.latent_backend,
+        latent_components=args.latent_components,
+        cebra_max_iterations=args.cebra_max_iterations,
     )
     print(json.dumps(bundle.to_dict(), indent=2, sort_keys=True))
 
@@ -599,7 +617,10 @@ def _falcon_h2_feature_bundle_command(args: argparse.Namespace) -> str:
     return (
         "intentfidelity eval falcon-h2-feature-bundle "
         f"{args.train_source} {args.test_source} {args.output_dir} "
-        f"--evidence-level {args.evidence_level}"
+        f"--evidence-level {args.evidence_level} "
+        f"--latent-backend {args.latent_backend} "
+        f"--latent-components {args.latent_components} "
+        f"--cebra-max-iterations {args.cebra_max_iterations}"
     )
 
 

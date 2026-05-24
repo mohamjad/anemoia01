@@ -61,11 +61,17 @@ files and can surface a real ranking disagreement for simple feature-derived
 methods. It is not evidence that rankings always disagree, not a submitted
 decoder benchmark, and not evidence of direct intent measurement.
 
+FALCON H2 feature bundles also emit a latent feature-state report. The default
+backend is deterministic PCA/SVD. An optional CEBRA backend is available behind
+`intentfidelity[latent-cebra]` and `--latent-backend cebra`, but it remains a
+neural feature-state probe rather than a direct intent readout.
+
 See:
 
 - `docs/FALCON_H2_LOCAL_RUN.md` for the sanity artifact bundle
 - `docs/FALCON_H2_METHOD_RUN.md` for the feature-baseline method run
 - `docs/FALCON_H2_FULL_COVERAGE_RUN.md` for the full-coverage FALCON H2 run
+- `docs/LATENT_BACKENDS.md` for PCA/SVD and optional CEBRA latent probes
 - `docs/EVIDENCE_STATUS.md` for the current empirical boundary
 - `docs/DATASET_LANDSCAPE.md` for dataset-family coverage and remaining gaps
 
@@ -164,7 +170,7 @@ Start here:
 Core implementation:
 
 - `src/intentfidelity/ingest/` - dataset-specific readers and inventories
-- `src/intentfidelity/latent/` - PCA/SVD neural feature-state probes
+- `src/intentfidelity/latent/` - PCA/SVD and optional CEBRA neural feature-state probes
 - `src/intentfidelity/labels/` - weak targets, predictions, and JSONL IO
 - `src/intentfidelity/metrics/` - scoring and comparison metrics
 - `src/intentfidelity/protocols/` - evaluation results and artifact bundles

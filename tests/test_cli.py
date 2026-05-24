@@ -196,6 +196,7 @@ def test_falcon_h2_feature_bundle_command_writes_method_artifacts(
 
     payload = json.loads(capsys.readouterr().out)
     assert payload["metadata"]["prediction_count"] == 6
+    assert payload["metadata"]["latent_backend"] == "pca_svd"
     assert (output_dir / "baseline_runs.json").exists()
 
     assert main(["eval", "falcon-h2-validate-feature-bundle", str(output_dir)]) == 0

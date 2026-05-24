@@ -113,9 +113,10 @@ PYTHONPATH=src python -m intentfidelity.cli.main eval \
 3. `docs/EVIDENCE_STATUS.md` for what is and is not demonstrated.
 4. `docs/SYSTEM_MAP.md` for module ownership.
 5. `docs/FALCON_H2_FULL_COVERAGE_RUN.md` for the strongest current run.
-6. `docs/BIGP3BCI_RAW_CONTRACT.md` for the first non-FALCON raw contract.
-7. `docs/BIGP3BCI_LOCAL_RUN.md` for the first downloaded bigP3BCI bundle run.
-8. `docs/NEXT_STEPS.md` for the highest-value remaining work.
+6. `docs/LATENT_BACKENDS.md` for PCA/SVD and optional CEBRA latent probes.
+7. `docs/BIGP3BCI_RAW_CONTRACT.md` for the first non-FALCON raw contract.
+8. `docs/BIGP3BCI_LOCAL_RUN.md` for the first downloaded bigP3BCI bundle run.
+9. `docs/NEXT_STEPS.md` for the highest-value remaining work.
 
 ## What To Say
 

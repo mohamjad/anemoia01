@@ -21,6 +21,7 @@ intentfidelity eval falcon-h2-targets data/h2/sub-T5-held-out-calib/example.nwb 
 intentfidelity eval falcon-h2-baselines data/h2/sub-T5-held-out-calib/example.nwb
 intentfidelity eval falcon-h2-feature-baseline train.nwb test.nwb
 intentfidelity eval falcon-h2-feature-bundle data/external data/external outputs/falcon-h2-feature-bundle --evidence-level downloaded_dataset_evidence
+intentfidelity eval falcon-h2-feature-bundle data/external data/external outputs/falcon-h2-feature-bundle-cebra --latent-backend cebra
 intentfidelity eval falcon-h2-validate-feature-bundle outputs/falcon-h2-feature-bundle
 intentfidelity eval falcon-h2-feature-bundle data/external data/external outputs/falcon-h2-full-feature-bundle --evidence-level downloaded_dataset_evidence
 intentfidelity eval falcon-h2-validate-feature-bundle outputs/falcon-h2-full-feature-bundle

@@ -169,7 +169,8 @@ issues: []
 ```
 
 The regenerated feature bundle also includes a PCA/SVD latent drift report. It
-is a neural feature-state probe, not a direct intent readout.
+is a neural feature-state probe, not a direct intent readout. The optional CEBRA
+backend was not used for this recorded run.
 
 ## Interpretation
 

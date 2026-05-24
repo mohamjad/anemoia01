@@ -98,7 +98,8 @@ Implemented and tested:
 - declared cue-character weak target construction
 - deterministic baseline prediction export
 - held-out-session `EvalResult` scoring
-- PCA/SVD neural feature-state drift probes for feature-baseline bundles
+- PCA/SVD and optional CEBRA neural feature-state drift probes for
+  feature-baseline bundles
 - eval-card rendering
 - comparison report rendering
 - artifact-bundle manifest

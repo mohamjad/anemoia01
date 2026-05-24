@@ -23,8 +23,9 @@ proxy-state section describes changes in declared weak targets and prediction
 streams; it does not claim access to hidden intent.
 
 FALCON H2 feature-baseline bundles also write `latent_drift.json` and
-`latent_drift.md`. These reports summarize PCA/SVD neural feature-state movement
-and explicitly state that the probe is not a direct intent readout.
+`latent_drift.md`. These reports summarize neural feature-state movement and
+explicitly state that the probe is not a direct intent readout. PCA/SVD is the
+default backend; CEBRA is optional and uses the same report contract.
 
 Pass 4 adds focused Markdown renderers for:
 

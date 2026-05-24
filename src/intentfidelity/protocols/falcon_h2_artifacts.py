@@ -33,7 +33,11 @@ from intentfidelity.labels import (
     write_predictions_jsonl,
     write_weak_targets_jsonl,
 )
-from intentfidelity.latent import fit_pca_latent_probe, render_latent_drift_markdown
+from intentfidelity.latent import (
+    LatentBackend,
+    fit_latent_probe,
+    render_latent_drift_markdown,
+)
 from intentfidelity.protocols.artifacts import (
     ArtifactBundle,
     ArtifactValidationIssue,
@@ -332,6 +336,9 @@ def write_falcon_h2_feature_baseline_bundle(
     evidence_level: EvidenceLevel = EvidenceLevel.DOWNLOADED_DATASET_EVIDENCE,
     command: str | None = None,
     support_floor_mass: float = 1e-6,
+    latent_backend: LatentBackend = "pca_svd",
+    latent_components: int = 3,
+    cebra_max_iterations: int = 100,
 ) -> ArtifactBundle:
     train_source = Path(train_source_path)
     test_source = Path(test_source_path)
@@ -399,6 +406,9 @@ def write_falcon_h2_feature_baseline_bundle(
             "command": command,
             "support_projection": "declared_target_support",
             "support_floor_mass": support_floor_mass,
+            "latent_backend": latent_backend,
+            "latent_components": latent_components,
+            "cebra_max_iterations": cebra_max_iterations,
             "train_source_files": train_source_files,
             "test_source_files": test_source_files,
             "baseline_scope": _feature_evidence_scope_text(evidence_level),
@@ -410,11 +420,14 @@ def write_falcon_h2_feature_baseline_bundle(
         },
     )
     diagnostics = evaluation_diagnostics(scored_targets, projected_predictions)
-    latent_report = fit_pca_latent_probe(
+    latent_report = fit_latent_probe(
         train_examples,
         test_examples,
         scored_targets,
         projected_predictions,
+        backend=latent_backend,
+        n_components=latent_components,
+        cebra_max_iterations=cebra_max_iterations,
     )
 
     paths = _FeatureBundlePaths(output)
@@ -487,12 +500,12 @@ def write_falcon_h2_feature_baseline_bundle(
         GeneratedArtifact(
             "latent_drift_json",
             paths.latent_drift_json,
-            "PCA/SVD neural feature-state drift probe.",
+            f"{latent_backend} neural feature-state drift probe.",
         ),
         GeneratedArtifact(
             "latent_drift_markdown",
             paths.latent_drift_md,
-            "Readable PCA/SVD latent drift report.",
+            f"Readable {latent_backend} latent drift report.",
         ),
         GeneratedArtifact(
             "eval_card_markdown",
@@ -533,6 +546,9 @@ def write_falcon_h2_feature_baseline_bundle(
             "command": command,
             "support_projection": "declared_target_support",
             "support_floor_mass": support_floor_mass,
+            "latent_backend": latent_backend,
+            "latent_components": latent_components,
+            "cebra_max_iterations": cebra_max_iterations,
             "train_source_files": train_source_files,
             "test_source_files": test_source_files,
         },
