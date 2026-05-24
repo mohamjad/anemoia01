@@ -114,8 +114,9 @@ FALCON H2 is the first infrastructure path.
 
 Card/Willett/Kunz are the conceptual speech path.
 
-AJILE12 and bigP3BCI are scaffold paths for naturalistic weak labels and
-P300-style selection weak targets.
+AJILE12 is a scaffold path for naturalistic weak labels. bigP3BCI is the first
+non-FALCON fixture-backed artifact bundle path for P300-style selection weak
+targets, but it is not downloaded-data evidence yet.
 
 ## Old Repo Relationship
 

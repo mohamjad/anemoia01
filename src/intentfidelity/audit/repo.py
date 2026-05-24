@@ -128,7 +128,7 @@ def _resource_manifest_check(root: Path) -> AuditCheck:
 
     expected_stages = {
         "falcon_h2": "full downloaded-data artifact and feature-baseline bundle path",
-        "bigp3bci": "raw inventory plus fixture-backed event extraction",
+        "bigp3bci": "fixture-backed artifact bundle path",
     }
     stage_mismatches = {
         dataset_id: by_id[dataset_id].metadata.get("evidence_stage")
@@ -193,12 +193,12 @@ def _evidence_boundary_check(root: Path) -> AuditCheck:
     required_phrases = {
         "evidence_status": (
             "should not be described as having proven the broad thesis",
-            "bigP3BCI now has raw EDF+ inventory and fixture-backed event extraction",
+            "bigP3BCI now has raw EDF+ inventory, fixture-backed event extraction, and fixture-backed artifact bundles",
             "still no downloaded-data event validation",
         ),
         "dataset_landscape": (
             "Only FALCON H2 has downloaded-data artifact bundles",
-            "not a real-data target or scoring path",
+            "not downloaded-data scoring evidence",
         ),
         "argument": (
             "does not observe true intent directly",

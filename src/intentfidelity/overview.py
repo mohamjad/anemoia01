@@ -89,6 +89,7 @@ def build_repo_overview(repo_root: str | Path = ".") -> RepoOverview:
                     "cue-character weak targets",
                     "baseline predictions",
                     "EvalResult JSON",
+                    "diagnostics JSON and Markdown",
                     "eval card and comparison report",
                     "bundle validation with provenance",
                 ),
@@ -100,23 +101,25 @@ def build_repo_overview(repo_root: str | Path = ".") -> RepoOverview:
             ),
             EvidencePath(
                 name="bigP3BCI",
-                evidence_level="raw_inventory_plus_fixture_event_extraction",
-                status="raw EDF+ inventory and typed event extraction path",
+                evidence_level="fixture_evidence",
+                status="fixture-backed selection artifact bundle path",
                 works_now=(
                     "local root resolution",
                     "EDF+ path inventory",
                     "numeric EDF+ record reading",
                     "study/session/phase parsing",
                     "P300SelectionEvent JSONL export",
-                    "structured validation issues",
+                    "sanity prediction bundle",
+                    "EvalResult JSON and diagnostics",
+                    "bundle validation with provenance",
                 ),
                 boundary=(
-                    "Fixture-backed extraction only; no downloaded-data event "
-                    "validation, predictions, scoring, or artifact bundle."
+                    "Fixture-backed only; no downloaded-data event validation "
+                    "or real-data scoring evidence."
                 ),
                 next_step=(
-                    "Validate event extraction on downloaded bigP3BCI files, "
-                    "then add predictions and selection scoring artifacts."
+                    "Validate event extraction and the bundle path on "
+                    "downloaded bigP3BCI EDF+ files."
                 ),
             ),
             EvidencePath(
@@ -138,6 +141,7 @@ def build_repo_overview(repo_root: str | Path = ".") -> RepoOverview:
             "intentfidelity audit repo --json",
             "intentfidelity resources list",
             "intentfidelity ingest falcon-h2-inventory data/external --json",
+            "intentfidelity eval bigp3bci-validate-bundle outputs/bigp3bci-bundle",
             "intentfidelity eval falcon-h2-validate-feature-bundle "
             "outputs/falcon-h2-full-feature-bundle",
         ),

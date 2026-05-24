@@ -24,9 +24,10 @@ The repo now has six scaffold passes:
 6. Selection weak-target scaffolding for bigP3BCI-style P300 symbol proxies.
 
 Non-FALCON resource paths mostly remain synthetic protocol scaffolds. bigP3BCI
-now has raw EDF+ inventory and fixture-backed typed event extraction, but no
-downloaded-data event validation, prediction generation, or scoring path. It is
-not real-data evidence yet.
+now has raw EDF+ inventory, fixture-backed typed event extraction, and
+fixture-backed selection artifact bundles with sanity predictions and
+diagnostics. It still has no downloaded-data event validation or real-data
+scoring evidence.
 
 ## Current Frontier
 
@@ -55,7 +56,8 @@ Build a real FALCON H2 evidence pass:
 
 Current implementation includes `intentfidelity eval falcon-h2-bundle`, which
 writes `inventory.json`, `targets.jsonl`, `predictions.jsonl`, `result.json`,
-`eval_card.md`, `comparison.md`, and `bundle_manifest.json`. The command
+`diagnostics.json`, `diagnostics.md`, `eval_card.md`, `comparison.md`, and
+`bundle_manifest.json`. The command
 defaults to `fixture_evidence`; pass `--evidence-level
 downloaded_dataset_evidence` only for local runs against downloaded FALCON H2
 files.
@@ -68,6 +70,8 @@ intentfidelity eval falcon-h2-validate-bundle outputs/falcon-h2-bundle
 
 The validator checks expected artifacts, loadability, count consistency,
 source-file hashes, evidence-level consistency, and report proxy-scope wording.
+Bundle diagnostics summarize per-method proxy metrics and bootstrap ranking
+stability over declared weak targets.
 
 One minimal downloaded-data FALCON H2 bundle run is recorded in
 `docs/FALCON_H2_LOCAL_RUN.md`. It uses one downloaded NWB file per required

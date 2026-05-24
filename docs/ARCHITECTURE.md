@@ -44,9 +44,9 @@ selection: event schemas, event IO, selection proxy summaries, a selection
 protocol, a report renderer, and an executable scaffold runner.
 
 The current production-quality path is FALCON H2. It has downloaded-data bundle
-generation and validation. bigP3BCI has the first non-FALCON raw EDF+ inventory
-and fixture-backed typed event extraction path, but no downloaded-data scoring
-path yet.
+generation and validation. bigP3BCI has the first non-FALCON raw EDF+ inventory,
+fixture-backed typed event extraction, and fixture-backed bundle path, but no
+downloaded-data scoring evidence yet.
 
 For first-run navigation, use:
 

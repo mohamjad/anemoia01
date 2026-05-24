@@ -14,16 +14,17 @@ weak_proxy_sources:
   - timing windows
   - session metadata
 known_limitations:
-  - raw-file inventory and numeric EDF+ event extraction are fixture-backed only
+  - raw-file inventory, numeric EDF+ event extraction, and artifact bundles are fixture-backed only
   - downloaded-data event extraction has not been validated yet
-  - prediction generation, scoring bundles, and method comparisons are not implemented
+  - bundle predictions are deterministic sanity baselines, not neural decoders
+  - downloaded-data prediction generation, scoring, and method comparisons are not validated
   - fixture-backed tests do not constitute downloaded-data evidence
-first_pass_role: first non-FALCON raw contract and event extraction path
+first_pass_role: first non-FALCON raw contract, event extraction, and fixture bundle path
 metadata:
-  evidence_stage: raw inventory plus fixture-backed event extraction
+  evidence_stage: fixture-backed artifact bundle path
   scaffold_protocol: selection
   scaffold_target_type: p300_selection_proxy
   source_version: 1.0.0
   file_format: EDF+
   expected_local_root: data/external/bigP3BCI-data
-  raw_contract_scope: inventory and numeric EDF+ record extraction only; no scoring
+  raw_contract_scope: inventory, numeric EDF+ record extraction, and fixture bundle only; no downloaded-data scoring evidence

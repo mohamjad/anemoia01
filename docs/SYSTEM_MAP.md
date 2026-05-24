@@ -37,7 +37,7 @@ resource manifest
 | Willett 2023 | communication and language-prior scaffold | synthetic protocol scaffold |
 | Kunz 2025 | authorization scaffold | synthetic protocol scaffold |
 | AJILE12 | naturalistic behavior proxy scaffold | synthetic protocol scaffold |
-| bigP3BCI | EDF+ inventory, fixture-backed event extraction, P300 selection scaffold | typed events only; no scoring evidence |
+| bigP3BCI | EDF+ inventory, fixture-backed event extraction, fixture-backed selection bundle | no downloaded-data scoring evidence |
 
 ## Extension Pattern
 
@@ -64,6 +64,7 @@ NWB/HDF5 file or FALCON H2 data root
 -> targets.jsonl
 -> predictions.jsonl
 -> result.json
+-> diagnostics.json / diagnostics.md
 -> eval_card.md
 -> comparison.md
 -> bundle_manifest.json
@@ -77,6 +78,9 @@ downloaded dataset evidence.
 FALCON H2 bundle validation checks the generated file contract, result and JSONL
 loadability, count consistency, source-file hashes, evidence-level consistency,
 and report language that keeps proxy limitations visible.
+
+bigP3BCI follows the same artifact shape at fixture scope, with `events.jsonl`
+and `selection_report.md` added for the P300 selection event boundary.
 
 ## Navigation Layer
 

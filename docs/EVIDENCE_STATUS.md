@@ -27,6 +27,8 @@ This run demonstrates:
 - eval card and comparison report generation
 - bundle manifest and validation
 - source-file hashing and provenance
+- evaluation diagnostics with per-method proxy metrics and bootstrap ranking
+  stability
 
 It does not test meaningful decoder methods.
 
@@ -42,6 +44,8 @@ This run demonstrates:
 - intent-fidelity log loss
 - method ranking comparison
 - validated feature-baseline artifact bundle
+- evaluation diagnostics with per-method proxy metrics and bootstrap ranking
+  stability
 
 The first subset result was a null ranking-disagreement result:
 
@@ -98,15 +102,16 @@ Dataset-family status is summarized in `docs/DATASET_LANDSCAPE.md`.
 ## Non-FALCON Boundary
 
 Card 2024, Willett 2023, Kunz 2025, and AJILE12 currently have protocol
-scaffolds, not real-data ingestion paths. bigP3BCI now has raw EDF+ inventory
-and fixture-backed event extraction into typed `P300SelectionEvent` records, but
-still no downloaded-data event validation, prediction generation, or real-data
-scoring path.
+scaffolds, not real-data ingestion paths. bigP3BCI now has raw EDF+ inventory,
+fixture-backed event extraction, and fixture-backed artifact bundles with
+deterministic sanity baselines and evaluation diagnostics. It has sanity bundle
+plumbing, but still no downloaded-data event validation, downloaded-data
+prediction generation, or real-data scoring evidence.
 
 Their manifests do not yet encode enough local data contracts to run the same
 downloaded-data artifact flow. For bigP3BCI, the next step is to validate event
-extraction on downloaded EDF+ files before any scoring or evidence claim is
-made.
+extraction and the bundle path on downloaded EDF+ files before treating any
+selection score as dataset evidence.
 
 ## Next Evidence Upgrade
 

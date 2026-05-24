@@ -49,9 +49,10 @@ FALCON H2:
 bigP3BCI:
 
 - Works now: raw EDF+ file inventory, numeric record reading, and typed
-  `P300SelectionEvent` JSONL export.
-- Evidence boundary: fixture-backed extraction only; no downloaded-data event
-  validation, prediction generation, scoring, or artifact bundle.
+  `P300SelectionEvent` JSONL export, plus fixture-backed selection artifact
+  bundles with sanity predictions and evaluation diagnostics.
+- Evidence boundary: fixture-backed only; no downloaded-data event validation,
+  neural decoder baselines, or real-data scoring evidence.
 
 Speech, authorization, naturalistic:
 
@@ -95,6 +96,12 @@ PYTHONPATH=src python -m intentfidelity.cli.main ingest bigp3bci-inventory \
 
 PYTHONPATH=src python -m intentfidelity.cli.main ingest bigp3bci-events \
   data/external outputs/bigp3bci-events.jsonl
+
+PYTHONPATH=src python -m intentfidelity.cli.main eval bigp3bci-bundle \
+  data/external outputs/bigp3bci-bundle
+
+PYTHONPATH=src python -m intentfidelity.cli.main eval \
+  bigp3bci-validate-bundle outputs/bigp3bci-bundle
 ```
 
 ## Read In This Order
