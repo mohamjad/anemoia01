@@ -154,6 +154,8 @@ def test_falcon_h2_feature_baseline_bundle_writes_method_artifacts(
         "result.json",
         "diagnostics.json",
         "diagnostics.md",
+        "latent_drift.json",
+        "latent_drift.md",
         "eval_card.md",
         "comparison.md",
         "bundle_manifest.json",
@@ -168,6 +170,12 @@ def test_falcon_h2_feature_baseline_bundle_writes_method_artifacts(
     assert json.loads((output_dir / "diagnostics.json").read_text())[
         "method_count"
     ] == 3
+    latent_drift = json.loads((output_dir / "latent_drift.json").read_text())
+    assert latent_drift["config"]["method_id"] == "pca_svd_latent_probe"
+    assert latent_drift["evaluated_sample_count"] == 2
+    assert "direct intent readout" in (output_dir / "latent_drift.md").read_text(
+        encoding="utf-8"
+    )
     assert [score.method_id for score in result.method_scores] == [
         "identity_centroid",
         "session_centered_centroid",

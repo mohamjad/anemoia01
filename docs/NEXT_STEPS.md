@@ -25,6 +25,7 @@ data root
 -> baseline predictions
 -> eval result
 -> diagnostics
+-> latent feature-state probe when neural features are available
 -> eval card
 -> comparison report
 ```
@@ -77,6 +78,8 @@ Run these before treating a pass as ready to hand off:
 - The artifact command writes every expected file.
 - The result loads through `load_eval_result`.
 - The eval card states the evidence scope.
+- Latent reports, when present, state that they are neural feature-state probes
+  and not direct intent readouts.
 - No report implies direct access to true intent.
 - Docs explain how to reproduce the run.
 - A downloaded-data bundle should record the local data path and exact command
@@ -92,10 +95,12 @@ evidence upgrades exists:
 1. Richer FALCON H2 method families beyond centroid baselines, recorded through
    the same validated artifact bundle and reported whether ranking disagreement
    appears or not.
-2. Broader bigP3BCI downloaded-data coverage plus real neural prediction
+2. Optional latent backends such as CEBRA or Dynamax behind the same
+   `latent_drift` artifact contract, only if they add useful method evidence.
+3. Broader bigP3BCI downloaded-data coverage plus real neural prediction
    generation and a validated method-comparison artifact path.
-3. CI and coverage thresholds so the audit/test gates run outside local
+4. CI and coverage thresholds so the audit/test gates run outside local
    discipline.
-4. Real Card/Willett speech-path ingestion, Kunz authorization extraction, or
+5. Real Card/Willett speech-path ingestion, Kunz authorization extraction, or
    AJILE12 naturalistic extraction only after a raw contract is written and
    fixture-backed.

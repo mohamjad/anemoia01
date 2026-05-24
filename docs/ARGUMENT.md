@@ -70,6 +70,7 @@ It supports:
 - P300-style selection scaffolds
 - ranking disagreement reports
 - over-adaptation checks
+- proxy-state and neural feature-state diagnostics
 - reproducible artifact bundles
 
 The central diagnostic is ranking disagreement:
@@ -97,6 +98,7 @@ Implemented and tested:
 - declared cue-character weak target construction
 - deterministic baseline prediction export
 - held-out-session `EvalResult` scoring
+- PCA/SVD neural feature-state drift probes for feature-baseline bundles
 - eval-card rendering
 - comparison report rendering
 - artifact-bundle manifest
@@ -112,6 +114,8 @@ Completed local downloaded-data runs:
   bundle and all held-in/held-out calibration files for the method bundle
 - three feature baselines: `identity_centroid`,
   `session_centered_centroid`, and `whitened_centroid`
+- latent drift artifacts that summarize low-dimensional neural feature-state
+  movement alongside proxy-fidelity scores
 - validated bundles with no issues
 
 This supports a narrow claim:
@@ -153,6 +157,7 @@ data provenance
 -> declared weak targets
 -> baseline predictions
 -> protocol result
+-> diagnostics and latent feature-state probe
 -> report cards
 -> comparison artifact
 -> validation report

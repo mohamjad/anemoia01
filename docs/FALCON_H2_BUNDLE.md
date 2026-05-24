@@ -13,6 +13,8 @@ Generated files:
 - `targets.jsonl`
 - `predictions.jsonl`
 - `result.json`
+- `diagnostics.json`
+- `diagnostics.md`
 - `eval_card.md`
 - `comparison.md`
 - `bundle_manifest.json`
@@ -25,6 +27,7 @@ source path
 -> declared cue-character weak targets
 -> deterministic baseline predictions
 -> EvalResult JSON
+-> diagnostics
 -> eval card and comparison report
 ```
 
@@ -77,6 +80,15 @@ intentfidelity eval falcon-h2-validate-feature-bundle <output-dir>
 
 These bundles compare centroid-style methods using proxy top-1 error as the
 conventional score and intent-fidelity log loss as the primary metric.
+
+Feature-baseline bundles additionally write:
+
+- `latent_drift.json`
+- `latent_drift.md`
+
+Those files contain a deterministic PCA/SVD neural feature-state probe. The
+probe summarizes movement in low-dimensional neural features and its relation
+to proxy-fidelity loss. It does not claim to recover true intent.
 
 ## Provenance
 

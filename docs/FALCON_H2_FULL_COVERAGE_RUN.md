@@ -109,6 +109,7 @@ The feature-baseline bundle used:
 - test examples: 561
 - scored weak targets: 561
 - predictions: 1683
+- latent drift artifacts: `latent_drift.json`, `latent_drift.md`
 
 Methods:
 
@@ -166,6 +167,9 @@ Validation:
 is_valid: true
 issues: []
 ```
+
+The regenerated feature bundle also includes a PCA/SVD latent drift report. It
+is a neural feature-state probe, not a direct intent readout.
 
 ## Interpretation
 

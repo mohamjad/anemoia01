@@ -33,6 +33,7 @@ from intentfidelity.labels import (
     write_predictions_jsonl,
     write_weak_targets_jsonl,
 )
+from intentfidelity.latent import fit_pca_latent_probe, render_latent_drift_markdown
 from intentfidelity.protocols.artifacts import (
     ArtifactBundle,
     ArtifactValidationIssue,
@@ -81,6 +82,8 @@ FALCON_H2_FEATURE_BUNDLE_REQUIRED_KINDS: tuple[str, ...] = (
     "result_json",
     "diagnostics_json",
     "diagnostics_markdown",
+    "latent_drift_json",
+    "latent_drift_markdown",
     "eval_card_markdown",
     "comparison_markdown",
     "bundle_manifest_json",
@@ -407,6 +410,12 @@ def write_falcon_h2_feature_baseline_bundle(
         },
     )
     diagnostics = evaluation_diagnostics(scored_targets, projected_predictions)
+    latent_report = fit_pca_latent_probe(
+        train_examples,
+        test_examples,
+        scored_targets,
+        projected_predictions,
+    )
 
     paths = _FeatureBundlePaths(output)
     _write_json(train_inventory.to_dict(), paths.train_inventory_json)
@@ -418,6 +427,11 @@ def write_falcon_h2_feature_baseline_bundle(
     _write_json(diagnostics.to_dict(), paths.diagnostics_json)
     paths.diagnostics_md.write_text(
         render_evaluation_diagnostics_markdown(diagnostics),
+        encoding="utf-8",
+    )
+    _write_json(latent_report.to_dict(), paths.latent_drift_json)
+    paths.latent_drift_md.write_text(
+        render_latent_drift_markdown(latent_report),
         encoding="utf-8",
     )
     paths.eval_card_md.write_text(
@@ -469,6 +483,16 @@ def write_falcon_h2_feature_baseline_bundle(
             "diagnostics_markdown",
             paths.diagnostics_md,
             "Readable diagnostics report with bootstrap ranking stability.",
+        ),
+        GeneratedArtifact(
+            "latent_drift_json",
+            paths.latent_drift_json,
+            "PCA/SVD neural feature-state drift probe.",
+        ),
+        GeneratedArtifact(
+            "latent_drift_markdown",
+            paths.latent_drift_md,
+            "Readable PCA/SVD latent drift report.",
         ),
         GeneratedArtifact(
             "eval_card_markdown",
@@ -539,6 +563,7 @@ def _validate_falcon_bundle_semantics(
     targets = read_weak_targets_jsonl(artifacts["targets_jsonl"])
     predictions = read_predictions_jsonl(artifacts["predictions_jsonl"])
     result = load_eval_result(artifacts["result_json"])
+    latent_drift = artifacts.get("latent_drift_json")
     eval_card = artifacts["eval_card_markdown"].read_text(encoding="utf-8")
     comparison = artifacts["comparison_markdown"].read_text(encoding="utf-8")
 
@@ -595,6 +620,23 @@ def _validate_falcon_bundle_semantics(
                 report.manifest_path,
             )
         )
+    if latent_drift is not None:
+        latent_payload = json.loads(latent_drift.read_text(encoding="utf-8"))
+        _append_count_issue(
+            issues,
+            "latent_evaluated_sample_count_mismatch",
+            latent_payload.get("evaluated_sample_count"),
+            len(targets),
+            latent_drift,
+        )
+        if "true intent" not in str(latent_payload.get("scope", "")):
+            issues.append(
+                _error(
+                    "latent_scope_missing_intent_limitation",
+                    "latent drift report must state that it does not recover true intent.",
+                    latent_drift,
+                )
+            )
     if bundle.evidence_level.value not in eval_card:
         issues.append(
             _error(
@@ -651,6 +693,8 @@ class _FeatureBundlePaths:
         self.result_json = output_dir / "result.json"
         self.diagnostics_json = output_dir / "diagnostics.json"
         self.diagnostics_md = output_dir / "diagnostics.md"
+        self.latent_drift_json = output_dir / "latent_drift.json"
+        self.latent_drift_md = output_dir / "latent_drift.md"
         self.eval_card_md = output_dir / "eval_card.md"
         self.comparison_md = output_dir / "comparison.md"
         self.bundle_manifest_json = output_dir / "bundle_manifest.json"

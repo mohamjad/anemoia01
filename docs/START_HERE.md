@@ -43,7 +43,8 @@ through a raw contract and typed events before it is allowed to become evidence.
 FALCON H2:
 
 - Works now: downloaded NWB/HDF5 inventory, cue-character weak targets, feature
-  baselines, eval cards, comparison reports, and validated bundles.
+  baselines, latent feature-state probes, eval cards, comparison reports, and
+  validated bundles.
 - Evidence boundary: one dataset family and simple feature baselines.
 
 bigP3BCI:

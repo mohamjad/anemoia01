@@ -20,6 +20,7 @@ resource manifest
 | `ingest` | dataset-specific raw file readers | protocol decisions |
 | `labels` | proxy events, weak targets, predictions, JSONL IO | scoring rules |
 | `metrics` | scoring rules and summary metrics | dataset parsing |
+| `latent` | optional neural feature-state probes and latent drift summaries | claiming direct intent access |
 | `protocols` | evaluation assembly into `EvalResult` | raw file parsing |
 | `baselines` | simple method implementations and predictions | report language |
 | `reports` | Markdown and JSON rendering | metric computation |
@@ -65,6 +66,7 @@ NWB/HDF5 file or FALCON H2 data root
 -> predictions.jsonl
 -> result.json
 -> diagnostics.json / diagnostics.md
+-> latent_drift.json / latent_drift.md when neural feature examples exist
 -> eval_card.md
 -> comparison.md
 -> bundle_manifest.json
@@ -78,6 +80,10 @@ downloaded dataset evidence.
 FALCON H2 bundle validation checks the generated file contract, result and JSONL
 loadability, count consistency, source-file hashes, evidence-level consistency,
 and report language that keeps proxy limitations visible.
+
+FALCON H2 feature-baseline bundles also write a PCA/SVD latent drift probe. The
+probe summarizes neural feature-state movement and its relation to proxy loss;
+it is not a direct intent readout.
 
 bigP3BCI follows the same artifact shape, with `events.jsonl` and
 `selection_report.md` added for the P300 selection event boundary. The current

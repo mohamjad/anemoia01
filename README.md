@@ -96,6 +96,7 @@ The infrastructure is organized around:
 - weak target construction
 - prediction import and baseline prediction
 - protocol scoring
+- proxy-state and neural feature-state diagnostics
 - ranking disagreement and over-adaptation checks
 - eval cards, comparison reports, and reproducible artifact bundles
 
@@ -163,6 +164,7 @@ Start here:
 Core implementation:
 
 - `src/intentfidelity/ingest/` - dataset-specific readers and inventories
+- `src/intentfidelity/latent/` - PCA/SVD neural feature-state probes
 - `src/intentfidelity/labels/` - weak targets, predictions, and JSONL IO
 - `src/intentfidelity/metrics/` - scoring and comparison metrics
 - `src/intentfidelity/protocols/` - evaluation results and artifact bundles

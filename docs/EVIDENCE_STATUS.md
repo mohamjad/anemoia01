@@ -47,6 +47,7 @@ This run demonstrates:
 - validated feature-baseline artifact bundle
 - evaluation diagnostics with per-method proxy metrics and bootstrap ranking
   stability
+- PCA/SVD latent drift artifacts that summarize neural feature-state movement
 
 The first subset result was a null ranking-disagreement result:
 
@@ -73,6 +74,10 @@ intent-fidelity log loss: session_centered_centroid -> whitened_centroid -> iden
 
 This is the current strongest empirical result in the repo.
 
+The feature-baseline bundles now also include `latent_drift.json` and
+`latent_drift.md`. These artifacts are neural feature-state probes. They do not
+claim to recover true intent.
+
 ## What Is Not Demonstrated
 
 Do not claim:
@@ -81,6 +86,7 @@ Do not claim:
 - intent-fidelity metrics reverse method rankings on FALCON H2
 - the current baselines represent state-of-the-art decoders
 - the current FALCON runs compare submitted decoder systems
+- PCA/SVD latent probes recover hidden intent
 - true intent is directly observed
 - the broad thesis is proven across datasets
 
