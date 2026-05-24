@@ -18,6 +18,7 @@ from intentfidelity.ingest import (
     inventory_bigp3bci,
     inventory_falcon_h2,
     list_hdf5_datasets,
+    load_bigp3bci_selection_events_from_root,
 )
 from intentfidelity.labels import (
     read_authorization_events_jsonl,
@@ -26,6 +27,7 @@ from intentfidelity.labels import (
     read_predictions_jsonl,
     read_text_predictions_jsonl,
     read_text_targets_jsonl,
+    write_p300_events_jsonl,
     write_weak_targets_jsonl,
 )
 from intentfidelity.overview import build_repo_overview, render_repo_overview
@@ -206,6 +208,10 @@ def build_parser() -> argparse.ArgumentParser:
     bigp3bci_inventory.add_argument("data_root", type=Path)
     bigp3bci_inventory.add_argument("--json", action="store_true")
     _add_handler(bigp3bci_inventory, _ingest_bigp3bci_inventory)
+    bigp3bci_events = ingest_subparsers.add_parser("bigp3bci-events")
+    bigp3bci_events.add_argument("data_root", type=Path)
+    bigp3bci_events.add_argument("output_jsonl", type=Path)
+    _add_handler(bigp3bci_events, _ingest_bigp3bci_events)
     nwb_summary = ingest_subparsers.add_parser("nwb-summary")
     nwb_summary.add_argument("nwb_file", type=Path)
     _add_handler(nwb_summary, _ingest_nwb_summary)
@@ -479,6 +485,12 @@ def _ingest_bigp3bci_inventory(args: argparse.Namespace) -> None:
     for issue in inventory.issues:
         location = f" ({issue.path})" if issue.path else ""
         print(f"{issue.severity.value}: {issue.code}: {issue.message}{location}")
+
+
+def _ingest_bigp3bci_events(args: argparse.Namespace) -> None:
+    events = load_bigp3bci_selection_events_from_root(args.data_root)
+    write_p300_events_jsonl(events, args.output_jsonl)
+    print(f"Wrote {len(events)} bigP3BCI selection events to {args.output_jsonl}")
 
 
 def _ingest_nwb_summary(args: argparse.Namespace) -> None:
