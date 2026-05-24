@@ -85,7 +85,8 @@ Dataset-family maturity is summarized in `docs/DATASET_LANDSCAPE.md`.
 The first non-FALCON raw-file contract is documented in
 `docs/BIGP3BCI_RAW_CONTRACT.md`; it inventories bigP3BCI EDF+ files and now has
 fixture-backed typed event extraction plus a fixture-backed selection artifact
-bundle from numeric EDF+ records.
+bundle from numeric EDF+ records. `docs/BIGP3BCI_LOCAL_RUN.md` records the first
+single-file downloaded EDF+ validation run.
 
 Do not backdate commits or fabricate history.
 
@@ -96,5 +97,5 @@ decoder accuracy can be insufficient under weak supervision and nonstationarity
 ```
 
 The next real-data target should be stronger FALCON H2 method evidence or the
-next bigP3BCI step: validate typed event extraction and the bundle path on
-downloaded EDF+ files.
+next bigP3BCI step: broader downloaded EDF+ coverage plus real neural
+prediction generation.

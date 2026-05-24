@@ -11,7 +11,8 @@ method-disagreement thesis not yet established across real datasets.
 
 ## What Is Demonstrated
 
-FALCON H2 now has three downloaded-data artifact records.
+FALCON H2 now has three downloaded-data artifact records. bigP3BCI has one
+downloaded-data EDF+ bundle validation record with sanity baselines only.
 
 ### Sanity Bundle
 
@@ -103,15 +104,15 @@ Dataset-family status is summarized in `docs/DATASET_LANDSCAPE.md`.
 
 Card 2024, Willett 2023, Kunz 2025, and AJILE12 currently have protocol
 scaffolds, not real-data ingestion paths. bigP3BCI now has raw EDF+ inventory,
-fixture-backed event extraction, and fixture-backed artifact bundles with
-deterministic sanity baselines and evaluation diagnostics. It has sanity bundle
-plumbing, but still no downloaded-data event validation, downloaded-data
-prediction generation, or real-data scoring evidence.
+fixture-backed event extraction, fixture-backed artifact bundles, and one
+single-file downloaded EDF+ bundle validation with deterministic sanity
+baselines and evaluation diagnostics. It still has no neural decoder baselines
+or real-data method comparison evidence.
 
 Their manifests do not yet encode enough local data contracts to run the same
-downloaded-data artifact flow. For bigP3BCI, the next step is to validate event
-extraction and the bundle path on downloaded EDF+ files before treating any
-selection score as dataset evidence.
+downloaded-data artifact flow. For bigP3BCI, the next step is broader
+downloaded EDF+ coverage plus real EEG/P300 prediction generation before
+treating any selection score as method evidence.
 
 ## Next Evidence Upgrade
 
@@ -119,8 +120,8 @@ The next stronger empirical result should be one of:
 
 1. A richer FALCON H2 method set where conventional proxy error and
    intent-fidelity log loss can plausibly diverge.
-2. A real non-FALCON ingestion path with downloaded data and validated artifact
-   bundles.
+2. A real non-FALCON method path with downloaded data, real predictions, and
+   validated artifact bundles.
 3. An over-adaptation experiment comparing before/after adaptive updates.
 
 Null results should be recorded. If rankings agree, the repo should say so.

@@ -3,10 +3,10 @@
 This document keeps dataset diversity separate from empirical proof.
 
 The repo currently understands six dataset paths at different maturity levels.
-Only FALCON H2 has downloaded-data artifact bundles. bigP3BCI now has a
-raw-file inventory contract, fixture-backed typed event extraction, and a
-fixture-backed selection artifact bundle, but not downloaded-data event
-validation, neural decoder prediction generation, or real-data scoring.
+Only FALCON H2 has downloaded-data method evidence. bigP3BCI now has a raw-file
+inventory contract, typed event extraction, fixture-backed bundles, and one
+single-file downloaded EDF+ bundle validation, but not neural decoder
+prediction generation or real-data method comparison evidence.
 The other paths are useful for protocol design and proxy taxonomy, but they are
 not real-data evidence yet.
 
@@ -19,7 +19,7 @@ not real-data evidence yet.
 | Willett 2023 | prompted speech/text and language-prior proxy | synthetic communication and language-prior scaffold | language model contribution not yet tied to raw data |
 | Kunz 2025 | authorization-state proxy | synthetic authorization scaffold | event extraction is dataset-specific future work |
 | AJILE12 | naturalistic behavior proxy | synthetic naturalistic scaffold | behavior may be confounded and weakly timed |
-| bigP3BCI | P300 symbol-selection proxy | raw EDF+ inventory plus fixture-backed artifact bundle | downloaded-data event validation and scoring are not implemented |
+| bigP3BCI | P300 symbol-selection proxy | one downloaded EDF+ bundle validation plus fixture-backed artifact bundle | neural decoder scoring is not implemented |
 
 ## What FALCON H2 Teaches
 
@@ -63,10 +63,10 @@ Do not describe the repo as having validated the thesis across diverse datasets.
 Accurate statement:
 
 ```text
-The repo has real downloaded-data FALCON H2 evidence and executable synthetic
-scaffolds for speech, authorization, and naturalistic proxy families. bigP3BCI
-also has a raw EDF+ inventory contract and fixture-backed bundle path, but this
-is not downloaded-data scoring evidence.
+The repo has real downloaded-data FALCON H2 method evidence and executable
+synthetic scaffolds for speech, authorization, and naturalistic proxy families.
+bigP3BCI also has a downloaded EDF+ bundle validation path, but its current
+scores are sanity baselines rather than neural decoder evidence.
 ```
 
 Inaccurate statement:
@@ -102,6 +102,7 @@ raw local file contract
 ```
 
 Until that exists, non-FALCON paths should remain labeled as scaffolds.
-bigP3BCI has completed that sequence only at fixture scope: raw local file
-contract, typed event extraction from numeric EDF+ records, weak targets, sanity
-predictions, scoring, diagnostics, reports, and a validated bundle.
+bigP3BCI has completed that sequence at fixture scope and on one downloaded EDF+
+file for bundle validation: raw local file contract, typed event extraction,
+weak targets, sanity predictions, scoring, diagnostics, reports, and a validated
+bundle.

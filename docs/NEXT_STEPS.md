@@ -33,8 +33,8 @@ The repo also has a bigP3BCI raw EDF+ inventory contract and fixture-backed
 numeric EDF+ event extraction into `P300SelectionEvent` JSONL. It now also has
 a fixture-backed selection artifact bundle with weak targets, deterministic
 sanity predictions, `EvalResult` scoring, diagnostics, reports, and validation.
-That path has not yet been validated on downloaded bigP3BCI files and does not
-provide neural decoder evidence.
+That path has also been validated on one downloaded bigP3BCI EDF+ file. It does
+not provide neural decoder evidence.
 
 ## Closeout Checks
 
@@ -92,8 +92,8 @@ evidence upgrades exists:
 1. Richer FALCON H2 method families beyond centroid baselines, recorded through
    the same validated artifact bundle and reported whether ranking disagreement
    appears or not.
-2. bigP3BCI downloaded-data event and bundle validation, followed by real neural
-   prediction generation and a validated real-data artifact path.
+2. Broader bigP3BCI downloaded-data coverage plus real neural prediction
+   generation and a validated method-comparison artifact path.
 3. CI and coverage thresholds so the audit/test gates run outside local
    discipline.
 4. Real Card/Willett speech-path ingestion, Kunz authorization extraction, or

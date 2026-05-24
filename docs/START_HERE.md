@@ -50,9 +50,10 @@ bigP3BCI:
 
 - Works now: raw EDF+ file inventory, numeric record reading, and typed
   `P300SelectionEvent` JSONL export, plus fixture-backed selection artifact
-  bundles with sanity predictions and evaluation diagnostics.
-- Evidence boundary: fixture-backed only; no downloaded-data event validation,
-  neural decoder baselines, or real-data scoring evidence.
+  bundles with sanity predictions and evaluation diagnostics. One downloaded
+  public EDF+ file has also validated the same bundle path.
+- Evidence boundary: no neural decoder baselines or real-data method comparison
+  evidence.
 
 Speech, authorization, naturalistic:
 
@@ -112,7 +113,8 @@ PYTHONPATH=src python -m intentfidelity.cli.main eval \
 4. `docs/SYSTEM_MAP.md` for module ownership.
 5. `docs/FALCON_H2_FULL_COVERAGE_RUN.md` for the strongest current run.
 6. `docs/BIGP3BCI_RAW_CONTRACT.md` for the first non-FALCON raw contract.
-7. `docs/NEXT_STEPS.md` for the highest-value remaining work.
+7. `docs/BIGP3BCI_LOCAL_RUN.md` for the first downloaded bigP3BCI bundle run.
+8. `docs/NEXT_STEPS.md` for the highest-value remaining work.
 
 ## What To Say
 

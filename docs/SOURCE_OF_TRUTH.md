@@ -116,7 +116,8 @@ Card/Willett/Kunz are the conceptual speech path.
 
 AJILE12 is a scaffold path for naturalistic weak labels. bigP3BCI is the first
 non-FALCON fixture-backed artifact bundle path for P300-style selection weak
-targets, but it is not downloaded-data evidence yet.
+targets, and now has one single-file downloaded EDF+ bundle validation. It is
+not neural decoder evidence yet.
 
 ## Old Repo Relationship
 

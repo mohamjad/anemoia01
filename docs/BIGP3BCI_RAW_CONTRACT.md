@@ -30,9 +30,8 @@ Implemented:
 
 Not implemented:
 
-- downloaded-data validation of event extraction
+- broad downloaded-data validation of event extraction
 - P300 timing-window alignment
-- downloaded-data evidence bundles for bigP3BCI
 - neural decoder baselines for bigP3BCI
 
 ## Local Layout
@@ -119,3 +118,7 @@ command writes `inventory.json`, `events.jsonl`, `targets.jsonl`,
 
 Successful fixture-backed extraction or bundle validation is not evidence for
 the thesis and should not be described as a downloaded dataset run.
+
+The first single-file downloaded EDF+ validation run is recorded in
+`docs/BIGP3BCI_LOCAL_RUN.md`. It validates bundle mechanics on one public file
+and remains limited to sanity baselines.

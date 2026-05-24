@@ -26,8 +26,8 @@ The repo now has six scaffold passes:
 Non-FALCON resource paths mostly remain synthetic protocol scaffolds. bigP3BCI
 now has raw EDF+ inventory, fixture-backed typed event extraction, and
 fixture-backed selection artifact bundles with sanity predictions and
-diagnostics. It still has no downloaded-data event validation or real-data
-scoring evidence.
+diagnostics. It also has one single-file downloaded EDF+ bundle validation. It
+still has no neural decoder baselines or real-data method comparison evidence.
 
 ## Current Frontier
 
@@ -70,8 +70,8 @@ intentfidelity eval falcon-h2-validate-bundle outputs/falcon-h2-bundle
 
 The validator checks expected artifacts, loadability, count consistency,
 source-file hashes, evidence-level consistency, and report proxy-scope wording.
-Bundle diagnostics summarize per-method proxy metrics and bootstrap ranking
-stability over declared weak targets.
+Bundle diagnostics summarize per-method proxy metrics, bootstrap ranking
+stability, and proxy-state dynamics over declared weak targets.
 
 One minimal downloaded-data FALCON H2 bundle run is recorded in
 `docs/FALCON_H2_LOCAL_RUN.md`. It uses one downloaded NWB file per required

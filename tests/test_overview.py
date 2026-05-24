@@ -12,7 +12,7 @@ def test_repo_overview_names_evidence_paths_and_boundaries() -> None:
         "Speech, authorization, and naturalistic paths",
     ]
     assert "not a submitted-decoder benchmark" in overview.evidence_paths[0].boundary
-    assert "Fixture-backed only" in overview.evidence_paths[1].boundary
+    assert "sanity baselines only" in overview.evidence_paths[1].boundary
     assert "EvalResult JSON and diagnostics" in overview.evidence_paths[1].works_now
 
 

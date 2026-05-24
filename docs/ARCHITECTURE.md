@@ -45,8 +45,8 @@ protocol, a report renderer, and an executable scaffold runner.
 
 The current production-quality path is FALCON H2. It has downloaded-data bundle
 generation and validation. bigP3BCI has the first non-FALCON raw EDF+ inventory,
-fixture-backed typed event extraction, and fixture-backed bundle path, but no
-downloaded-data scoring evidence yet.
+typed event extraction, fixture-backed bundle path, and one single-file
+downloaded EDF+ bundle validation, but no neural decoder evidence yet.
 
 For first-run navigation, use:
 

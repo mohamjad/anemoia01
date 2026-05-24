@@ -101,8 +101,8 @@ def build_repo_overview(repo_root: str | Path = ".") -> RepoOverview:
             ),
             EvidencePath(
                 name="bigP3BCI",
-                evidence_level="fixture_evidence",
-                status="fixture-backed selection artifact bundle path",
+                evidence_level="downloaded_dataset_evidence",
+                status="single-file downloaded EDF+ selection bundle validation",
                 works_now=(
                     "local root resolution",
                     "EDF+ path inventory",
@@ -114,12 +114,12 @@ def build_repo_overview(repo_root: str | Path = ".") -> RepoOverview:
                     "bundle validation with provenance",
                 ),
                 boundary=(
-                    "Fixture-backed only; no downloaded-data event validation "
-                    "or real-data scoring evidence."
+                    "One EDF+ file and sanity baselines only; no neural decoder "
+                    "method evidence."
                 ),
                 next_step=(
-                    "Validate event extraction and the bundle path on "
-                    "downloaded bigP3BCI EDF+ files."
+                    "Broaden downloaded EDF+ coverage and add real EEG/P300 "
+                    "prediction methods."
                 ),
             ),
             EvidencePath(
