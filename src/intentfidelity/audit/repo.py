@@ -88,6 +88,7 @@ def audit_repository(repo_root: str | Path) -> RepoAuditReport:
     root = Path(repo_root)
     checks = (
         _required_docs_check(root),
+        _ci_workflow_check(root),
         _resource_manifest_check(root),
         _evidence_boundary_check(root),
         _db_state_check(root),
@@ -148,6 +149,38 @@ def _resource_manifest_check(root: Path) -> AuditCheck:
             "count": len(manifests),
             "dataset_ids": [manifest.dataset_id for manifest in manifests],
             "stage_mismatches": stage_mismatches,
+        },
+    )
+
+
+def _ci_workflow_check(root: Path) -> AuditCheck:
+    workflow = root / ".github" / "workflows" / "tests.yml"
+    if not workflow.is_file():
+        return AuditCheck(
+            name="ci_workflow",
+            passed=False,
+            message="CI workflow is missing.",
+            details={"path": str(workflow.relative_to(root))},
+        )
+
+    text = workflow.read_text(encoding="utf-8")
+    required_fragments = (
+        "python -m pip install -e \".[dev]\"",
+        "intentfidelity audit repo --json",
+        "pytest -q",
+    )
+    missing = [fragment for fragment in required_fragments if fragment not in text]
+    return AuditCheck(
+        name="ci_workflow",
+        passed=not missing,
+        message=(
+            "CI workflow installs the package and runs audit plus tests."
+            if not missing
+            else "CI workflow is missing required public-readiness gates."
+        ),
+        details={
+            "path": str(workflow.relative_to(root)),
+            "missing_fragments": missing,
         },
     )
 

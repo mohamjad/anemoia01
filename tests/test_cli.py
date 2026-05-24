@@ -46,6 +46,7 @@ def test_audit_repo_command_outputs_json(capsys) -> None:
     assert payload["passed"] is True
     assert {check["name"] for check in payload["checks"]} == {
         "required_docs",
+        "ci_workflow",
         "resource_manifests",
         "evidence_boundaries",
         "db_state_files",

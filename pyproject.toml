@@ -8,10 +8,16 @@ version = "0.1.0"
 description = "Intent-fidelity evaluation infrastructure for adaptive neural interfaces."
 readme = "README.md"
 requires-python = ">=3.11"
+license = { file = "LICENSE" }
 dependencies = [
   "h5py>=3.10",
   "PyYAML>=6.0",
 ]
+
+[project.urls]
+Homepage = "https://github.com/mohamjad/anemoia01"
+Repository = "https://github.com/mohamjad/anemoia01"
+Issues = "https://github.com/mohamjad/anemoia01/issues"
 
 [project.optional-dependencies]
 dev = [
