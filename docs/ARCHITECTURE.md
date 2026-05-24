@@ -45,7 +45,8 @@ protocol, a report renderer, and an executable scaffold runner.
 
 The current production-quality path is FALCON H2. It has downloaded-data bundle
 generation and validation. bigP3BCI has the first non-FALCON raw EDF+ inventory
-contract, but no annotation parser or scoring path yet.
+and fixture-backed typed event extraction path, but no downloaded-data scoring
+path yet.
 
 For first-run navigation, use:
 

@@ -24,8 +24,9 @@ The repo now has six scaffold passes:
 6. Selection weak-target scaffolding for bigP3BCI-style P300 symbol proxies.
 
 Non-FALCON resource paths mostly remain synthetic protocol scaffolds. bigP3BCI
-now has a raw EDF+ inventory contract, but no EDF+ annotation parser, target
-construction, or scoring path. It is not real-data evidence yet.
+now has raw EDF+ inventory and fixture-backed typed event extraction, but no
+downloaded-data event validation, prediction generation, or scoring path. It is
+not real-data evidence yet.
 
 ## Current Frontier
 

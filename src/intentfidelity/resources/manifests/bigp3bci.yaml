@@ -14,15 +14,16 @@ weak_proxy_sources:
   - timing windows
   - session metadata
 known_limitations:
-  - raw-file inventory is implemented, but EDF+ parsing is not
-  - target distributions require task-specific event alignment
+  - raw-file inventory and numeric EDF+ event extraction are fixture-backed only
+  - downloaded-data event extraction has not been validated yet
+  - prediction generation, scoring bundles, and method comparisons are not implemented
   - fixture-backed tests do not constitute downloaded-data evidence
-first_pass_role: first non-FALCON raw-file contract for non-invasive BCI data
+first_pass_role: first non-FALCON raw contract and event extraction path
 metadata:
-  evidence_stage: raw inventory contract
+  evidence_stage: raw inventory plus fixture-backed event extraction
   scaffold_protocol: selection
   scaffold_target_type: p300_selection_proxy
   source_version: 1.0.0
   file_format: EDF+
   expected_local_root: data/external/bigP3BCI-data
-  raw_contract_scope: inventory only; no EDF+ annotation parsing or scoring
+  raw_contract_scope: inventory and numeric EDF+ record extraction only; no scoring

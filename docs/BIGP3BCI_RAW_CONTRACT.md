@@ -1,7 +1,7 @@
 # bigP3BCI Raw Contract
 
 This is the first non-FALCON raw-data contract in the repo. It is intentionally
-limited to local file inventory.
+limited to local file inventory and fixture-backed event extraction.
 
 Source: https://physionet.org/content/bigp3bci/1.0.0/
 
@@ -16,14 +16,18 @@ Implemented:
   byte size
 - report structured validation issues for missing roots, empty roots, and
   invalid EDF paths
+- read numeric EDF+ record signals from valid local files
+- infer symbol-grid candidates from labels shaped like `<symbol>_<row>_<column>`
+- export typed `P300SelectionEvent` JSONL from `StimulusBegin`,
+  `StimulusType`, `CurrentTarget`, and optional `SelectedTarget` signals
 - expose the raw contract through Python and CLI JSON
 
 Not implemented:
 
-- EDF+ signal loading
-- EDF+ annotation extraction
-- target-symbol construction
+- downloaded-data validation of event extraction
 - P300 timing-window alignment
+- baseline prediction generation
+- selection scoring artifact bundles
 - downloaded-data evidence bundles for bigP3BCI
 
 ## Local Layout
@@ -74,7 +78,8 @@ DisplayResult
 FakeFeedback
 ```
 
-These labels are not parsed yet. They are contract metadata for the next pass.
+These labels are parsed as numeric EDF+ record signals by the fixture-backed
+event extractor. This is not yet downloaded-data evidence.
 
 ## Command
 
@@ -83,6 +88,14 @@ PYTHONPATH=src python -m intentfidelity.cli.main ingest bigp3bci-inventory \
   data/external --json
 ```
 
-The command emits an inventory JSON object and embeds the raw-data contract. A
-successful fixture-backed inventory is not evidence for the thesis and should
-not be described as a downloaded dataset run.
+Extract typed selection events:
+
+```text
+PYTHONPATH=src python -m intentfidelity.cli.main ingest bigp3bci-events \
+  data/external outputs/bigp3bci-events.jsonl
+```
+
+The inventory command emits an inventory JSON object and embeds the raw-data
+contract. The event command writes `P300SelectionEvent` JSONL. Successful
+fixture-backed extraction is not evidence for the thesis and should not be
+described as a downloaded dataset run.

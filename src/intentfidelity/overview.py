@@ -100,16 +100,24 @@ def build_repo_overview(repo_root: str | Path = ".") -> RepoOverview:
             ),
             EvidencePath(
                 name="bigP3BCI",
-                evidence_level="raw_inventory_contract",
-                status="raw EDF+ file inventory contract",
+                evidence_level="raw_inventory_plus_fixture_event_extraction",
+                status="raw EDF+ inventory and typed event extraction path",
                 works_now=(
                     "local root resolution",
                     "EDF+ path inventory",
+                    "numeric EDF+ record reading",
                     "study/session/phase parsing",
+                    "P300SelectionEvent JSONL export",
                     "structured validation issues",
                 ),
-                boundary="No EDF+ annotation parsing, target construction, or scoring.",
-                next_step="Parse EDF+ annotations into typed P300 selection events.",
+                boundary=(
+                    "Fixture-backed extraction only; no downloaded-data event "
+                    "validation, predictions, scoring, or artifact bundle."
+                ),
+                next_step=(
+                    "Validate event extraction on downloaded bigP3BCI files, "
+                    "then add predictions and selection scoring artifacts."
+                ),
             ),
             EvidencePath(
                 name="Speech, authorization, and naturalistic paths",

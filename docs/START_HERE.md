@@ -48,9 +48,10 @@ FALCON H2:
 
 bigP3BCI:
 
-- Works now: raw EDF+ file inventory contract and CLI.
-- Evidence boundary: no EDF+ annotation parsing, target construction, or
-  scoring.
+- Works now: raw EDF+ file inventory, numeric record reading, and typed
+  `P300SelectionEvent` JSONL export.
+- Evidence boundary: fixture-backed extraction only; no downloaded-data event
+  validation, prediction generation, scoring, or artifact bundle.
 
 Speech, authorization, naturalistic:
 
@@ -91,6 +92,9 @@ With local bigP3BCI data:
 ```text
 PYTHONPATH=src python -m intentfidelity.cli.main ingest bigp3bci-inventory \
   data/external --json
+
+PYTHONPATH=src python -m intentfidelity.cli.main ingest bigp3bci-events \
+  data/external outputs/bigp3bci-events.jsonl
 ```
 
 ## Read In This Order

@@ -12,6 +12,7 @@ intentfidelity resources falcon-h2-assets --json
 intentfidelity audit repo --json
 intentfidelity ingest falcon-h2-inventory data --json
 intentfidelity ingest bigp3bci-inventory data/external --json
+intentfidelity ingest bigp3bci-events data/external outputs/bigp3bci-events.jsonl
 intentfidelity ingest nwb-summary data/h2/sub-T5-held-out-calib/example.nwb
 intentfidelity baselines list --implemented
 intentfidelity baselines centroid train.csv test.csv

@@ -177,10 +177,9 @@ FALCON H2
 
 ```text
 bigP3BCI
--> EDF+ annotation parsing
--> typed P300 selection events
--> weak target construction
--> protocol scoring
+-> downloaded-data validation of typed P300 selection event extraction
+-> prediction generation
+-> selection protocol scoring
 -> validated artifact bundle
 ```
 

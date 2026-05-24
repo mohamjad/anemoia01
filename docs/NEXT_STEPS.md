@@ -28,9 +28,10 @@ data root
 -> comparison report
 ```
 
-The repo also has a bigP3BCI raw EDF+ inventory contract. That contract stops
-at file inventory; it does not parse EDF+ annotations or produce selection
-targets.
+The repo also has a bigP3BCI raw EDF+ inventory contract and fixture-backed
+numeric EDF+ event extraction into `P300SelectionEvent` JSONL. That path has not
+yet been validated on downloaded bigP3BCI files and does not produce predictions
+or scoring artifacts.
 
 ## Closeout Checks
 
@@ -88,8 +89,8 @@ evidence upgrades exists:
 1. Richer FALCON H2 method families beyond centroid baselines, recorded through
    the same validated artifact bundle and reported whether ranking disagreement
    appears or not.
-2. bigP3BCI EDF+ annotation parsing into typed P300 selection events, followed
-   by weak target construction and a validated real-data artifact path.
+2. bigP3BCI downloaded-data event validation, followed by prediction generation,
+   selection scoring, and a validated real-data artifact path.
 3. CI and coverage thresholds so the audit/test gates run outside local
    discipline.
 4. Real Card/Willett speech-path ingestion, Kunz authorization extraction, or

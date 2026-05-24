@@ -37,7 +37,7 @@ resource manifest
 | Willett 2023 | communication and language-prior scaffold | synthetic protocol scaffold |
 | Kunz 2025 | authorization scaffold | synthetic protocol scaffold |
 | AJILE12 | naturalistic behavior proxy scaffold | synthetic protocol scaffold |
-| bigP3BCI | EDF+ raw-file inventory contract plus P300 selection proxy scaffold | raw inventory contract; no target evidence |
+| bigP3BCI | EDF+ inventory, fixture-backed event extraction, P300 selection scaffold | typed events only; no scoring evidence |
 
 ## Extension Pattern
 

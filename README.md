@@ -153,7 +153,7 @@ Start here:
 - `docs/FALCON_H2_METHOD_RUN.md` - current FALCON H2 feature-baseline run
 - `docs/FALCON_H2_FULL_COVERAGE_RUN.md` - full FALCON H2 local run
 - `docs/FALCON_H2_BUNDLE.md` - bundle contract and validation behavior
-- `docs/BIGP3BCI_RAW_CONTRACT.md` - non-FALCON raw inventory boundary
+- `docs/BIGP3BCI_RAW_CONTRACT.md` - non-FALCON raw inventory and event boundary
 - `docs/SYSTEM_MAP.md` - module responsibilities and data flow
 - `docs/RELIABILITY.md` - evidence levels and verification gates
 - `CONTRIBUTING.md` - contribution rules and evidence boundaries
@@ -178,7 +178,8 @@ fidelity to declared weak target proxies.
 
 That is the repo's architectural claim. The empirical state is narrower:
 downloaded-data FALCON H2 evidence exists; comprehensive cross-dataset evidence
-does not.
+does not. bigP3BCI now has fixture-backed typed event extraction, but not
+downloaded-data scoring evidence.
 
 ## Contributing
 

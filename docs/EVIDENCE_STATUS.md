@@ -98,14 +98,15 @@ Dataset-family status is summarized in `docs/DATASET_LANDSCAPE.md`.
 ## Non-FALCON Boundary
 
 Card 2024, Willett 2023, Kunz 2025, and AJILE12 currently have protocol
-scaffolds, not real-data ingestion paths. bigP3BCI now has a raw EDF+ inventory
-contract and CLI, but still no EDF+ annotation parser, target construction, or
-real-data scoring path.
+scaffolds, not real-data ingestion paths. bigP3BCI now has raw EDF+ inventory
+and fixture-backed event extraction into typed `P300SelectionEvent` records, but
+still no downloaded-data event validation, prediction generation, or real-data
+scoring path.
 
 Their manifests do not yet encode enough local data contracts to run the same
-downloaded-data artifact flow. For bigP3BCI, the next step is to turn the raw
-file contract into typed events from EDF+ annotations before any evidence claim
-is made.
+downloaded-data artifact flow. For bigP3BCI, the next step is to validate event
+extraction on downloaded EDF+ files before any scoring or evidence claim is
+made.
 
 ## Next Evidence Upgrade
 

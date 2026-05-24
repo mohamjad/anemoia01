@@ -12,7 +12,7 @@ def test_repo_overview_names_evidence_paths_and_boundaries() -> None:
         "Speech, authorization, and naturalistic paths",
     ]
     assert "not a submitted-decoder benchmark" in overview.evidence_paths[0].boundary
-    assert "No EDF+ annotation parsing" in overview.evidence_paths[1].boundary
+    assert "Fixture-backed extraction only" in overview.evidence_paths[1].boundary
 
 
 def test_repo_overview_renders_navigation() -> None:

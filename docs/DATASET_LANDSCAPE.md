@@ -4,9 +4,10 @@ This document keeps dataset diversity separate from empirical proof.
 
 The repo currently understands six dataset paths at different maturity levels.
 Only FALCON H2 has downloaded-data artifact bundles. bigP3BCI now has a
-raw-file inventory contract, but not EDF+ parsing, target construction, or
-real-data scoring. The other paths are useful for protocol design and proxy
-taxonomy, but they are not real-data evidence yet.
+raw-file inventory contract and fixture-backed typed event extraction, but not
+downloaded-data event validation, prediction generation, or real-data scoring.
+The other paths are useful for protocol design and proxy taxonomy, but they are
+not real-data evidence yet.
 
 ## Summary
 
@@ -17,7 +18,7 @@ taxonomy, but they are not real-data evidence yet.
 | Willett 2023 | prompted speech/text and language-prior proxy | synthetic communication and language-prior scaffold | language model contribution not yet tied to raw data |
 | Kunz 2025 | authorization-state proxy | synthetic authorization scaffold | event extraction is dataset-specific future work |
 | AJILE12 | naturalistic behavior proxy | synthetic naturalistic scaffold | behavior may be confounded and weakly timed |
-| bigP3BCI | P300 symbol-selection proxy | raw EDF+ inventory contract plus synthetic selection scaffold | EDF+ annotation parsing, event alignment, and symbol support are not implemented |
+| bigP3BCI | P300 symbol-selection proxy | raw EDF+ inventory plus fixture-backed event extraction | downloaded-data event validation and scoring are not implemented |
 
 ## What FALCON H2 Teaches
 
@@ -100,5 +101,5 @@ raw local file contract
 ```
 
 Until that exists, non-FALCON paths should remain labeled as scaffolds.
-bigP3BCI has completed only the first item in that sequence: a fixture-backed
-raw local file contract.
+bigP3BCI has completed the first two items in that sequence: a fixture-backed
+raw local file contract and typed event extraction from numeric EDF+ records.
